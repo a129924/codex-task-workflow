@@ -1,5 +1,6 @@
-# Project-scoped experiment configuration; contains no credentials.
-# Loaded only when this feature worktree is trusted by Codex.
+# E002 reproduction example; Codex does not automatically load this file.
+# Explicitly opt in from an isolated worktree as described in README.md.
+# Contains no credentials.
 [mcp_servers.youtrack_feasibility]
 url = "https://a129924-tasks.youtrack.cloud/mcp"
 auth = "oauth"

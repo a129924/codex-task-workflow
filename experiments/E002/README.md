@@ -9,7 +9,7 @@
 
 ## 為什麼
 
-此結果決定官方 MCP 能否作為後續 Task 整合的候選；不包含正式 plugin 實作或採用核准。文件只能證明能力設計，不能證明此帳號、tenant、專案權限與 workflow 的實際行為。
+此結果決定官方 MCP 能否作為後續 Task 整合的候選；不包含正式 plugin 實作或採用核准。計畫與圖表只描述能力設計；本次認證後 MCP 操作及寫後讀取證據，支持指定帳號、tenant、MCPTEST 專案權限與 workflow 下的實際行為，不外推其他帳號、專案或正式產品需求。
 
 2026-10-07 查閱官方資料：
 
@@ -35,19 +35,26 @@
 - 真實目標：`https://a129924-tasks.youtrack.cloud/mcp`；tenant 版本於 review 階段（2026-10-07 07:41:57 UTC）從公開版本 metadata 確認為 YouTrack 2026.2、build 19197（`evidence/tenant-version.json`）；CIMD 初次回傳 false，使用者啟用後重新探測回傳 true。本輪真實 MCP 讀寫證實此帳號對 MCPTEST 的必要可見性與操作權限。
 - Client：目前 Codex；CLI 0.160.1；feature branch `chore/a129924/youtrack-mcp-validation`，基底 `994b509b645755744836d0a8e2baf0056e353799`。
 - 專用測試專案：使用者已建立，Project ID 為 `MCPTEST`；本輪 `find_projects` 與 `get_project` 均經認證後 MCP 確認。
-- `.codex/config.toml` 僅在此 feature worktree 設定 HTTP/OAuth，不含 credentials；Codex 信任該 project 後已載入工具。
+- 執行驗證時，本 feature worktree 的 `.codex/config.toml` 設定 HTTP/OAuth，不含 credentials；Codex 信任 project 後載入工具。驗證完成後，review 修正將設定移為 [重現範例](config.example.toml)，交付內容不含會自動載入的 project MCP 設定；本地 `.codex/config.toml` 已列入 `.gitignore`。
 - 使用者在瀏覽器完成自己的 OAuth 登入／同意；遇管理員設定停在人工邊界。設定載入已由本輪工具呼叫確認。
 - 本地圖為預期流程，沒有模擬 MCP 或偽造 Ticket。全局 Codex 設定未改。
 
 ## 重現步驟
 
-在此 feature worktree 開啟／信任 Codex，先確認 user-provided project 已存在及 CIMD 前置條件，再由使用者執行：
+若需重現，先明確選定已授權的 tenant 與測試專案，在獨立 worktree 檢查 [重現範例](config.example.toml) 的 endpoint。確認該 worktree 尚無 `.codex/config.toml` 後，再複製範例作為本地設定；已有設定時應人工合併，不覆寫。範例本身不會被 Codex 自動載入；[官方設定文件](https://learn.chatgpt.com/docs/config-file/config-basic) 說明 trusted project 的 `.codex/config.toml` 會參與設定載入。
+
+```sh
+mkdir -p .codex
+test ! -e .codex/config.toml && cp experiments/E002/config.example.toml .codex/config.toml
+```
+
+在該 worktree 開啟／信任 Codex，確認工具已載入、user-provided project 已存在及 CIMD 前置條件，再由使用者執行：
 
 ```sh
 codex mcp login youtrack_feasibility --oauth-client-registration cimd
 ```
 
-此命令已執行，正常 exit 0 並回報登入成功；使用者確認 Authentication complete。OAuth credentials 由 Codex 保存，不把授權 URL、code、state、token、callback 或私人回傳貼進本紀錄。不要用 `codex mcp add` 另改全局設定。必要時重開 client，確認當前 session 可見且可呼叫工具。
+此命令已執行，正常 exit 0 並回報登入成功；使用者確認 Authentication complete。OAuth credentials 由 Codex 保存，不把授權 URL、code、state、token、callback 或私人回傳貼進本紀錄。不要用 `codex mcp add` 另改全局設定。必要時重開 client，確認當前 session 可見且可呼叫工具。重現完成後移除該本地設定並重啟 MCP 連線；不要提交本地設定或修改全局 credentials。
 
 | TestCase | 操作／輸入 | 觀察 |
 | --- | --- | --- |

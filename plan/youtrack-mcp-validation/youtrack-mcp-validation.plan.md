@@ -47,3 +47,5 @@ Plan-Reviewer 已在對話中審查設計與 bounded 修訂；沒有宣稱 runti
 
 使用者於核准計畫後追加授權：先建 feature worktree，在其中實現，按 topic commit → push → Draft PR → human review。
 此授權允許本 topic 的正常提交與 Draft PR，Archify 產物隨本 topic 提交；未授權 merge、正式發布、上傳 repo 外的 PR Lens 產物或解除上述 MCP 前置條件。
+
+Review 修正交付方式：驗證當時的 `.codex/config.toml` 移為 `experiments/E002/config.example.toml`，保留重現內容但不隨 checkout 自動載入。重現須在獨立 worktree 明確啟用本地設定；該本地路徑由 `.gitignore` 排除。這是本 topic 的設定交付修正，測試票與歷史證據均保留，產品目標及事前判準不變。
