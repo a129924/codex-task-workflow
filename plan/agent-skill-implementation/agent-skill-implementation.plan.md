@@ -379,6 +379,99 @@ Last read-only source HEAD observation is the externally moved
 without reset or repin. Retain the production feature for human review; no
 merge, release or cleanup.
 
+### Round5 bounded fixes — independent verification PASS
+
+The authorized five-group Round5 correction passed actual independent Tester
+and Reviewer verification. The Tester ran 23 methods / 378 CLI calls once and
+all 56 immutable companion items once, with 14 separate baseline replays across
+seven fixtures correcting six false-success outcomes. Round4 21 tests / 303 CLI
+calls and 56/56 companion results remain historical. Original 5/37, Round1
+12/128, Round2 15/189 and Round3 18/251 evidence remains separately recorded.
+
+Visible quoted plain/ordered actions now fail closed along with quoted task
+checkboxes; quoted prose/links and genuine quoted code remain supported.
+HTML-comment scanning protects only raw same-line balanced equal-length
+inline tick spans while retaining original line/step text. Ambiguous/unmatched
+or multiline comment-token syntax fails closed; real active HTML-comment mode
+consumes raw closing markers regardless of ticks. This is bounded syntax
+handling, not a full Markdown parser or new dependency.
+
+Plan-Creator checks actual mode and exact existing selected-feature authority
+before writes. Plan or Default without file authority returns a complete
+frozen-input conversation draft with intended paths/proposed states only;
+unknown mode stops without writes. Optional analysis stays optional, with named
+warnings and no invented missing baseline facts or disk/approval claims.
+
+Plan-Reviewer preflight requires readable plan/contracts, genuine independent
+actual start acknowledgement, then the authorized owner's recorded current
+reviewer-in-progress before either native verdict. Otherwise it returns BLOCKED
+coordination without approved/needs-rework. Reviewer leaves source body/phase
+read-only; owner records actual start phase before resumed review and returned
+verdict phase afterward. Eligible fixed JSON shape remains unchanged. Any new
+verification fixture records genuine distinct actors/chronology; no main topic
+reapproval, Base creation or report execution is part of this correction.
+
+The positive implementation Reviewer context example now includes exact
+illustrative changed-artifact/current-diff/actual-Tester-result paths with version
+binding. A real package verifies required proof is readable/current; absent or
+stale proof stops. Illustrative paths assert no existence or test PASS and do
+not add requirements to unrelated roles.
+
+All new Round5 reports and owned fixtures derive from the actual recorded
+platform-selected evidence root:
+`/private/var/folders/x9/3v967ts5131dfn6x4bsy9th00000gn/T/agent-skill-review-round5-jgvpi3w2`.
+
+Its baselines.json preserves 14 actual CLI calls / seven immutable fixtures:
+six false-success outcomes and eight correct controls. runtime-test-result.json
+records the independent once-run 23 methods / 378 CLI calls, 56/56 companion
+items and 14 successful replay comparisons. The existing external pytest 9.1.1
+environment is optional verification tooling, not a runtime dependency or a
+new installation prerequisite.
+
+planning-and-package-test-result.json records actual authorized Default file
+authoring and four separate mode/input applications: the Default no-authority
+conversation draft plus three controlled policy inputs (Plan, unknown mode
+and incomplete inputs).
+The positive fresh fixture followed all five actual planning states with
+distinct Plan-Creator and Plan-Reviewer actors. Eight controlled preflight
+refusals returned BLOCKED with zero native verdicts. Two genuine Reviewer
+start acknowledgements preceded owner-only reviewer-in-progress records;
+resumed eligible review returned the actual native approved and needs-rework
+verdicts, then the owner recorded each result. Reviewer preserved both
+non-status source bodies. Only approved is planning-terminal; needs-rework
+retains its creator-in-progress edge. The broken fixture's initial review-ready
+state was synthetic; its subsequent start, owner records and native review
+were actual. No main-topic reapproval, Base creation or report execution occurred.
+
+The actual Tester package supplied 12 readable current references for changed
+artifacts, diff and Tester proof. The independently dispatched implementation
+Reviewer consumed that package and returned bounded PASS; a controlled
+missing-proof case stopped without a package. targeted-test-report.json records
+the formal Tester PASS and final-review.json records the independent Reviewer
+PASS for all five groups. These records do not certify every environment or
+repeat the original full six-group acceptance cycle.
+
+Author failed/intermediate/final selfchecks remain separately retained in
+selfcheck-first-failure.json, selfcheck-intermediate-before-inline-interaction.json
+and implementation-result.json. They are not independent test counts. The
+initial aggregation hash guard compared a historical preflight hash against
+an owner-updated source; aggregation-first-attempt.json retains that failure.
+The final aggregation used the retained review-ready snapshot and verified the
+owner's final source separately, without a test rerun.
+
+Evidence is local-only, not uploaded or downloadable through this PR.
+Historical /private/tmp paths remain original provenance. Observed actual
+Default on macOS/Python 3.14 and controlled Plan policy remain distinct;
+actual Plan-engine execution and Linux remain unverified.
+
+Immutable import provenance stays pinned to 60b3b5b77515c354ed355c1adb28a8ed349dda67;
+current 46-file comparison remains 41 adapted / 5 unchanged. Source last observed
+external HEAD34f943b is not the import authority and is not reset or repinned.
+No dev/source/global/product/immutable 703-line companion changes. Preserve
+the original main approval, eleven canonical sections/nine scope fields and
+Open Questions bytes. Retain feature and owned fixtures for human review;
+no merge, release or cleanup.
+
 ## Reviewer Handoff
 
 The following object declares the independent output schema only. It is not a
