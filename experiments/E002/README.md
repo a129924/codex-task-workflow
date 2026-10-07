@@ -3,7 +3,7 @@
 ## 驗證什麼
 
 - 編號：E002。E001 依使用者提供的 PR #1 占用資訊保留；2026-10-07 已查本地全部可得 Git 歷史與遠端 branch/PR，未見 E002 占用。PR #1 的 files 不含實驗目錄，不能據此否定使用者的 E001 占用資訊。
-- 設計日期：2026-10-07，本輪前置探測日期：2026-10-07；OAuth 登入已成功；認證後 MCP 工具呼叫尚未執行。
+- 設計日期：2026-10-07，前置探測及完整 MCP 驗證日期：2026-10-07；OAuth 登入與認證後工具呼叫均已成功。
 - 主要問題：目前 Codex、指定 tenant、OAuth/CIMD 與專用測試專案能否只經官方 MCP 完成同一張票的完整操作？
 - 假設：登入身分正確，真實 MCP 可建立、讀取、更新、resolved 並重新查得同一張票。
 
@@ -32,11 +32,11 @@
 
 ## 環境與前置條件
 
-- 真實目標：`https://a129924-tasks.youtrack.cloud/mcp`；tenant 版本、權限與 AI visibility 尚未驗證；CIMD 初次回傳 false，使用者啟用後重新探測回傳 true。
+- 真實目標：`https://a129924-tasks.youtrack.cloud/mcp`；tenant 版本仍未獨立查證；CIMD 初次回傳 false，使用者啟用後重新探測回傳 true。本輪真實 MCP 讀寫證實此帳號對 MCPTEST 的必要可見性與操作權限。
 - Client：目前 Codex；CLI 0.160.1；feature branch `chore/a129924/youtrack-mcp-validation`，基底 `994b509b645755744836d0a8e2baf0056e353799`。
-- 專用測試專案：使用者已建立，Project ID 為 `MCPTEST`；仍待認證後 MCP 回傳確認，不把使用者提供資訊冒充 server 驗證。
-- `.codex/config.toml` 僅在此 feature worktree 設定 HTTP/OAuth，不含 credentials；須由 Codex 信任該 project 才載入。
-- 使用者在瀏覽器完成自己的 OAuth 登入／同意；遇管理員設定停在人工邊界。新增設定不代表当前 session 已載入工具。
+- 專用測試專案：使用者已建立，Project ID 為 `MCPTEST`；本輪 `find_projects` 與 `get_project` 均經認證後 MCP 確認。
+- `.codex/config.toml` 僅在此 feature worktree 設定 HTTP/OAuth，不含 credentials；Codex 信任該 project 後已載入工具。
+- 使用者在瀏覽器完成自己的 OAuth 登入／同意；遇管理員設定停在人工邊界。設定載入已由本輪工具呼叫確認。
 - 本地圖為預期流程，沒有模擬 MCP 或偽造 Ticket。全局 Codex 設定未改。
 
 ## 重現步驟
@@ -61,14 +61,14 @@ codex mcp login youtrack_feasibility --oauth-client-registration cimd
 實際參數採當前 MCP `tools/list` 揭露的 schema，本文不虛構 wire arguments。`get_issue` 只驗內容，不假設它或 fields schema 暴露 resolved metadata。
 若發現額外必填欄位／workflow，不為通過驗證而改規則。每次觀察先去敏，再記錄工具名、輸入概要、同 ID 比對值、錯誤與判準。
 
-實際停止位置：初次 metadata 宣告 CIMD false，使用者啟用後重查為 true；原生 `codex mcp login youtrack_feasibility --oauth-client-registration cimd` 已正常 exit 0 並回報登入成功，使用者確認 Authentication complete。當前對話工具目錄仍沒有 YouTrack 工具，停在核准的 client／MCP 重啟人工邊界，等待於 feature project 載入工具。沒有 `get_current_user`、project/schema 或 Ticket 呼叫，沒有 Ticket。
+實際執行：先前 OAuth/CIMD 登入成功後，當前對話已載入八個 YouTrack MCP 工具。`get_current_user` 回傳 login `admin`，使用者確認為預期帳號；不保存 email 或姓名。`find_projects`、`get_project` 確認 MCPTEST，schema 顯示唯一 State 欄位可用 `To do`、`In Progress`、`Done`，無必填自訂欄位。建立一張 `MCPTEST-1`，依 TC03–TC05 對同一 ID 完成讀、更新、結案及兩種搜尋。建立回應明確，TC06 未觸發。
 
 ## 是否成功
 
-- 本輪前置探測與 OAuth 登入日期：2026-10-07；Ticket 步驟尚未執行。
-- 實驗狀態：**無法判定**；OAuth 登入部分成功，但當前對話未載入 MCP 工具。TC01 的身分核對及 TC02–TC06 仍未執行，不能判定完整操作链。
-- 本輪驗證任務完成：**否**；缺少當前 client MCP 身分、專案、schema 與 Ticket 操作證據。
-- 驗證準備可交付 human review，不表示假設已成立、Task 整合完成或 blocker 已解除。
+- 本輪完整驗證日期：2026-10-07。
+- 實驗狀態：**成功**；TC01–TC05 均由真實 MCP 呼叫與寫後讀取支持，TC06 因建立回應明確而不需要執行。
+- 本輪驗證任務完成：**是**；同一張 `MCPTEST-1` 的 ID、中文、換行與 resolved 回查有證據。
+- 結果僅支持這一組帳號、tenant、專案與當前 client 條件；正式 Task 整合及採用仍待獨立決策與 human review。
 
 ## 結果與證據
 
@@ -80,14 +80,13 @@ codex mcp login youtrack_feasibility --oauth-client-registration cimd
 - `evidence/preflight.json`：先前準備階段的歷史 snapshot。
 - `evidence/oauth-preflight.json`：初次公開 metadata／MCP endpoint 探測及設定載入觀察，CIMD false 是當時結果。
 - `evidence/oauth-login.json`：使用者啟用後 CIMD true、CLI 登入成功及當前對話工具未載入的紀錄；不含 credentials、帳號或服務 scope ID。
+- `evidence/mcp-ticket-validation.json`：本輪真實 MCP 工具、去敏身分確認、專案 schema、單張票的各次寫後讀取與 resolved 搜尋結果。先前 `oauth-login.json` 保留當時工具未載入的歷史 snapshot。
 - `evidence/visual-review.md`：真實閱圖狀態與限制。
 
-已取得 OAuth 登入成功證據；尚未取得 `get_current_user`、project schema、Ticket ID、任何認證後 MCP 寫入／讀取／resolved 證據。
-PR Lens 已對先前真實 topic commits 製作本地 change map；本輪變更提交後更新至最新 head，不上傳圖表。未提交 diff 只直接審閱。
+`MCPTEST-1` 的初次讀取與更新後讀取均比對同一 ID、專案、標題與完整描述。最終更新使用 schema 列出的 `Done`；回讀 State 顯示本地化的「已完成」，`resolvedAt` 為 `2026-10-07 07:18:30`，按 ID 搜尋及 `issue id: MCPTEST-1 #Resolved` 均只回傳同一張票。完整去敏摘要見新增證據檔。
+PR Lens 已對先前真實 topic commits 製作本地 change map；本輪驗證變更以 Git diff 直接審閱，不上傳 repo 外圖表。
 
 ## 結論與限制
 
-`MCPTEST` 已由使用者建立，CIMD 已由使用者啟用，原生 OAuth/CIMD 登入成功。這支持登入子問題，尚不足以證明目前 Codex 對話可呼叫 MCP 或完成 Ticket 操作；整體仍無法判定。
-下一步於 feature project 重啟 client／MCP 連線，載入 YouTrack 工具，再呼叫 `get_current_user` 核對預期帳號、確認 `MCPTEST` 與 schema、執行單張 Ticket 的 TC03–TC06；不以 CLI 登入成功代替這些證據。
-條件不足時保留部分證據，不切換 token／REST、不刪測試票、不建立正式 plugin。
-正式採用仍交回原整合決策與 review；Draft PR 的 human review 先評估這份驗證準備及未滿足前置條件。
+`MCPTEST` 已由真實 MCP 確認，登入代號經使用者核對；當前 Codex 對話透過官方 MCP 完成同一張 Ticket 的建立、讀取、更新、結案與回查。因此 E002 在指定條件下成功。未切換 token／REST、未刪測試票、未建立正式 plugin。
+正式採用仍交回原整合決策與 review；Draft PR 停在 human review。

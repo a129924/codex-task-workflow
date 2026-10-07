@@ -40,7 +40,7 @@ MCP 實驗限 30 分鐘、一張票，每個受阻步驟最多一次診斷後有
 
 Plan-Reviewer 已在對話中審查設計與 bounded 修訂；沒有宣稱 runtime gate 通過。
 模式與授權允許後，由 Implementer 處理設定／產物、Tester 執行、Reviewer 判讀。
-專用測試專案 `MCPTEST` 已由使用者建立；2026-10-07 CIMD 從 false 經使用者啟用變為 true，CLI OAuth/CIMD 登入成功。當前停在 client／MCP 重啟與工具載入的 human-check；仍須以真實 MCP 確認身分、專案、權限與 Ticket 操作。
+專用測試專案 `MCPTEST` 已由使用者建立；2026-10-07 CIMD 從 false 經使用者啟用變為 true，CLI OAuth/CIMD 登入成功。當前 Codex 對話隨後載入八個 YouTrack MCP 工具；使用者確認回傳 login `admin`，真實 MCP 確認專案與 schema，並完成同一張 `MCPTEST-1` 的建立、讀取、更新、結案與 `#Resolved` 回查。去敏結果記錄在 E002；停在 Draft PR 的 human review。
 實驗四態與本輪任務完成否分開，結論僅適用實際驗證條件。
 
 ## 本輪交付授權
