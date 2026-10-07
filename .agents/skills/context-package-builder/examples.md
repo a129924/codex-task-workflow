@@ -47,20 +47,33 @@ Output:
   "frozen_inputs": [
     "analysis/observer-dispatcher-canonical-baseline/requirements.md",
     "analysis/observer-dispatcher-canonical-baseline/technical-spec.md",
-    "plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md"
+    "plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md",
+    ".agents/skills/example/SKILL.md",
+    "artifacts/observer-dispatcher-canonical-baseline/changed-artifacts.json",
+    "artifacts/observer-dispatcher-canonical-baseline/implementation.diff",
+    "artifacts/observer-dispatcher-canonical-baseline/tester-result.json"
   ],
   "constraints": [
     "Judge only the bounded write set.",
     "Do not broaden into runtime semantics."
   ],
   "evidence": [
-    "the implementation write set is complete"
+    "artifacts/observer-dispatcher-canonical-baseline/changed-artifacts.json: exact changed paths and current content hashes",
+    "artifacts/observer-dispatcher-canonical-baseline/implementation.diff: current bounded diff",
+    "artifacts/observer-dispatcher-canonical-baseline/tester-result.json: actual Tester identity, command/results and version binding"
   ],
   "unknowns": [
     "human review timing is not yet available"
   ]
 }
 ```
+
+These exact paths are illustrative, not existing artifacts or successful tests.
+For a real implementation Reviewer handoff, verify every required changed
+artifact, bounded diff and actual Tester result is readable and current for the
+same supplied revision/hash. Include bounded contents only with actual provenance.
+Absent or stale required proof stops packaging; a completion assertion is not
+evidence. These inputs apply to implementation Reviewer, not every unrelated role.
 
 ## Negative: full conversation dump
 
