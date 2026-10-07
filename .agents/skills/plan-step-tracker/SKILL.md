@@ -217,3 +217,11 @@ without changing line or step text. Unmatched/ambiguous/multiline comment-token
 syntax fails closed rather than hiding later pending steps; real HTML-comment
 mode consumes raw closing markers even inside ticks. Raw fence validity and
 quote-container boundaries remain prior to masking. No full Markdown parser.
+
+## Escaped HTML opener boundary
+
+Outside genuine raw comment/code, contiguous backslash parity before the raw
+opener controls recognition: odd literal, even eligible. Continue looking for
+a later genuine same-line opener. Balanced inline spans and genuine fences
+remain code. In active real HTML comment mode, raw closing markers retain
+precedence regardless of backslashes/ticks. No full Markdown parser is added.

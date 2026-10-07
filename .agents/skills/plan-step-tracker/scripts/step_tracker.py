@@ -120,6 +120,19 @@ def _inline_tick_end(line: str, start: int) -> int:
     return end  # No comment tokens: preserve unmatched literal ticks.
 
 
+def _unescaped_comment_opening(line: str, start: int) -> int:
+    """Odd contiguous backslashes escape an opener outside raw code/comments."""
+    opening = line.find("<!--", start)
+    while opening >= 0:
+        previous = opening - 1
+        while previous >= 0 and line[previous] == chr(92):
+            previous -= 1
+        if (opening - previous - 1) % 2 == 0:
+            return opening
+        opening = line.find("<!--", opening + 4)
+    return -1
+
+
 def _visible_completion_lines(lines: list[str]) -> list[str]:
     """Exclude genuine code/comments while preserving unsupported task evidence."""
     visible: list[str] = []
@@ -164,7 +177,7 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
                 position = closing + 3
                 in_comment = False
             else:
-                opening = raw_line.find("<!--", position)
+                opening = _unescaped_comment_opening(raw_line, position)
                 tick = raw_line.find(chr(96), position)
                 if tick >= 0 and (opening < 0 or tick < opening):
                     fragments.append(raw_line[position:tick])

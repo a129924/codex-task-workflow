@@ -566,5 +566,39 @@ class AgentSkillsTestCase(unittest.TestCase):
                     if index == 4:
                         self.assertIn("[ ] Pending after raw candidate", result.stdout)
 
+    def test_escaped_html_openers_use_contiguous_backslash_parity(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        slash = chr(92)
+        for width in (1, 3, 5):
+            content = prefix + "Literal " + slash * width + "<!-- token\n- [ ] Pending\nLiteral " + slash * width + "--> token\n"
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(odd=width, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, 1, result.stderr)
+                    self.assertIn("[ ] Pending", result.stdout)
+                    self.assertNotIn("SUCCESS", result.stdout)
+        for width in (0, 2, 4):
+            content = prefix + "Real " + slash * width + "<!-- comment\n- [ ] Example only\n-->\n"
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(even=width, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+        tick = chr(96)
+        controls = (
+            ("Literal " + slash + "<!-- then <!-- real\n- [ ] Example only\n-->\n", 0),
+            ("<!-- actual\n- [ ] Example only\n" + slash + "-->\n- [ ] Pending after close\n", 1),
+            ("<!-- actual\n- [ ] Example only\n" + tick + slash + "-->" + tick + "\n- [ ] Pending after close\n", 1),
+            ("Inline " + tick + slash + "<!--" + tick + " token\n- [ ] Pending\n", 1),
+            (tick * 3 + "html\n" + slash + "<!--\n- [ ] Example only\n" + tick * 3 + "\n", 0),
+        )
+        for content, expected in controls:
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(control=content, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if expected:
+                        self.assertIn("[ ] Pending", result.stdout)
+                        self.assertNotIn("SUCCESS", result.stdout)
+
 if __name__ == "__main__":
     unittest.main()
