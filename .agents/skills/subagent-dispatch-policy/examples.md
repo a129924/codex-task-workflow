@@ -5,7 +5,7 @@
 Input:
 
 - one bounded task slice: update the accepted implementation artifact set
-- real dispatch conditions: all present
+- real separated instructions/context-packaging/handoff/result capabilities: available; the completed package is required only before actual dispatch
 - no registry or runtime dependency
 
 Output:
@@ -24,7 +24,7 @@ Input:
 
 - one bounded task slice
 - frozen truth is ambiguous for the current slice
-- real dispatch conditions: all present
+- real separated instructions/context-packaging/handoff/result capabilities: available; the completed package is required only before actual dispatch
 
 Output:
 
@@ -89,3 +89,13 @@ Output:
   "stop_condition": "runtime orchestration semantics required"
 }
 ```
+
+## Select before authoring a role-specific package
+
+With one bounded implementation slice and actual separated instruction,
+context-packaging and handoff/result facilities available, select Implementer
+even if its package is not authored yet. context-package-builder then assembles
+that role's actual bounded inputs. Before actual dispatch require the complete
+package and payload contracts; missing any of them stops without launching.
+Unavailable facilities stop at selection; a text-only role simulation never
+counts as dispatch evidence.

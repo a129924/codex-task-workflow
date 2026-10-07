@@ -38,13 +38,11 @@ Delete prompt text after replacing it with real topic-specific content.
 - **Stage-local action**: Author the bounded topic plan.
 - **Allowed transitions**:
   - `planned` -> `creator-in-progress`
-  - `creator-in-progress` -> `review-ready`
-  - `review-ready` -> `reviewer-in-progress`
-  - `reviewer-in-progress` -> `approved`
-  - `reviewer-in-progress` -> `needs-rework`
-  - `needs-rework` -> `creator-in-progress`
 
-Only list valid next transitions for the current status. Implementation proceeds
+Only list valid outgoing transitions for the declared current status. When that
+status changes, replace this edge and the matching next actor/action using the
+shared canonical authority; do not copy the whole lifecycle into this field.
+Implementation proceeds
 only after independent approval; do not add publish, merge or release states.
 
 ## Artifact Paths

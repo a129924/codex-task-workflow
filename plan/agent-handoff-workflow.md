@@ -61,11 +61,18 @@ its own explicit topic contract; this contract defines no publish-state model.
 
 ## Real dispatch and routing
 
-A real handoff requires separated role instructions, bounded context, explicit
-handoff and result payloads. Keep a dispatch/result identifier as evidence.
+Role selection first checks that separated role instructions, bounded-context
+packaging and explicit handoff/result facilities can be established. It chooses
+one role before that role's package is authored; no completed package is needed
+merely to select. Immediately before actual dispatch, require the actual complete
+bounded context package, separated instructions and explicit handoff/result
+contracts. Missing any actual payload stops without launching. Keep a genuine
+dispatch/result identifier as evidence.
 No simulation or a text-only role label counts as actual dispatch. Select one
 allowed role or stop; no registry, hidden launcher binding or fabricated state.
 Native approved/needs-rework are allowed only from Plan-Reviewer. approved
-routes to an explicitly declared next role or stop; needs-rework to Plan-Creator.
+routes only to explicitly declared Implementer (or Code-Implementer alias);
+other/missing next actors stop. Ordinary PASS retains explicit permitted-role
+routing. needs-rework routes to Plan-Creator.
 Unknown, role-incompatible or BLOCKED results stop. All artifacts and tests
 remain evidence-pending until actual execution and independent review.

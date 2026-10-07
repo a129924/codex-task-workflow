@@ -45,13 +45,14 @@ Do not use this skill when:
 1. Confirm the task is a single bounded slice.
 2. Confirm the Observer is not being asked to self-perform Planner,
    Implementer, Reviewer, Plan-Creator, Plan-Reviewer, Tester or Explorer work.
-3. Check whether real dispatch can be established:
-   - separated role instruction surface
-   - separated task context package
-   - explicit handoff payload
-   - explicit result payload contract
-   - no hidden role simulation
-4. If any real-dispatch condition is missing, stop.
+3. At role selection, check whether real separated role instructions,
+   bounded context packaging, explicit handoff payload and result contract
+   facilities can be established. A completed role-specific package is not
+   required yet; select its target first. No hidden role simulation.
+4. If any required capability is unavailable, stop. Immediately before actual
+   dispatch, require the actual complete bounded context package, separated
+   instructions and explicit handoff/result contracts; missing actual payload
+   stops without launching. Selection permission alone is not a dispatch.
 5. If the task requires registry behavior, workflow binding, runtime semantics,
    or concrete role-agent files, stop.
 6. Choose exactly one next role name or return `stop`.
@@ -79,10 +80,10 @@ Do not use this skill when:
 ## Required Checks
 
 - `PASS`: the input is one bounded task slice, the Observer is in `INTAKE` or
-  `ROUTING`, real dispatch conditions are established, and the result is
+  `ROUTING`, real dispatch capability can be established, and the result is
   exactly one allowed `next_role` or `stop`.
 - `BLOCKED`: stop when the available evidence cannot distinguish between more
-  than one allowed next role, when real dispatch cannot be established, or when
+  than one allowed next role, when real dispatch capability cannot be established, or when
   proceeding would require workflow binding, registry behavior, runtime
   semantics, or concrete role-agent files.
 

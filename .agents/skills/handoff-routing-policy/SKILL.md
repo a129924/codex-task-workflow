@@ -39,7 +39,7 @@ Do not use this skill when:
 - bounded evidence summary
 - explicit blocker list, if any
 - optional evidence owner for `MISSING_EVIDENCE`
-- optional explicitly declared next role after `PASS` or `approved`
+- optional explicitly declared next role after `PASS`; native `approved` requires explicit `Implementer` (or its Code alias)
 
 # Process
 
@@ -53,8 +53,9 @@ Do not use this skill when:
 3. If the result reveals runtime semantics, registry behavior, workflow binding,
    or another out-of-scope expansion, stop.
 4. Route by verdict without inventing a broader workflow model:
-   - `approved`: route to the explicitly declared permitted next role or stop;
-     never convert this native plan verdict to PASS
+   - `approved`: route only when the declared next role is explicitly
+     `Implementer` (normalize Code-Implementer); every other or missing next
+     role stops. Keep the native verdict; never convert it to PASS
    - `needs-rework`: route to `Plan-Creator`
    - `PASS`: route to the explicitly declared permitted next role or stop
    - `PATCH_REQUIRED`: route to `Implementer`

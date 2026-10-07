@@ -113,7 +113,11 @@ Output:
 
 A real Plan-Reviewer dispatch returns the fixed JSON verdict approved. With
 an explicitly declared Implementer next handoff, return next_role Implementer;
-without a declared next handoff, stop. Keep approved native, do not map to PASS.
+without a declared next Implementer handoff, stop. A declared Tester, Reviewer
+or any other actor also stops: approval terminates planning and hands execution
+to Implementer only. Code-Implementer is its permitted alias. Keep approved
+native, do not map to PASS. Ordinary PASS still uses its explicitly declared
+permitted next role.
 
 ## Native plan rework and role incompatibility
 
