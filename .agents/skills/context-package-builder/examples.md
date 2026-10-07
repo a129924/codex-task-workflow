@@ -1,5 +1,10 @@
 # context-package-builder examples
 
+The positive paths below are exact illustrative paths for one topic, not a
+claim these files exist. Real handoff verifies supplied exact paths are readable;
+missing required input is recorded and stops the package. No example grants
+permission or manufactures artifacts/dispatch.
+
 ## Positive: bounded implementation package
 
 Output:
@@ -9,8 +14,8 @@ Output:
   "target_role": "Implementer",
   "task_slice": "Implement the accepted Feature 1 artifact set within the frozen write set.",
   "frozen_inputs": [
-    "accepted topic requirements artifact",
-    "accepted topic technical specification artifact",
+    "analysis/observer-dispatcher-canonical-baseline/requirements.md",
+    "analysis/observer-dispatcher-canonical-baseline/technical-spec.md",
     "plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md"
   ],
   "constraints": [
@@ -40,8 +45,9 @@ Output:
   "target_role": "Reviewer",
   "task_slice": "Review whether the bounded Feature 1 artifact set matches the frozen contract.",
   "frozen_inputs": [
-    "accepted topic requirements artifact",
-    "accepted topic technical specification artifact"
+    "analysis/observer-dispatcher-canonical-baseline/requirements.md",
+    "analysis/observer-dispatcher-canonical-baseline/technical-spec.md",
+    "plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md"
   ],
   "constraints": [
     "Judge only the bounded write set.",
