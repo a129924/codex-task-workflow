@@ -32,8 +32,8 @@ Do not use this skill when:
   - `approved` (native Plan-Reviewer only)
   - `needs-rework` (native Plan-Reviewer only)
   - `PASS`
-  - `PATCH_REQUIRED`
-  - `REPLAN_REQUIRED`
+  - `PATCH_REQUIRED` (independent Reviewer / Code-Reviewer only)
+  - `REPLAN_REQUIRED` (independent Reviewer / Code-Reviewer only)
   - `MISSING_EVIDENCE`
   - `BLOCKED`
 - bounded evidence summary
@@ -47,8 +47,10 @@ Do not use this skill when:
 2. Confirm the result role is permitted (normalize only Code-Implementer and
    Code-Reviewer aliases) and the verdict is role-compatible. approved and
    needs-rework belong only to Plan-Reviewer; Plan-Reviewer returns native
-   JSON rather than PASS. All other roles use PASS, PATCH_REQUIRED,
-   REPLAN_REQUIRED, MISSING_EVIDENCE or BLOCKED. Unknown/incompatible results
+   JSON rather than PASS. PATCH_REQUIRED and REPLAN_REQUIRED belong only to
+   independent Reviewer (including normalized Code-Reviewer). Other non-plan-
+   review roles use PASS, MISSING_EVIDENCE or BLOCKED; their PATCH_REQUIRED or
+   REPLAN_REQUIRED is incompatible and stops. Unknown/incompatible results
    stop; do not infer or normalize verdict spelling.
 3. If the result reveals runtime semantics, registry behavior, workflow binding,
    or another out-of-scope expansion, stop.
@@ -58,8 +60,8 @@ Do not use this skill when:
      role stops. Keep the native verdict; never convert it to PASS
    - `needs-rework`: route to `Plan-Creator`
    - `PASS`: route to the explicitly declared permitted next role or stop
-   - `PATCH_REQUIRED`: route to `Implementer`
-   - `REPLAN_REQUIRED`: route to `Plan-Creator`
+   - `PATCH_REQUIRED`: only independent Reviewer routes to `Implementer`
+   - `REPLAN_REQUIRED`: only independent Reviewer routes to `Plan-Creator`
    - `MISSING_EVIDENCE`: route only to the bounded role that can supply the
      missing evidence; if that owner is unknown, stop
    - `BLOCKED`: stop
@@ -67,7 +69,7 @@ Do not use this skill when:
 
 # Examples
 
-- **Positive**: An `Implementer` returns `PATCH_REQUIRED` with concrete bounded
+- **Positive**: An independent `Reviewer` returns `PATCH_REQUIRED` with concrete bounded
   evidence, and the skill routes to `Implementer`.
 - **Negative**: A result says "probably approved" with no explicit verdict, and
   the skill refuses to invent one.

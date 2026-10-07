@@ -38,6 +38,10 @@ is explicitly [] or none. The next actor is Implementer with the source-declared
 bounded implementation action. This is an execution handoff, not a new planning
 transition or state-machine. An approved source with these fields is eligible
 for Base step creation; no outgoing approved planning edge is required.
+Immutable Base tracker creation requires this terminal approved source before
+any temporary/final write. planned, creator-in-progress, review-ready,
+reviewer-in-progress and needs-rework sources are BLOCKED even with valid
+canonical edges. Approval is eligibility authority, never execution evidence.
 
 ## Implementation and local delivery
 
@@ -47,7 +51,9 @@ feature worktree and required acceptance evidence. Implementer returns changed
 paths, limitations and verification evidence. Observer sends the bounded test
 request and actual artifacts to Tester, then sends the diff, plan and test
 results to an independent Reviewer. Reviewer returns PASS, PATCH_REQUIRED,
-REPLAN_REQUIRED, MISSING_EVIDENCE or BLOCKED with evidence. PATCH_REQUIRED goes
+REPLAN_REQUIRED, MISSING_EVIDENCE or BLOCKED with evidence. Only independent
+Reviewer (or normalized Code-Reviewer) may issue PATCH_REQUIRED / REPLAN_REQUIRED;
+these verdicts from any other role stop as incompatible. PATCH_REQUIRED goes
 to Implementer; REPLAN_REQUIRED goes to Plan-Creator; MISSING_EVIDENCE goes to
 its known owner, otherwise stops. PASS permits the explicitly declared next
 handoff or stops at local reviewable delivery. It does not imply publication.

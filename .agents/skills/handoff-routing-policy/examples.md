@@ -36,25 +36,48 @@ Output:
 }
 ```
 
-## Positive: pass then review
+## Positive: initial implementation passes to Tester, then independent Reviewer
 
 Input:
 
 - `result_role`: `Implementer`
 - `verdict`: `PASS`
-- bounded evidence: implementation for the current slice is complete and needs an independent check
-- `declared_next_role`: `Reviewer`
-- declaration source: the actual returned handoff payload explicitly names independent Reviewer as the next bounded owner; this is supplied input, not inferred from PASS
+- bounded evidence: implementation for the current slice is ready for assigned testing
+- `declared_next_role`: `Tester`
+- declaration source: the actual Implementer handoff explicitly names Tester; PASS does not prove tests ran
+- evidence identity: retain the actual Implementer dispatch/result identifier and changed artifact paths
 
 Output:
 
 ```json
 {
-  "next_role": "Reviewer",
-  "reason": "The actual handoff explicitly declares Reviewer as the next bounded role after PASS.",
+  "next_role": "Tester",
+  "reason": "The actual Implementer handoff explicitly declares Tester for assigned verification.",
   "stop_condition": "none"
 }
 ```
+
+Only after real Tester execution returns a separate payload, use the second input:
+
+- `result_role`: `Tester`
+- `verdict`: `PASS`
+- bounded evidence: actual assigned test results and retained evidence paths
+- `declared_next_role`: `Reviewer`
+- declaration source: the actual Tester handoff explicitly names independent Reviewer
+- evidence identity: retain the actual Tester dispatch/result identifier; do not manufacture it from the first PASS
+
+Second output:
+
+```json
+{
+  "next_role": "Reviewer",
+  "reason": "The actual Tester result explicitly declares independent Reviewer with test evidence.",
+  "stop_condition": "none"
+}
+```
+
+These illustrate payload shapes, not execution records or invented dispatch
+identifiers. Real routing requires each actual returned payload.
 
 ## Negative: invented verdict
 
@@ -124,3 +147,6 @@ permitted next role.
 Plan-Reviewer needs-rework routes to Plan-Creator. Implementer approved is
 role-incompatible and stops. Plan-Reviewer PASS is also incompatible and stops.
 Unknown verdicts, BLOCKED and MISSING_EVIDENCE without a known allowed owner stop.
+PATCH_REQUIRED and REPLAN_REQUIRED are compatible only with independent
+Reviewer / normalized Code-Reviewer. Implementer, Code-Implementer, Tester,
+Planner, Plan-Creator and Explorer emitting either review verdict stop.
