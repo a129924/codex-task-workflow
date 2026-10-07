@@ -40,7 +40,7 @@ MCP 實驗限 30 分鐘、一張票，每個受阻步驟最多一次診斷後有
 
 Plan-Reviewer 已在對話中審查設計與 bounded 修訂；沒有宣稱 runtime gate 通過。
 模式與授權允許後，由 Implementer 處理設定／產物、Tester 執行、Reviewer 判讀。
-專用測試專案 `MCPTEST` 已由使用者建立；2026-10-07 公開 OAuth metadata 回傳 CIMD 支援為 false，當前停在管理員啟用 CIMD 的 human-check。認證後仍須以 MCP 確認專案與權限，不改管理員設定。
+專用測試專案 `MCPTEST` 已由使用者建立；2026-10-07 CIMD 從 false 經使用者啟用變為 true，CLI OAuth/CIMD 登入成功。當前停在 client／MCP 重啟與工具載入的 human-check；仍須以真實 MCP 確認身分、專案、權限與 Ticket 操作。
 實驗四態與本輪任務完成否分開，結論僅適用實際驗證條件。
 
 ## 本輪交付授權
