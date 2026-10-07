@@ -1,0 +1,6 @@
+# Project-scoped experiment configuration; contains no credentials.
+# Loaded only when this feature worktree is trusted by Codex.
+[mcp_servers.youtrack_feasibility]
+url = "https://a129924-tasks.youtrack.cloud/mcp"
+auth = "oauth"
+enabled_tools = ["get_current_user", "find_projects", "get_project", "get_issue_fields_schema", "create_issue", "get_issue", "update_issue", "search_issues"]
