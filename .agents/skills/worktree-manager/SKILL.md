@@ -43,6 +43,8 @@ Do not use this skill when:
 - the user wants repository-internal worktree placement under the repo root
 
 # Inputs
+- verified actual active engine mode; a controlled prompt label is not engine proof
+- for Default mutation: existing exact operation/selector/path/branch authorization
 - requested operation: `create`, `get-worktree`, `release worktree`, or `remove worktree`
 - repository root context for the target repo
 - worktree selector when inspecting, releasing, or removing
@@ -52,6 +54,15 @@ Do not use this skill when:
 - explicit human choice when branch-name collision requires reuse or rename
 
 # Process
+0. Verify actual active engine mode before any lifecycle mutation. In Plan Mode
+   give conversation planning/inspection guidance only: no Git worktree add/remove,
+   branch/ref, directory, registration or offboarding-metadata mutation, and no
+   subagent bypass. Unknown/unverified mode gives no mutation permission. Read-only
+   inspection remains available. Default execution requires the existing exact
+   authorized operation and selector (including create path/branch) plus every
+   repository/path/branch/removal safety gate below. Do not ask again when that
+   authorization is already present; missing authority blocks mutation. Controlled
+   mode labels test policy only and never certify actual Plan-engine behavior.
 1. Resolve the intended absolute Git top-level using
    `git rev-parse --show-toplevel`, then resolve filesystem aliases. The caller
    may be at repo root or any nested child; never anchor managed paths at cwd.
@@ -72,10 +83,13 @@ Do not use this skill when:
    - Keep the managed worktree outside the repository root.
    - If the target path already exists and is not the intended worktree, stop for human review instead of improvising.
    - If the preferred branch name already exists, stop for an explicit reuse-or-rename decision; do not silently reuse the lineage.
-   - Create the branch and worktree only after the path and branch decisions are unambiguous.
-   - Return an absolute unambiguous path and `cd` next step. The same selector
+   - Create the branch and worktree only in actual Default with exact existing authorization after all path/branch safety checks pass.
+   - After verified creation, return an absolute unambiguous created path and `cd` next step. The same selector
      from a nested cwd must resolve to the same sibling path as from repo root.
-   - Return at least this contract:
+   - For Plan/unknown-mode guidance, label the absolute destination as intended,
+     not created; give a mode/authorization stop rather than a `cd` or execution
+     next step. Do not emit a successful create_result or claim existence.
+   - Return at least this contract only after actual authorized creation:
      ```yaml
      create_result:
        path: "<absolute-resolved-managed-path>"
@@ -90,7 +104,10 @@ Do not use this skill when:
    - Do not auto-prune stale registrations.
 6. For `release worktree`:
    - Treat release as non-destructive offboarding from the active working set.
-   - Fill the fixed `release_evidence` schema before deciding whether release is safe.
+   - Fill the fixed `release_evidence` schema in the response before deciding whether release is safe.
+   - Guidance/evidence alone does not persist offboarding metadata. Plan/unknown
+     mode must not write it; any Default offboarding write needs its own exact
+     already-authorized path/action. Do not imply release changed Git state.
    - Keep `destructive_action_allowed: false` by default.
    - Require a clean worktree, no untracked files, and merged or explicitly abandoned lineage before recommending release.
    - Never use release as a synonym for remove.
@@ -105,11 +122,11 @@ Do not use this skill when:
    - If the human explicitly authorizes a destructive path, restate that the worktree is unmanaged and require the full remove safety gate before proceeding.
 
 # Examples
-- Positive: Create a managed task worktree, return the managed path, attached branch, and the immediate next step to continue work inside that worktree.
+- Positive: In actual Default with exact existing create authorization and all safety checks, create and verify a managed task worktree, then return its actual path, attached branch and next step. Plan Mode returns intended-path guidance only.
 - Negative: Treat "release worktree" as permission to delete the directory, silently reuse an existing branch, or clean up an unmanaged worktree without an explicit destructive gate.
 
 # Outputs
-- `create_result`: managed `path`, attached `branch`, and immediate `next_step`
+- `create_result`: only after verified authorized Default creation, managed `path`, attached `branch`, and immediate `next_step`; planned-only responses label intended paths and never claim creation/existence
 - `get_worktree_result`: entries with `path`, `branch`, `status`, `dirty state`, `recommendation`, `reason`, and `next safe action`
 - `release_evidence`: recorded evidence plus the release recommendation that keeps destructive action separate
 - `routing_result`: `BLOCKED`, `needs-human-decision`, or `prune-candidate` routing when safety rules require escalation
@@ -118,6 +135,9 @@ Do not use this skill when:
 # Validation
 
 ## Required Checks
+- actual engine mode checked first; Plan/unknown mode permits inspection/guidance only, no lifecycle or metadata writes
+- Default mutation has exact existing authorization; all original safety gates still pass
+- intended paths and planned-only results never assert creation, existence, `cd` or execution
 - repo-root validation passes before any create, get-worktree, release, or remove action
 - `create` uses the canonical managed path family and keeps the worktree outside the repository root
 - `create_result` includes `path`, `branch`, and `next_step`

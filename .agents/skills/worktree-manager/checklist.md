@@ -3,6 +3,15 @@
 Use this checklist for repeatable safety checks. It is operational, not a policy
 summary.
 
+## Mode and authorization checks
+
+- [ ] Actual active engine mode verified; controlled mode labels are policy inputs only.
+- [ ] Plan Mode or unknown mode returns conversation planning/inspection only,
+  with no branch/ref/directory/registration/add/remove/offboarding-metadata write.
+- [ ] Default mutations have exact existing operation/selector/path/branch authority
+  and every original safety gate; do not request permission again when already given.
+- [ ] Planned-only paths are intended, with no existence/created/`cd` claim.
+
 ## Pre-create checks
 
 - [ ] Current directory resolves to the intended Git repository root or a child of it.
@@ -12,13 +21,13 @@ summary.
 - [ ] Sibling family computed from resolved root.parent/root.name, not cwd.
 - [ ] Final destination resolved, outside Git root and within intended family;
   symlink aliases into the Git root block before any mutation.
-- [ ] Absolute create_result path / cd target is identical from root/child cwd.
+- [ ] After actual authorized Default creation, absolute create_result path / cd target is identical from root/child cwd; guidance-only output never claims creation.
 - [ ] Managed path stays outside the repository root.
 - [ ] Preferred branch name is known.
 - [ ] If the preferred branch name already exists, the human has made an explicit reuse-or-rename decision.
 - [ ] Target path does not already exist as an unrelated directory or conflicting worktree.
 - [ ] Shared planning or governance files that may be edited across worktrees are called out with a coordination warning.
-- [ ] Planned output includes `path`, `branch`, and `next_step`.
+- [ ] Actual create_result includes `path`, `branch`, and `next_step` after creation is verified; planned-only output labels intended path and the stop.
 
 ## Pre-release checks
 
@@ -32,12 +41,14 @@ summary.
 - [ ] Lineage is merged, or the human explicitly states the task is abandoned / does not need merge.
 - [ ] `release_evidence.user_intent` is `release`.
 - [ ] `release_evidence.destructive_action_allowed` remains `false`.
-- [ ] Output explains that release does not imply deletion.
+- [ ] Output explains that release does not imply deletion or a Git-state change.
+- [ ] Evidence is response-only; Plan/unknown mode never persists offboarding metadata,
+  and any Default metadata write requires its exact existing authorization.
 
 ## Pre-remove checks
 
 - [ ] Requested operation is clearly `remove worktree`.
-- [ ] Explicit human destructive approval is present in the current request or restated confirmation.
+- [ ] Explicit human destructive approval is already present for this exact selector/operation in the session; no repeated request if authorized.
 - [ ] Target worktree selector resolves to exactly one worktree.
 - [ ] Latest state check shows no tracked changes.
 - [ ] Latest state check shows no untracked files.

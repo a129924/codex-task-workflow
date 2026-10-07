@@ -2,6 +2,21 @@
 
 Use this file for stable operational details that would make `SKILL.md` too dense.
 
+## Actual mode and mutation authority
+
+Verify actual active engine mode before any lifecycle mutation. Plan Mode gives
+conversation planning/inspection only; no add/remove, branch/ref, directory,
+registration or offboarding-metadata write. Unknown/unverified mode supplies no
+mutation permission. Read-only inspection stays available. Default mutation
+requires exact existing operation/selector/path/branch authorization plus all
+original safety checks; do not request the same permission again. Controlled
+mode labels are policy evidence, never actual engine proof. Planned-only output
+labels intended paths and the stop, with no created/existence/`cd` claim.
+
+Release evidence is response-only guidance. It neither deletes a worktree nor
+changes Git state, and cannot silently persist metadata in Plan/unknown mode.
+A Default offboarding write requires exact already-authorized path/action.
+
 ## Lifecycle terminology
 
 - `create`: create a managed worktree and its intended branch lineage at the canonical path.
@@ -34,7 +49,8 @@ Rules:
   never use invocation cwd to interpret `..`, even from a nested child.
 - Resolve the final destination and verify it is outside that Git root, within
   the intended managed family, with no symlink alias into the root.
-- Return absolute path / cd targets so callers cannot reinterpret their cwd.
+- After actual verified Default creation, return absolute path / cd targets.
+  Planned-only output gives an intended absolute path and mode/authorization stop.
 - managed worktrees live outside the repository root
 - default `<prefix>` is `agent`
 - a human may explicitly override the prefix

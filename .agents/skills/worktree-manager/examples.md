@@ -3,6 +3,12 @@
 Use this file for concrete lifecycle scenarios. It expands the concise `SKILL.md`
 examples without redefining the core contract.
 
+All execution examples below require actual Default mode, exact existing
+operation/selector/path/branch authorization and all original safety checks.
+They are illustrative, not evidence that these paths were created. In Plan Mode
+(or unknown mode), give conversation planning/inspection only with intended
+paths and a stop; do not run mutations or claim creation/existence/`cd`.
+
 ## Scenario 1: create a managed worktree
 
 User intent:
@@ -12,10 +18,11 @@ Correct handling:
 - validate that the current directory belongs to the target Git repository
 - resolve absolute Git top-level; from `/workspace/agent-skills` or its nested
   child, construct the same managed sibling path such as `/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`
-- create or attach the intended branch only after confirming there is no branch collision
+- create the intended branch/worktree only in actual Default under exact existing
+  authorization, after confirming all safety conditions and no branch collision
 - return the path, branch, and immediate next step
 
-Example output:
+Example output after actual authorized creation and verification:
 
 ```yaml
 create_result:
@@ -56,7 +63,7 @@ Observed condition:
 Correct handling:
 - produce `release_evidence`
 - keep `destructive_action_allowed: false`
-- recommend `release`
+- recommend `release` as response-only guidance, with no automatic metadata write
 - explain that release removes the worktree from the active working set but does not imply deletion
 
 Example output:
@@ -75,7 +82,7 @@ release_evidence:
     - "Task merged; safe to offboard from active working set."
 recommendation: release
 reason: "Managed worktree is clean and the lineage is complete."
-next safe action: "Mark the worktree as released; use remove worktree later only if explicit destructive cleanup is requested."
+next safe action: "Retain this release recommendation in the conversation. Persist offboarding metadata only in Default with exact existing authorization; remove later only on an explicitly authorized safe remove path."
 ```
 
 ## Scenario 4: dirty or untracked worktree
@@ -191,7 +198,18 @@ review. Do not clean it up. Evidence must precede any fixture removal.
 
 Calling create from `/workspace/agent-skills/src/nested` anchors at the resolved
 Git root `/workspace/agent-skills`, so the same example selector returns
-`/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`. The returned
-cd is absolute. If a candidate family/destination symlink resolves inside
+`/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`. After actual authorized Default creation the returned
+cd is absolute; Plan/unknown-mode guidance reports an intended path and stop only. If a candidate family/destination symlink resolves inside
 `/workspace/agent-skills`, stop before mutation. These are illustrative paths,
 not claims of actually created worktrees. Collisions and destructive gates remain.
+
+## Mode boundary example
+
+A Plan Mode create request returns the intended managed path and explains that
+creation waits for actual Default mode and exact authority. It does not run
+`git worktree add`, create a branch/directory/registration, or offer `cd` as if
+the path exists. A Plan/unknown-mode remove request returns inspection/guidance
+without deletion; release evidence remains in the conversation. An actual
+Default request with missing authorization also stops. Existing exact Default
+authorization is reused once all original gates pass, without asking again.
+Controlled mode inputs test this policy only, not actual Plan-engine execution.
