@@ -350,6 +350,73 @@ class AgentSkillsTestCase(unittest.TestCase):
         finally:
             del sys.modules[spec.name]
 
+    def test_raw_fence_info_is_not_promoted_by_comment_removal(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        invalid = prefix + "\x60\x60\x60lang<!--\x60-->rest\n- [ ] Still pending\n\x60\x60\x60\n"
+        valid_prefix = prefix + "<!-- note -->\n\x60\x60\x60markdown\n- [ ] Example only\n\x60\x60\x60\n"
+        invalid_prefix = prefix + "<!-- note -->\x60\x60\x60markdown\n- [ ] Still pending\n\x60\x60\x60\n"
+        for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+            with self.subTest(operation=operation, fixture="raw-invalid"):
+                result = self.run_cli(operation, invalid)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("[ ] Still pending", result.stdout)
+                self.assertNotIn("SUCCESS", result.stdout)
+            with self.subTest(operation=operation, fixture="comment-prefix-no-promotion"):
+                result = self.run_cli(operation, invalid_prefix)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("[ ] Still pending", result.stdout)
+            with self.subTest(operation=operation, fixture="valid-next-raw-line"):
+                result = self.run_cli(operation, valid_prefix)
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_quote_prefixed_checkboxes_fail_closed_but_quote_prose_does_not(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        for quote in ("> ", ">> ", "> > "):
+            for marker in ("[ ]", "[X]", "[x]", "[?]", "[??]"):
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(quote=quote, marker=marker, operation=operation):
+                        result = self.run_cli(operation, prefix + quote + "- " + marker + " Quoted task\n")
+                        self.assertEqual(result.returncode, 1)
+                        self.assertIn("Unsupported quoted", result.stderr)
+                        self.assertNotIn("SUCCESS", result.stdout)
+        controls = (
+            "> Ordinary quoted prose\n> [documentation](https://example.invalid)\n",
+            "\x60\x60\x60markdown\n> - [ ] Code example\n\x60\x60\x60\n",
+            "<!--\n> - [ ] Comment example\n-->\n",
+            "An indented code example follows:\n    > - [ ] Example only\n",
+        )
+        for content in controls:
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(control=content, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_nested_descriptions_are_prose_only_under_supported_parent(self):
+        for indentation in ("  ", "    "):
+            for marker, expected in (("[X]", 0), ("[ ]", 1), ("[x]", 1)):
+                content = (
+                    "## Implementation Steps\n- " + marker + " Update the bounded write set\n"
+                    + indentation + "- src/example.py\n"
+                    + indentation + "- tests/test_example.py\n"
+                    + "- [X] Run the affected tests\n"
+                )
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(indentation=indentation, marker=marker, operation=operation):
+                        result = self.run_cli(operation, content)
+                        self.assertEqual(result.returncode, expected, result.stderr)
+                        self.assertNotIn("Malformed", result.stderr)
+                        if marker == "[x]":
+                            self.assertIn("lowercase [x]", result.stderr)
+        orphan = "## Implementation Steps\n  - Unowned description\n- [X] Done\n"
+        reset = "## Implementation Steps\n- [X] Done\nBoundary prose\n  - Unknown action\n"
+        unknown_lifecycle = "## Implementation Steps\n- [X] Done\n## Lifecycle\n- Review pending\n"
+        for name, content in (("orphan", orphan), ("reset", reset), ("unknown-lifecycle", unknown_lifecycle)):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                expected = 0 if name == "unknown-lifecycle" and operation == "check_impl_steps_succeeded" else 1
+                with self.subTest(fixture=name, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

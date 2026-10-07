@@ -180,3 +180,16 @@ Progression truth inputs, Completion evidence inputs, Marker semantics,
 Tracker semantics, Owner-only updates. Other labels, empty values, checkbox
 rows or the same labels under other sections are not exempt. The section itself
 is never exempt; implementation-only scope stays Implementation Steps.
+
+## Round3 evidence boundaries
+
+Fence opening validity uses raw backtick info: removing HTML comments cannot
+promote a raw invalid opener or a marker embedded after a same-line comment
+prefix. A legitimate raw opener on a following line remains eligible. Visible quote-prefixed task checkboxes are unsupported
+and block both completion gates, including nested quote prefixes and completed
+or unknown markers; ordinary quoted prose/links and genuine code/comments are
+not task evidence. Non-checkbox indented descriptions under a supported
+top-level checkbox are prose; a pending/lowercase parent still blocks.
+Nested checkboxes remain unsupported across descriptive children. Genuine
+top-level boundaries reset ancestry; orphan/unknown plain actions and the exact
+nine-metadata rule retain fail-closed semantics.

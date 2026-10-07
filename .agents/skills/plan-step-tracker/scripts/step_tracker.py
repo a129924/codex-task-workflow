@@ -138,16 +138,10 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
                 remaining = remaining[opening + 4:]
                 in_comment = True
         line = "".join(fragments)
-        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
-        if marker:
-            token, suffix = marker.groups()
-            if token[0] != "`" or "`" not in suffix:
-                fence = (token[0], len(token))
-                continue
         visible.append(line)
         if line.strip() and not line[0].isspace():
             # Indented descriptions/sub-lists retain their enclosing list.
-            list_context = re.match(r"^(?:[-*+]|\d+[.)])\s+", line) is not None
+            list_context = re.fullmatch(r"- \[[ Xx]\] \S.*", line.rstrip()) is not None
     if in_comment:
         raise ValueError("Unclosed HTML comment in completion evidence")
     return visible
@@ -276,6 +270,7 @@ _HANDOFF_METADATA_KEYS = frozenset({
 def _validate_completion_lines(lines: list[str], *, implementation: bool = False) -> None:
     """Reject unsupported tasks; only the frozen Base metadata is non-task data."""
     in_handoff_notes = False
+    checkbox_parent = False
     for line in lines:
         stripped = line.strip()
         if _ends_implementation_section(line):
@@ -286,7 +281,16 @@ def _validate_completion_lines(lines: list[str], *, implementation: bool = False
         bare_checkbox_like = re.match(
             r"^\[(?:\s|[^\]\s]|\?+)?\](?![(:])", stripped
         )
+        quote = re.match(r"^(?:>\s*)+(.*)$", stripped)
+        if quote and re.match(
+                r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\](?![(:])",
+                quote.group(1)):
+            raise ValueError(f"Unsupported quoted completion step: {line}")
         list_item = re.match(r"^(?:[-*+]|\d+[.)])\s+", stripped)
+        if line and not line[0].isspace() and stripped:
+            checkbox_parent = re.fullmatch(r"- \[[ Xx]\] \S.*", line.rstrip()) is not None
+        if line[:1].isspace() and checkbox_parent and not (list_checkbox_like or bare_checkbox_like):
+            continue  # Descriptive children are prose; nested checkboxes still fail.
         metadata = re.fullmatch(r"- ([^:]+): (\S.*)", line.rstrip())
         if (not implementation and in_handoff_notes and not list_checkbox_like
                 and metadata and metadata.group(1) in _HANDOFF_METADATA_KEYS):
