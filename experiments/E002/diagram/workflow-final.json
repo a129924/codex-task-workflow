@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "YouTrack MCP 驗證設計｜尚未執行",
+    "quality_profile": "showcase",
+    "viewBox": [
+      760,
+      342
+    ]
+  },
+  "lanes": [
+    {
+      "id": "prep",
+      "label": "前置與測試操作"
+    },
+    {
+      "id": "operations",
+      "label": "結案與留存"
+    }
+  ],
+  "mainPath": [
+    "preflight",
+    "identity",
+    "write",
+    "resolve"
+  ],
+  "nodes": [
+    {
+      "id": "preflight",
+      "lane": "prep",
+      "col": 0,
+      "type": "security",
+      "label": "前置與登入",
+      "sublabel": "專案、CIMD、OAuth"
+    },
+    {
+      "id": "identity",
+      "lane": "prep",
+      "col": 2,
+      "type": "backend",
+      "label": "身分與欄位",
+      "sublabel": "get_current_user、schema",
+      "width": 150
+    },
+    {
+      "id": "write",
+      "lane": "prep",
+      "col": 4,
+      "type": "cloud",
+      "label": "建立與更新",
+      "sublabel": "每次寫入後 get_issue"
+    },
+    {
+      "id": "resolve",
+      "lane": "operations",
+      "col": 4,
+      "type": "database",
+      "label": "結案與證據",
+      "sublabel": "resolved、search、紀錄"
+    }
+  ],
+  "edges": [
+    {
+      "id": "flow-0",
+      "from": "preflight",
+      "to": "identity",
+      "role": "main"
+    },
+    {
+      "id": "flow-1",
+      "from": "identity",
+      "to": "write",
+      "role": "main"
+    },
+    {
+      "id": "flow-2",
+      "from": "write",
+      "to": "resolve",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "目前停點",
+      "items": [
+        "專用測試專案尚未建立",
+        "流程是設計，不是成功紀錄"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "事前判準",
+      "items": [
+        "真實 MCP、同一 Ticket ID",
+        "每次寫入後讀取確認"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "結案證據",
+      "items": [
+        "所有 State 欄位須 resolved",
+        "search_issues 確認結案回查"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/private/tmp/codex-task-workflow-worktrees/youtrack-mcp-validation/experiments/E002/diagram/workflow-final.json",
+  "output": "/private/tmp/codex-task-workflow-worktrees/youtrack-mcp-validation/experiments/E002/diagram/workflow.html",
+  "specification": {
+    "sha256": "905e48cb43de27e75885c213d04e1b7b5c6fd7303dbbdaacff1a2fbb55adc00c",
+    "bytes": 2082
+  },
+  "artifact": {
+    "sha256": "7ed1bcbdf9e04e9202cd0f9ccacb00899befc74d35840357ada3e164ac72a9a8",
+    "bytes": 695877
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
