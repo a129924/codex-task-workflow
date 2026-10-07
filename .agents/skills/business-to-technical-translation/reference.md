@@ -4,7 +4,8 @@ Use this file after `SKILL.md` has already narrowed the task to translating a fr
 
 ## Baseline gate
 
-`analysis/<topic>/requirements.md` must already provide:
+A readable frozen `analysis/<topic>/requirements.md`, or an explicitly identified
+complete frozen conversation requirements draft in actual Plan Mode, must provide:
 - named actors and measurable outcomes
 - explicit constraints and non-goals
 - resolved contradictions or clearly marked blockers
@@ -68,3 +69,18 @@ Rollback notes should name:
 1. the failing business assumption
 2. the technical fact that contradicts it
 3. the decision or renegotiation needed before planning can continue
+
+## Actual mode and output boundary
+
+Verify the actual active engine mode before artifact output. Controlled prompt
+mode labels test policy only and cannot certify actual Plan Mode. In Plan Mode
+return conversation-only drafts with explicit intended paths and no file writes,
+existence claims or subagent bypass. In Default execution, file writes require
+the selected feature worktree and exact authorized output paths. Unknown or
+unverified mode never implies write permission; block file output and disclose
+the limit. Preserve measurable baseline content and explicit freeze/blocker state.
+
+A Plan Mode conversation baseline must be complete, explicitly frozen and identified;
+missing/vague/unfrozen input blocks translation. Name intended requirements path
+and content identity, never claim a file was read or exists when only a draft
+was supplied. Default continues to require the readable frozen file baseline.

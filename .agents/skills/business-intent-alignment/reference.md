@@ -4,7 +4,7 @@ Use this file after `SKILL.md` has already narrowed the task to turning business
 
 ## Frozen baseline shape
 
-A strong `analysis/<topic>/requirements.md` usually includes:
+A strong baseline with intended `analysis/<topic>/requirements.md` path usually includes:
 - a short problem statement in business terms
 - named actors and permission boundaries
 - measurable requirements with condition, metric, target, and evidence signal
@@ -72,4 +72,14 @@ Only treat the baseline as ready for downstream technical translation when:
 - contradictions are resolved or explicitly marked as blockers
 - extreme-boundary checks did not reveal hidden requirement changes
 
-If blockers remain, the file should say it is not ready for technical translation yet. Do not disguise a blocked baseline as a frozen one.
+If blockers remain, the baseline should say it is not ready for technical translation yet. Do not disguise a blocked baseline as a frozen one.
+
+## Actual mode and output boundary
+
+Verify the actual active engine mode before artifact output. Controlled prompt
+mode labels test policy only and cannot certify actual Plan Mode. In Plan Mode
+return conversation-only drafts with explicit intended paths and no file writes,
+existence claims or subagent bypass. In Default execution, file writes require
+the selected feature worktree and exact authorized output paths. Unknown or
+unverified mode never implies write permission; block file output and disclose
+the limit. Preserve measurable baseline content and explicit freeze/blocker state.

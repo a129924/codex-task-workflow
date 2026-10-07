@@ -5,7 +5,7 @@ complexity: medium
 risk_profile:
   - ambiguity_sensitive
 use_when:
-  - "`analysis/<topic>/requirements.md` exists and the next step is technical decomposition or feasibility analysis"
+  - "a readable frozen requirements file, or an explicitly identified complete frozen conversation draft in actual Plan Mode, is available for technical translation"
   - the workflow needs explicit technical tasks, artifacts, constraints, and dependency mapping before execution planning starts
   - architecture fit, delivery cost, or operational burden must be tested against the business baseline
   - the request needs a pessimistic implementer view instead of optimistic solution selling
@@ -15,13 +15,13 @@ do_not_use_when:
   - the main work is architecture invention without a frozen baseline to translate
 inputs:
   - topic name and intended `analysis/<topic>/technical-spec.md` path
-  - "`analysis/<topic>/requirements.md` as the business baseline"
+  - "readable frozen requirements file, or complete identified frozen conversation requirements draft in actual Plan Mode"
   - current repository, platform, or system constraints that the design must obey
   - available architecture rules, dependency boundaries, and compliance obligations
   - staffing, timeline, integration, operational, and cost constraints
   - known failure tolerances, rollback expectations, and non-negotiable business priorities
 outputs:
-  - "`analysis/<topic>/technical-spec.md` as the implementation-facing technical baseline"
+  - "technical baseline: conversation draft with intended path in Plan Mode; authorized feature file in Default"
   - requirement-to-technical mapping with tasks, artifacts, and dependency notes
   - cost-of-realization and feasibility constraints for each major workstream
   - architecture-compliance results, conflicts, and rollback-to-alignment triggers
@@ -32,7 +32,8 @@ Turn a frozen business baseline into a technical specification that names the re
 
 # Trigger / When to use
 Use this skill when:
-- `analysis/<topic>/requirements.md` exists and the next step is technical decomposition or feasibility analysis
+- a readable frozen requirements file, or an explicitly identified complete frozen
+  conversation draft in actual Plan Mode, is available for technical translation
 - the workflow needs explicit technical tasks, artifacts, constraints, and dependency mapping before execution planning starts
 - architecture fit, delivery cost, or operational burden must be tested against the business baseline
 - the request needs a pessimistic implementer view instead of optimistic solution selling
@@ -43,14 +44,23 @@ Do not use this skill when:
 - the main work is architecture invention without a frozen baseline to translate
 
 # Inputs
+- verified actual active engine mode; for Default output, selected feature worktree
+  and exact authorized output path
 - topic name and intended `analysis/<topic>/technical-spec.md` path
-- `analysis/<topic>/requirements.md` as the business baseline
+- readable frozen `analysis/<topic>/requirements.md`, or in actual Plan Mode an
+  explicitly identified complete frozen conversation requirements draft with
+  intended path and content identity; no fabricated file or disk-read claim
 - current repository, platform, or system constraints that the design must obey
 - available architecture rules, dependency boundaries, and compliance obligations
 - staffing, timeline, integration, operational, and cost constraints
 - known failure tolerances, rollback expectations, and non-negotiable business priorities
 
 # Process
+0. Verify actual active mode before artifact output. In Plan Mode return only a
+   conversation technical-spec draft with intended path and frozen-input identity;
+   never write files or delegate around the no-write boundary. Default file output
+   requires selected feature worktree and exact authorized path. Unknown/unverified
+   mode blocks file output. Controlled mode labels are not actual engine evidence.
 1. Confirm the task is technical translation, not business discovery or implementation. If the baseline is missing, vague, or contradictory, stop spec authoring and route back to `business-intent-alignment` with the exact gap.
 2. Adopt a pessimistic implementer posture. Assume hidden coupling, operational cost, migration effort, and failure handling all count until proven otherwise.
 3. Map each requirement to the minimum technical realization: components, interfaces, data changes, operational dependencies, validation artifacts, and owner-facing tasks.
@@ -58,14 +68,19 @@ Do not use this skill when:
 5. Run an architecture-compliance self-check against existing standards, boundaries, and supported patterns. Name every fit, mismatch, waiver need, and missing prerequisite explicitly.
 6. Detect conflicts between technical reality and business intent, including schedule impossibility, platform limitations, security/compliance gaps, data constraints, and rollback-risk surfaces.
 7. When conflicts are material, trigger rollback to alignment instead of forcing a false technical plan. State which business assumption failed, what must be renegotiated, and which work remains blocked.
-8. Write `analysis/<topic>/technical-spec.md` with requirement traceability, technical tasks and artifacts, feasibility assessment, architecture-compliance results, conflict notes, and rollback triggers.
+8. Produce the technical baseline with traceability, tasks/artifacts, feasibility,
+   architecture-compliance results, conflicts and rollback triggers. Actual Plan
+   Mode returns a complete conversation draft with intended
+   `analysis/<topic>/technical-spec.md` path; Default writes only the exactly
+   authorized feature path. Do not turn conversation input/output into file claims.
 
 # Examples
 - **Positive**: Translate a frozen offline-order baseline into a technical spec that names local-storage needs, sync tasks, architecture fit checks, staffing pressure, and a rollback trigger if secure offline storage is unavailable on the approved platform.
 - **Negative**: Invent a technical plan from a vague request, ignore platform mismatch because the feature is `strategic`, or skip cost and rollback analysis because the team can `figure it out during implementation`.
 
 # Outputs
-- `analysis/<topic>/technical-spec.md` as the implementation-facing technical baseline
+- mode-appropriate implementation-facing technical baseline: conversation draft
+  with intended path in Plan Mode, or exactly authorized feature file in Default
 - requirement-to-technical mapping with tasks, artifacts, and dependency notes
 - cost-of-realization and feasibility constraints for each major workstream
 - architecture-compliance results, conflicts, and rollback-to-alignment triggers
@@ -97,7 +112,11 @@ Do not use this skill when:
 # Validation
 
 ## Required Checks
-- PASS: `analysis/<topic>/requirements.md` exists and is readable before any technical decomposition begins
+- PASS: before decomposition, actual mode is verified and the frozen input is
+  readable requirements file content, or in actual Plan Mode a complete explicitly
+  identified frozen conversation draft; its intended path is not a disk existence claim
+- Default file output requires exact authorized selected-feature path; Plan Mode
+  never writes, and unknown/unverified mode blocks writes
 - BLOCKED: if the business baseline is missing, vague, or internally contradictory — stop spec authoring and route back to `business-intent-alignment` with the exact gap named
 
 ## Quality Checks
@@ -113,7 +132,9 @@ Do not use this skill when:
 # Failure Handling
 
 ## Missing Context
-- BLOCKED — if `analysis/<topic>/requirements.md` is not provided or cannot be read, stop and route back to `business-intent-alignment`; do not begin technical decomposition
+- BLOCKED — if no readable frozen requirements file or permitted complete frozen
+  conversation baseline is supplied, stop and route back to business-intent-alignment.
+  Missing, vague or unfrozen conversation input also blocks; never invent a file.
 
 ## Ambiguous Requirement
 - if a requirement is present but too vague to translate honestly, surface the specific ambiguity and stop rather than proceeding with guesswork

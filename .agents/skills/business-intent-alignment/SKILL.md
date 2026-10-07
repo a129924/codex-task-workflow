@@ -11,7 +11,7 @@ inputs:
   - "known constraints, dependencies, compliance rules, and failure consequences"
   - "any existing notes, tickets, meeting summaries, or prior contradictions"
 outputs:
-  - "`analysis/<topic>/requirements.md`"
+  - "requirements baseline: conversation draft with intended path in Plan Mode; authorized file in Default execution"
 use_when:
   - "business goals are stated as outcomes, preferences, or urgency without measurable requirements"
   - "stakeholders disagree, omit constraints, or mix goals with assumed solutions"
@@ -39,6 +39,8 @@ Do not use this skill when:
 - the user wants uncommitted brainstorming without converting it into a requirements baseline
 
 # Inputs
+- actual active engine mode, verified independently of any controlled prompt label
+- for Default file output: selected feature worktree and exact authorized output path
 - topic name and intended `analysis/<topic>/requirements.md` path
 - stated business outcomes, success claims, deadlines, and stakeholder expectations
 - target users, actors, permissions, and environments
@@ -46,6 +48,12 @@ Do not use this skill when:
 - any existing notes, tickets, meeting summaries, or prior contradictions
 
 # Process
+0. Verify actual active mode before artifact output. In Plan Mode return only a
+   conversation requirements draft with intended `analysis/<topic>/requirements.md`
+   path; no file writes, existence claims or subagent permission bypass. Default
+   file output requires selected feature worktree and exact authorized path.
+   Unknown/unverified mode supplies no write permission: block file output and
+   state that limitation. Controlled mode labels are policy inputs, not engine proof.
 1. Confirm the task is business-intent alignment rather than technical solutioning or implementation planning.
 2. Adopt a Socratic interviewer posture. Convert every claim into something testable: who needs what outcome, by when, under which conditions, and how success will be observed.
 3. Challenge assumptions directly. Ask hard follow-up questions about actor boundaries, hidden dependencies, incentives, manual work, exception handling, and business loss if the outcome fails.
@@ -57,14 +65,20 @@ Do not use this skill when:
    - time-window, audit, or regulatory edge cases
 5. Surface contradictions explicitly. If one statement conflicts with another, record the conflict, force a decision, and do not smooth it over with vague wording.
 6. Force measurability. Rewrite vague words such as `fast`, `simple`, `accurate`, or `better` into observable thresholds, decision rules, and acceptance signals.
-7. Freeze the resolved baseline into `analysis/<topic>/requirements.md` with measurable requirements, explicit assumptions, non-goals, surfaced contradictions, and any remaining blockers that must be resolved before technical translation.
+7. Freeze the resolved baseline with measurable requirements, explicit assumptions,
+   non-goals, contradictions and remaining blockers. In actual Plan Mode provide
+   the complete identified frozen conversation draft and intended path only;
+   in Default write only the exactly authorized feature path. Never claim a draft
+   path exists on disk or that the draft was read from a file.
 
 # Examples
 - Positive: Turn `make partner onboarding faster` into a baseline that defines actor roles, approval deadlines, measurable completion targets, interruption handling, and explicit contradictions about compliance review timing.
 - Negative: Accept `users want a simple dashboard` as sufficient, skip edge-case questioning, and move straight to technical design without measurable thresholds or contradiction tracking.
 
 # Outputs
-- `analysis/<topic>/requirements.md` as the business baseline for downstream work
+- business baseline for downstream work: a complete identified conversation draft
+  with intended `analysis/<topic>/requirements.md` path in Plan Mode, or the
+  exactly authorized feature file in Default execution
 - measurable requirements with named actors, conditions, thresholds, and acceptance signals
 - explicit assumptions, non-goals, surfaced contradictions, and blocker notes
 - a clear handoff boundary for technical translation
@@ -72,6 +86,8 @@ Do not use this skill when:
 # Validation
 
 ## Required Checks
+- verify actual active mode and mode-appropriate output; Plan Mode never writes
+  files, Default requires exact feature-path authorization, unknown mode blocks writes
 - confirm every in-scope requirement names an actor, a condition, an observable outcome, and a metric or decision rule
 - confirm vague adjectives were rewritten into measurable thresholds or explicit decision rules
 - confirm contradictions are surfaced explicitly and either resolved or marked as blockers

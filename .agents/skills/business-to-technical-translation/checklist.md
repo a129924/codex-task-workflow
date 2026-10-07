@@ -3,8 +3,14 @@
 Use this checklist before treating `analysis/<topic>/technical-spec.md` as review-ready.
 
 - [ ] The task is technical translation of a business baseline, not business discovery or direct implementation.
-- [ ] The output path is explicit: `analysis/<topic>/technical-spec.md`.
-- [ ] `analysis/<topic>/requirements.md` exists and is strong enough to translate:
+- [ ] Actual engine mode verified; controlled mode label is not engine proof.
+- [ ] Plan Mode conversation-only spec has intended path, with no write/existence
+  claim or subagent bypass; Default file requires exact selected-feature authority.
+- [ ] Unknown/unverified mode blocks writes.
+- [ ] Readable frozen requirements file, or in actual Plan Mode an explicitly
+  identified complete frozen conversation draft, is strong enough to translate:
+  - [ ] intended path/content identity retained without fabricating file existence
+  - [ ] missing/vague/unfrozen conversation input blocks
   - [ ] actors and measurable outcomes are explicit
   - [ ] contradictions are resolved or clearly marked as blockers
   - [ ] the baseline is not still using soft business adjectives as requirements
