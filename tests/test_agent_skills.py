@@ -239,6 +239,117 @@ class AgentSkillsTestCase(unittest.TestCase):
         finally:
             del sys.modules[spec.name]
 
+    def test_invalid_backtick_info_does_not_hide_pending(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        for opening in ("```bad`info", "````bad`info"):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(opening=opening, operation=operation):
+                    result = self.run_cli(operation, prefix + opening + "\n- [ ] Still pending\n```\n")
+                    self.assertEqual(result.returncode, 1)
+                    self.assertNotIn("SUCCESS", result.stdout)
+        for opening, closing in (("```", "```"), ("```markdown", "```"), ("~~~bad`info", "~~~"), ("```html <!--", "```")):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(valid_opening=opening, operation=operation):
+                    result = self.run_cli(operation, prefix + opening + "\n- [ ] Example only\n" + closing + "\n")
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn("SUCCESS", result.stdout)
+
+    def test_whole_gate_plain_tasks_and_exact_base_metadata(self):
+        prefix = "## Implementation Steps\n- [X] Implemented\n"
+        for marker in ("-", "*", "+", "1.", "1)"):
+            content = prefix + "## Lifecycle\n" + marker + " Review pending\n"
+            for operation, expected in (("check_all_succeeded", 1), ("check_impl_steps_succeeded", 0)):
+                with self.subTest(marker=marker, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+            result = self.run_cli("read_all", content)
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(result.stdout, "[X] Implemented\n")
+        metadata = (
+            "- Selected profile: base-plan\n"
+            "- Source plan: plan/fixture/fixture.plan.md\n"
+            "- Shared lifecycle shell: .agents/skills/step-creator/templates/shared-lifecycle-shell.md\n"
+            "- Managed worktree intent: topic=fixture; branch=chore/a129924/fixture; managed-path-intent=/disposable/fixture.worktrees/agent-fixture; primary-worktree=false\n"
+            "- Progression truth inputs: plan/fixture/fixture.plan.md; plan/agent-handoff-workflow.md; plan/topic-plan-contract.md\n"
+            "- Completion evidence inputs: controlled CLI markers only, not execution evidence\n"
+            "- Marker semantics: [X] exact evidence; [ ] pending; [x] pending\n"
+            "- Tracker semantics: whole covers all action rows; impl only Implementation Steps\n"
+            "- Owner-only updates: only action owner; no overwrite\n"
+        )
+        # Frozen Base wire shape, with deliberately controlled action markers.
+        base = (
+            "---\ntopic: fixture\nstep_profile: base-plan\nsource_plan: plan/fixture/fixture.plan.md\ncreated: 2026-10-07\n---\n"
+            "# fixture — Step Tracking\n"
+            "## Workflow Stages\n| Current status | Allowed next transitions | Next actor |\n| --- | --- | --- |\n| approved | [] | Implementer |\n"
+            "## Actionable Steps\n### Observer — Fixed Head\n"
+            "- [X] **Actor:** Observer — **Action:** Dispatch authorized feature preparation\n"
+            "- [X] **Actor:** Implementer — **Action:** Verify selected feature\n"
+            "### Contextual Actions\n- [X] **Actor:** Implementer — **Action:** Execute bounded implementation\n"
+            + prefix +
+            "## Observer Actionable Steps — Fixed Tail\n"
+            "- [X] **Actor:** Observer — **Action:** Dispatch assigned checks to Tester\n"
+            "- [X] **Actor:** Tester — **Action:** Execute checks\n"
+            "- [X] **Actor:** Observer — **Action:** Dispatch evidence to independent Reviewer\n"
+            "- [X] **Actor:** Reviewer — **Action:** Return bounded verdict\n"
+            "- [X] **Actor:** Observer — **Action:** Route or stop for human review\n"
+            "## Handoff / Gate Notes\n" + metadata
+        )
+        for variant, content, whole in (
+            ("base-control", base, 0),
+            ("unknown-action", base + "- Review pending\n", 1),
+            ("empty-known-value", base.replace("- Source plan: plan/fixture/fixture.plan.md", "- Source plan: "), 1),
+            ("wrong-section", base.replace("## Handoff / Gate Notes", "## Other Notes"), 1),
+            ("wrong-heading", base.replace("## Handoff / Gate Notes", "## Handoff / Gate Notes extra"), 1),
+            ("checkbox-still-task", base + "- [ ] Pending note action\n", 1),
+            ("malformed-known", base.replace("- Selected profile: base-plan", "* Selected profile: base-plan"), 1),
+        ):
+            for operation, expected in (("check_all_succeeded", whole), ("check_impl_steps_succeeded", 0)):
+                with self.subTest(variant=variant, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if expected:
+                        self.assertNotIn("SUCCESS", result.stdout)
+
+    def test_comments_preserve_visible_tasks_and_real_boundaries(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        cases = {
+            "comment-H1": prefix + "<!--\n# Old heading\n-->\n- [ ] Pending\n",
+            "comment-H2": prefix + "<!--\n## Old heading\n-->\n- [ ] Pending\n",
+            "inline-before-task": prefix + "<!-- old -->- [ ] Pending\n",
+            "inline-after-task": prefix + "- [ ] Pending<!-- old -->\n",
+            "multiline-outside": prefix + "<!-- old\nheading -->- [ ] Pending\n",
+            "comment-only-checkbox": prefix + "<!--\n- [ ] Example only\n-->\n",
+            "real-heading-after-comment": prefix + "<!-- old -->\n# Lifecycle\n- [ ] Pending\n",
+            "fenced-comment-syntax": prefix + "```html\n<!--\n## Old heading\n```\n- [ ] Pending\n",
+            "indented-comment-syntax": prefix + "An indented code example follows:\n    <!--\n    ## Old heading\n- [ ] Pending\n",
+            "unclosed-comment": prefix + "<!--\n- [ ] Pending\n",
+        }
+        for name, content in cases.items():
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                expected = 0 if name == "comment-only-checkbox" or (name == "real-heading-after-comment" and operation == "check_impl_steps_succeeded") else 1
+                with self.subTest(fixture=name, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if name == "unclosed-comment":
+                        self.assertIn("Unclosed HTML comment", result.stderr)
+                    if expected:
+                        self.assertNotIn("SUCCESS", result.stdout)
+        spec = importlib.util.spec_from_file_location("installed_tracker_comment_regression", self.entry)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        try:
+            spec.loader.exec_module(module)
+            with tempfile.TemporaryDirectory(prefix="tracker-comment-parser-") as fixture:
+                plan = Path(fixture) / "plan"
+                target = plan / "fixture/fixture.step.md"
+                target.parent.mkdir(parents=True)
+                for name in ("comment-H1", "comment-H2", "inline-before-task", "multiline-outside"):
+                    target.write_text(cases[name], encoding="utf-8")
+                    with self.subTest(public_parser=name):
+                        self.assertEqual([step.text for step in module.parse_impl_steps("fixture", plan)], ["Done", "Pending"])
+        finally:
+            del sys.modules[spec.name]
+
 
 if __name__ == "__main__":
     unittest.main()

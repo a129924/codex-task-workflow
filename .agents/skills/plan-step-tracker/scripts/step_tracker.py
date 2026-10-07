@@ -79,7 +79,7 @@ def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     impl_lines: list[str] = []
     in_impl_section = False
 
-    for line in _without_fenced_code(lines):
+    for line in _visible_completion_lines(lines):
         stripped = line.strip()
         if stripped == "## Implementation Steps":
             in_impl_section = True
@@ -94,35 +94,62 @@ def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     return _parse_step_lines(impl_lines)
 
 
-def _without_fenced_code(lines: list[str]) -> list[str]:
-    """Exclude code examples while keeping unsupported nested task evidence."""
+def _visible_completion_lines(lines: list[str]) -> list[str]:
+    """Exclude genuine code/comments while preserving unsupported task evidence."""
     visible: list[str] = []
     fence: tuple[str, int] | None = None
     list_context = False
+    in_comment = False
 
-    for line in lines:
-        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
+    for raw_line in lines:
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", raw_line.rstrip("\r\n"))
         if fence is not None:
             if marker:
                 token, suffix = marker.groups()
                 if token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
                     fence = None
             continue
-        if line.startswith(("    ", "\t")):
-            nested_checkbox = re.match(r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\]", line.strip())
-            if list_context and nested_checkbox:
-                visible.append(line)  # Existing validator rejects unsupported nesting.
-            continue
+        if not in_comment and raw_line.startswith(("    ", "\t")):
+            nested_checkbox = re.match(r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\]", raw_line.strip())
+            if not (list_context and nested_checkbox):
+                continue  # Real indented code; its comment tokens have no effect.
+        if not in_comment and marker:
+            token, suffix = marker.groups()
+            if token[0] != "`" or "`" not in suffix:
+                fence = (token[0], len(token))
+                continue  # Comment tokens in a valid fence's info are code too.
+        # Remove only HTML comment spans outside genuine code. Keep all text
+        # before/after a closed span, including headings and pending rows.
+        fragments: list[str] = []
+        remaining = raw_line
+        while remaining:
+            if in_comment:
+                closing = remaining.find("-->")
+                if closing < 0:
+                    break
+                remaining = remaining[closing + 3:]
+                in_comment = False
+            else:
+                opening = remaining.find("<!--")
+                if opening < 0:
+                    fragments.append(remaining)
+                    break
+                fragments.append(remaining[:opening])
+                remaining = remaining[opening + 4:]
+                in_comment = True
+        line = "".join(fragments)
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
         if marker:
-            token = marker.group(1)
-            fence = (token[0], len(token))
-            continue
+            token, suffix = marker.groups()
+            if token[0] != "`" or "`" not in suffix:
+                fence = (token[0], len(token))
+                continue
         visible.append(line)
         if line.strip() and not line[0].isspace():
             # Indented descriptions/sub-lists retain their enclosing list.
-            # Only a real top-level non-list boundary clears that ancestry.
             list_context = re.match(r"^(?:[-*+]|\d+[.)])\s+", line) is not None
-
+    if in_comment:
+        raise ValueError("Unclosed HTML comment in completion evidence")
     return visible
 
 def _parse_step_lines(lines: list[str]) -> list[Step]:
@@ -213,7 +240,7 @@ def read_success(topic: str, plan_dir: Path = Path("plan")) -> int:
 def check_all_succeeded(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Check if all steps are complete. Exit 0 if yes, 1 if any pending."""
     try:
-        lines = _without_fenced_code(_read_step_lines(topic, plan_dir))
+        lines = _visible_completion_lines(_read_step_lines(topic, plan_dir))
         _validate_completion_lines(lines)
         steps = _parse_step_lines(lines)
     except (OSError, UnicodeError, ValueError) as e:
@@ -238,20 +265,33 @@ def check_all_succeeded(topic: str, plan_dir: Path = Path("plan")) -> int:
     return 1
 
 
+_HANDOFF_METADATA_KEYS = frozenset({
+    "Selected profile", "Source plan", "Shared lifecycle shell",
+    "Managed worktree intent", "Progression truth inputs",
+    "Completion evidence inputs", "Marker semantics", "Tracker semantics",
+    "Owner-only updates",
+})
+
+
 def _validate_completion_lines(lines: list[str], *, implementation: bool = False) -> None:
-    """Reject malformed checkbox evidence without changing read-only queries."""
+    """Reject unsupported tasks; only the frozen Base metadata is non-task data."""
+    in_handoff_notes = False
     for line in lines:
         stripped = line.strip()
+        if _ends_implementation_section(line):
+            in_handoff_notes = stripped == "## Handoff / Gate Notes"
         list_checkbox_like = re.match(
             r"^(?:[-*+]|\d+[.)])\s+\[[^\]]*\](?![(:])", stripped
         )
         bare_checkbox_like = re.match(
             r"^\[(?:\s|[^\]\s]|\?+)?\](?![(:])", stripped
         )
-        top_level_list_item = implementation and re.match(
-            r"^(?:[-*+]\s|\d+[.)]\s)", line
-        )
-        if list_checkbox_like or bare_checkbox_like or top_level_list_item:
+        list_item = re.match(r"^(?:[-*+]|\d+[.)])\s+", stripped)
+        metadata = re.fullmatch(r"- ([^:]+): (\S.*)", line.rstrip())
+        if (not implementation and in_handoff_notes and not list_checkbox_like
+                and metadata and metadata.group(1) in _HANDOFF_METADATA_KEYS):
+            continue
+        if list_checkbox_like or bare_checkbox_like or list_item:
             if not re.fullmatch(r"- \[[ Xx]\] \S.*", line.rstrip()):
                 raise ValueError(f"Malformed or unsupported completion step: {line}")
 
@@ -259,7 +299,7 @@ def _validate_completion_lines(lines: list[str], *, implementation: bool = False
 def check_impl_steps_succeeded(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Check if all implementation steps are complete. Exit 0 if yes, 1 if any pending."""
     try:
-        lines = _without_fenced_code(_read_step_lines(topic, plan_dir))
+        lines = _visible_completion_lines(_read_step_lines(topic, plan_dir))
         headings = [i for i, line in enumerate(lines) if line.strip() == "## Implementation Steps"]
         if len(headings) != 1:
             raise ValueError("Expected exactly one Implementation Steps section")

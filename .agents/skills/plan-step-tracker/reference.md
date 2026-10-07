@@ -82,3 +82,22 @@ errors return explanatory stderr and exit 1 without a traceback. Both gates
 ignore genuine code examples, require whitespace-only matching fence closure,
 and reject unsupported nested checklist evidence rather than hiding it. The
 implementation-only parser/gate stops at non-fenced H1/H2 headings, not H3+.
+
+## Round2 visible completion evidence
+
+Only valid backtick fence openers (no backtick in the info suffix) and valid
+tilde fences enter code mode. Matching whitespace-only closing rules remain.
+Outside genuine fenced/indented code, HTML comment spans are removed before
+headings or checkbox evidence are interpreted; text outside closed spans stays
+visible. Unclosed comments return a blocking error. The public implementation
+parser and both completion gates share these boundaries; read queries remain
+permissive. This is bounded evidence handling, not a full Markdown parser.
+
+The whole-file completion gate rejects unknown/plain task-like list rows too.
+Only under exact `## Handoff / Gate Notes`, exact top-level `- Label: value`
+rows with nonempty values for these existing nine labels are metadata:
+Selected profile, Source plan, Shared lifecycle shell, Managed worktree intent,
+Progression truth inputs, Completion evidence inputs, Marker semantics,
+Tracker semantics, Owner-only updates. Other labels, empty values, checkbox
+rows or the same labels under other sections are not exempt. The section itself
+is never exempt; implementation-only scope stays Implementation Steps.
