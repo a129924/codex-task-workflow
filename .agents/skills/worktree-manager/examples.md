@@ -10,7 +10,8 @@ User intent:
 
 Correct handling:
 - validate that the current directory belongs to the target Git repository
-- construct a managed path such as `../agent-skills.worktrees/agent-20260507-worktree-skill`
+- resolve absolute Git top-level; from `/workspace/agent-skills` or its nested
+  child, construct the same managed sibling path such as `/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`
 - create or attach the intended branch only after confirming there is no branch collision
 - return the path, branch, and immediate next step
 
@@ -18,9 +19,9 @@ Example output:
 
 ```yaml
 create_result:
-  path: "../agent-skills.worktrees/agent-20260507-worktree-skill"
+  path: "/workspace/agent-skills.worktrees/agent-20260507-worktree-skill"
   branch: "feat/andrew/worktree-skill"
-  next_step: "cd ../agent-skills.worktrees/agent-20260507-worktree-skill && continue work inside this worktree"
+  next_step: "cd /workspace/agent-skills.worktrees/agent-20260507-worktree-skill && continue work inside this worktree"
 notes:
   - "Coordinate planner / observer owned files if multiple worktrees may touch them."
 ```
@@ -99,7 +100,7 @@ User intent:
 - "Clean up `/some/other/path/my-worktree`."
 
 Observed condition:
-- the path does not match `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`
+- the path does not match `<resolved-git-root-parent>/<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`
 
 Correct handling:
 - classify it as unmanaged
@@ -185,3 +186,12 @@ stops for human decision without deletion. Existing ordinary worktrees still
 require explicit human destructive approval and all original safety gates.
 The feature worktree for this topic is not a fixture and must remain for human
 review. Do not clean it up. Evidence must precede any fixture removal.
+
+## Nested invocation and symlink refusal
+
+Calling create from `/workspace/agent-skills/src/nested` anchors at the resolved
+Git root `/workspace/agent-skills`, so the same example selector returns
+`/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`. The returned
+cd is absolute. If a candidate family/destination symlink resolves inside
+`/workspace/agent-skills`, stop before mutation. These are illustrative paths,
+not claims of actually created worktrees. Collisions and destructive gates remain.

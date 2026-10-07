@@ -52,7 +52,10 @@ Do not use this skill when:
 - explicit human choice when branch-name collision requires reuse or rename
 
 # Process
-1. Confirm the current directory belongs to the intended Git repository.
+1. Resolve the intended absolute Git top-level using
+   `git rev-parse --show-toplevel`, then resolve filesystem aliases. The caller
+   may be at repo root or any nested child; never anchor managed paths at cwd.
+   Confirm that resolved root identifies the intended Git repository.
    - If repo-root validation fails, return `BLOCKED`, tell the operator to switch to the correct repository, and make no worktree mutation.
 2. Resolve the requested lifecycle operation exactly as one of `create`, `get-worktree`, `release worktree`, or `remove worktree`.
    - If the intent is ambiguous (for example, "clean up this worktree"), stop and ask whether the user means `release worktree` or `remove worktree`.
@@ -60,15 +63,22 @@ Do not use this skill when:
    - Determine managed status from path policy first.
    - Surface a planner / observer coordination warning whenever shared planning, governance, or other cross-worktree files may be touched.
 4. For `create`:
-   - Build the managed path as `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`.
+   - Construct the sibling family from `resolved_root.parent` and
+     `resolved_root.name + ".worktrees"`, using path-safe prefix/name components.
+     Resolve the final destination (including existing symlinks) and prove it
+     lies outside the resolved Git root and in the intended sibling family
+     before any mutation. A symlink alias into the Git root is BLOCKED.
+   - Build the managed path as `<resolved-git-root-parent>/<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`.
    - Keep the managed worktree outside the repository root.
    - If the target path already exists and is not the intended worktree, stop for human review instead of improvising.
    - If the preferred branch name already exists, stop for an explicit reuse-or-rename decision; do not silently reuse the lineage.
    - Create the branch and worktree only after the path and branch decisions are unambiguous.
+   - Return an absolute unambiguous path and `cd` next step. The same selector
+     from a nested cwd must resolve to the same sibling path as from repo root.
    - Return at least this contract:
      ```yaml
      create_result:
-       path: "../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>"
+       path: "<absolute-resolved-managed-path>"
        branch: "<branch-name>"
        next_step: "cd <path> && continue work inside this worktree"
      ```

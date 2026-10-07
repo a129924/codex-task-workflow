@@ -26,9 +26,15 @@ inspection or ask for clarification instead of mutating state.
 
 Managed worktrees use this path family:
 
-`../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`
+`<resolved-git-root-parent>/<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`
 
 Rules:
+- Resolve `git rev-parse --show-toplevel` to the absolute intended Git root.
+- Compute the sibling family from root.parent / (root.name + ".worktrees");
+  never use invocation cwd to interpret `..`, even from a nested child.
+- Resolve the final destination and verify it is outside that Git root, within
+  the intended managed family, with no symlink alias into the root.
+- Return absolute path / cd targets so callers cannot reinterpret their cwd.
 - managed worktrees live outside the repository root
 - default `<prefix>` is `agent`
 - a human may explicitly override the prefix
@@ -36,7 +42,7 @@ Rules:
 - metadata or plan context may add notes, but they do not replace path policy
 
 Examples:
-- managed: `../agent-skills.worktrees/agent-20260507-worktree-skill`
+- managed: `/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`
 - unmanaged: `../scratch/worktree-skill`
 - unmanaged: `.github/worktrees/worktree-skill`
 

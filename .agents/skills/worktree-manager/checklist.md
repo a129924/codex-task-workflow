@@ -7,7 +7,12 @@ summary.
 
 - [ ] Current directory resolves to the intended Git repository root or a child of it.
 - [ ] Requested operation is clearly `create`, not `get-worktree`, `release worktree`, or `remove worktree`.
-- [ ] Managed path follows `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`.
+- [ ] Managed path follows `<resolved-git-root-parent>/<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`.
+- [ ] Absolute intended Git root resolved via git rev-parse --show-toplevel.
+- [ ] Sibling family computed from resolved root.parent/root.name, not cwd.
+- [ ] Final destination resolved, outside Git root and within intended family;
+  symlink aliases into the Git root block before any mutation.
+- [ ] Absolute create_result path / cd target is identical from root/child cwd.
 - [ ] Managed path stays outside the repository root.
 - [ ] Preferred branch name is known.
 - [ ] If the preferred branch name already exists, the human has made an explicit reuse-or-rename decision.
