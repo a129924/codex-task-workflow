@@ -99,7 +99,7 @@ label it a negative input, never an actually executed implementation verdict.
 | Role/result input | Expected route |
 | --- | --- |
 | Plan-Reviewer approved + declared next Implementer | Implementer; preserve approved native |
-| Plan-Reviewer approved without declared next | stop |
+| Plan-Reviewer approved without declared next, or with Tester/Reviewer | stop |
 | Plan-Reviewer needs-rework | Plan-Creator |
 | Implementer PASS + declared next Tester | Tester |
 | Reviewer PATCH_REQUIRED | Implementer |
@@ -128,6 +128,14 @@ runtime. Capture complete output/exit code and inspect no source edits.
 | Missing / empty / duplicate Implementation section with other done checkbox | only implementation completion 1; reads/whole checks retain source semantics |
 | Missing .step.md | All five operations exit 1 with file-not-found error |
 | Only fenced example checkboxes | Both completion checks 1; examples are not evidence |
+
+The new PR-comment regression additions verify every operation rejects unsafe
+topics and external symlink targets without outside output or traceback; they
+cover read/encoding failures, true fence closure, nested-checklist refusal,
+H1/H2 implementation boundaries and platform-default temporary directories.
+Actual targeted Tester completed the fixes' own final 12-method / 128-call
+suite and four exact G11 rechecks; the original 5-test / 37-call result below
+remains historical.
 
 The five operations are read_all, read_not_run, read_success, check_all_succeeded,
 check_impl_steps_succeeded. Missing/empty/duplicate section expectations do not
@@ -172,7 +180,8 @@ worktree, source checkout, dev worktree, existing worktrees or any remote refs.
 
 ## Evaluation and current state
 
-Actual Tester `/root/tester` reported all six original groups PASS. Independent
+For the original delivery head `2afebb1a259b163ee47d3b95c6d11ef199dc7591`,
+actual Tester `/root/tester` reported all six original groups PASS. Independent
 Reviewer `/root/explorer` returned overall bounded PASS with no blocking issues
 on 2026-10-07. The final review checks the original TestCase and ten-entry mapping,
 not universal availability, Task product behavior, publication or human merge.
@@ -186,10 +195,10 @@ not universal availability, Task product behavior, publication or human merge.
 | 5. Tracker | PASS: five tests / thirty-seven installed CLI calls |
 | 6. Worktree | PASS: four actual lifecycle operations and eleven refusal gates |
 
-Evidence: [Tester report](/private/tmp/agent-skill-implementation-review/test-report.md),
-[structured index](/private/tmp/agent-skill-implementation-review/test-report.json),
-[independent final review](/private/tmp/agent-skill-implementation-review/code-review/final-review.md)
-and [review result](/private/tmp/agent-skill-implementation-review/code-review/final-review.json).
+Evidence: `/private/tmp/agent-skill-implementation-review/test-report.md`,
+`/private/tmp/agent-skill-implementation-review/test-report.json`,
+`/private/tmp/agent-skill-implementation-review/code-review/final-review.md`
+and `/private/tmp/agent-skill-implementation-review/code-review/final-review.json`.
 The earlier Tester index pending overall-gate field is historical; the separate
 final-review result provides the later independent gate. Tests were not rerun
 for this documentation closeout.
@@ -205,5 +214,33 @@ Optional source pytest was neither installed nor run; no universal guarantee,
 product implementation, publishing or human-review approval is inferred.
 The real feature worktree remains available for human review; only the verified
 same-run disposable child was removed. External evidence and temporary primary
-fixtures are retained. The final documentation delta still requires its bounded
-independent check before the already-authorized publication handoff.
+fixtures are retained. The original documentation delta completed its independent PASS in
+`/private/tmp/agent-skill-implementation-review/code-review/doc-sync-review.json`.
+These code-formatted evidence paths are local-session only and unavailable
+through the PR; nothing is uploaded. The authorized PR-comment fixes now have
+separate actual targeted Tester `/root/tester` PASS and independent Reviewer
+`/root/explorer` PASS covering 14 groups / all 18 threads. Final suite: 12 test
+methods / 128 CLI calls; four exact G11 notes/description continuation rechecks
+return exit 1 without false success. The prior 43-input replay is retained at
+its initial-fixed runtime version; it was not repeated or attributed to the
+final runtime. No unchanged full-six-group/analysis/discovery sessions were
+repeated. Neither historical six-group PASS nor 5 tests / 37 calls substitutes
+for this current runtime evidence.
+
+Actual installed-byte-equal prompt snapshot applications cover seven routing
+cases, three selection/prelaunch cases and the template. Controlled contextual
+inputs and genuinely reused result IDs remain labeled; no new dispatch or
+native planning approval is invented. Forty-two captured Git fixture commands
+verify absolute root/child anchoring, internal/symlink refusal, preserved refs
+and guarded same-run clean child removal, with actual feature retained.
+
+Current local-only evidence:
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/targeted-test-report.json`,
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/targeted-test-report.md`,
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.md`.
+Observed current suite environment is macOS / Python3.14.0 / default tempfile;
+no Linux/universal model claim. Historical failed-attempt/freeze limits, original
+doc-sync chronology and source-license limitation remain. These paths cannot
+be downloaded through the PR. Human review is still the stop; thread resolution
+has not been inferred from the implementation PASS.

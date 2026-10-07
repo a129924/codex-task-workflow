@@ -1,13 +1,23 @@
 # agent-skill-implementation
 
-Recorded from the user-approved conversation plan, without reopening its locked
-scope. The user subsequently authorized feature-worktree implementation and
+Recorded from the independently approved conversation plan and user-approved
+baseline, without reopening locked scope. The genuine prior Plan-Reviewer
+`/root/plan_reviewer` returned approved for the planning-only additions. Its
+historical captured conversation result is retained locally at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/historical-planning-approval.json`.
+That is an earlier actual tool-result capture, not newly issued native review
+JSON; live archived-agent availability is not asserted. User acceptance and
+subsequent execution authorization are distinct from independent plan review.
+This file records that existing baseline and does not issue a fresh verdict. The user subsequently authorized feature-worktree implementation and
 commit-by-topic -> push -> Draft PR -> human review. Those delivery actions
 supersede the earlier local-only delivery stop for this topic only; they do not
 make publication automatic for installed skills. Actual Tester six-group PASS
 and independent Reviewer `/root/explorer` overall bounded PASS now have external
 evidence; this recorded plan itself is not the approval or test evidence. The
-final documentation delta still requires bounded review before publication.
+original documentation delta subsequently received independent PASS; the
+authorized PR-comment runtime/contract fixes now have separate actual targeted
+Tester PASS and independent Reviewer PASS; historical approval and earlier
+installation evidence remain distinct from those current results.
 
 Optional analysis warning: analysis/agent-skill-implementation/requirements.md
 and analysis/agent-skill-implementation/technical-spec.md are absent. The approved
@@ -38,7 +48,9 @@ conversation plan is the recorded baseline; no alternate requirements are added.
 - Seven permitted roles with Code aliases; independent reviews; native
   approved/needs-rework JSON; no simulated dispatch or claimed gate evidence.
 - base-plan is supported; both source specialized profiles block preflight.
-- Tracker Python >=3.11, stdlib, unchanged runtime semantics; installed script
+- Tracker Python >=3.11, stdlib and the original five-operation contract;
+  authorized PR-comment fixes tighten path validation and Markdown boundaries.
+  The source checkout remains unchanged. Use the installed script
   path and target-root cwd, no source checkout dependency during use.
 - Stable-library intent absent; README navigation is not promotion; no VERSION,
   registry, publishing library, tag or release dependency.
@@ -66,8 +78,9 @@ conversation plan is the recorded baseline; no alternate requirements are added.
 
 ## Status / Allowed Transitions
 
-- **Current**: approved (the conversation planning baseline accepted by user;
-  this file records that baseline, not a new independent reviewer verdict).
+- **Current**: approved (genuine earlier independent `/root/plan_reviewer`
+  planning-only approval plus user-accepted baseline; this file records those
+  existing decisions, not a newly issued verdict or smoke-fixture approval).
 - **Allowed next planning transitions**: none; approved ends planning.
 - **Next actor**: Implementer.
 - **Stage-local action**: Complete bounded installation and verification handoff.
@@ -90,7 +103,7 @@ conversation plan is the recorded baseline; no alternate requirements are added.
 | Planning skill | .agents/skills/plan-creator/ | Implementer | Complete pinned directory plus local adaptation |
 | Planning review | .agents/skills/plan-reviewer/ | Implementer | Complete pinned directory plus local adaptation |
 | Step creation | .agents/skills/step-creator/ | Implementer | Complete pinned directory plus Base-only adaptation |
-| Tracker | .agents/skills/plan-step-tracker/ | Implementer | Unchanged Python runtime and installed-path guidance |
+| Tracker | .agents/skills/plan-step-tracker/ | Implementer | Pinned runtime with authorized PR safety fixes and installed-path guidance |
 | Business analysis | .agents/skills/business-intent-alignment/ | Implementer | Complete unchanged pinned directory |
 | Technical translation | .agents/skills/business-to-technical-translation/ | Implementer | Complete unchanged pinned directory |
 | Dispatch | .agents/skills/subagent-dispatch-policy/ | Implementer | Seven bounded roles and real dispatch |
@@ -133,9 +146,48 @@ and do not enlarge the repo write set. Path drift stops for bounded plan review.
 - Tracker distinguishes implementation completion from pending lifecycle,
   lowercase [x] remains pending with warning, missing/empty/duplicate sections
   fail only the implementation completion operation while other behavior stays.
-- Source manifest exact; unchanged runtime and companions byte-for-byte;
-  adapters reviewed; product ReadOnly hashes unchanged; no unapproved paths.
+- Source manifest exact; unchanged imported files byte-for-byte, with adapted
+  tracker/runtime/companions recorded after the authorized PR fixes; product
+  ReadOnly hashes unchanged and no unapproved paths.
 - No all-skills-usable claim while any group is pending, blocked or unverified.
+
+Actual Tester `/root/tester` six-group PASS and
+independent Reviewer `/root/explorer` overall bounded PASS are recorded in
+`/private/tmp/agent-skill-implementation-review/test-report.json`
+and `/private/tmp/agent-skill-implementation-review/code-review/final-review.json`,
+with readable `/private/tmp/agent-skill-implementation-review/test-report.md`
+and `/private/tmp/agent-skill-implementation-review/code-review/final-review.md`.
+This establishes the ten installed skills' bounded supported uses in the observed
+macOS/Codex/Python >=3.11/Git fixture environment, Base profile only. Failed CLI
+attempts are retained and excluded from successful counts; current hashes cannot
+independently reconstruct the historical analysis freeze sequence. Source
+LICENSE/COPYING absence and optional pytest not run remain documented limits.
+No universal guarantee, Task product implementation, publication or human-review
+approval is implied. The original status-documentation delta completed its independent PASS at
+`/private/tmp/agent-skill-implementation-review/code-review/doc-sync-review.json`.
+These plain local-session paths are unavailable through the PR and are not
+uploaded. The authorized PR-comment fixes now have separate actual targeted
+Tester `/root/tester` PASS and independent Reviewer `/root/explorer` PASS for
+all 14 groups / 18 threads. The final suite passes 12 methods / 128 CLI calls
+on observed macOS / Python3.14.0 / default tempfile; four exact G11 continuation
+rechecks fail closed. The previous 43-input replay stays versioned to the initial
+fixed runtime and was not repeated or recast as final-runtime proof.
+
+Actual installed-byte-equal snapshot checks include seven routing cases, three
+selection/prelaunch cases and template consistency; genuine existing result IDs
+are reused and controlled inputs labeled, with no new dispatch/native approval.
+Forty-two captured Git fixture commands verify root/child absolute sibling
+anchoring, internal/symlink refusal and exact safe fixture-child cleanup.
+Current local-session evidence:
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/targeted-test-report.json`,
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/targeted-test-report.md`,
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.md`.
+It is unavailable through the PR. Original six-group / 5-test / 37-call and
+doc-sync results stay historical; current changed-runtime validation is separate.
+No universal environment claim or human approval is implied. Publication and
+per-thread resolution remain separately authorized; human review remains the
+stop and the actual feature worktree is preserved.
 
 ## Reviewer Handoff
 
@@ -159,18 +211,4 @@ uses existing graph navigation or targeted source fallback, not an implicit buil
 
 ## Open Questions / Unresolved Items
 
-No unresolved scope decisions. Actual Tester `/root/tester` six-group PASS and
-independent Reviewer `/root/explorer` overall bounded PASS are recorded in
-[test-report.json](/private/tmp/agent-skill-implementation-review/test-report.json)
-and [final-review.json](/private/tmp/agent-skill-implementation-review/code-review/final-review.json),
-with readable [test report](/private/tmp/agent-skill-implementation-review/test-report.md)
-and [final review](/private/tmp/agent-skill-implementation-review/code-review/final-review.md).
-This establishes the ten installed skills' bounded supported uses in the observed
-macOS/Codex/Python >=3.11/Git fixture environment, Base profile only. Failed CLI
-attempts are retained and excluded from successful counts; current hashes cannot
-independently reconstruct the historical analysis freeze sequence. Source
-LICENSE/COPYING absence and optional pytest not run remain documented limits.
-No universal guarantee, Task product implementation, publication or human-review
-approval is implied. The final status-documentation delta awaits bounded
-independent checking, then the separately authorized topic publication handoff
-stops at human review and preserves the actual feature worktree.
+None: no unresolved scope or required-input decisions.

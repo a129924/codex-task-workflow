@@ -45,7 +45,8 @@ explicitly unsupported and stop before any write. No python-plan-authoring or
 11th skill is installed. The Base lifecycle ends at local reviewable delivery;
 publication needs a separate explicit authorization and retains human review.
 
-Tracker requires Python >=3.11 and only stdlib. Run from the target repo root:
+Tracker requires Python >=3.11 and only stdlib. Use the python3 command and
+run from the target repo root:
 
 ```sh
 python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all <topic>
@@ -56,8 +57,10 @@ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_impl_step
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
 ```
 
-The source tracker runtime and its companion pytest tests are unchanged. pytest
-is optional for those source tests and is not installed as part of this topic;
+The installed tracker runtime was initially copied unchanged. The authorized
+PR-comment fixes now adapt its topic/path validation, error handling and Markdown
+boundaries. The source checkout and imported companion pytest tests remain
+unchanged. pytest is optional for those source tests and is not installed;
 the repository's acceptance harness uses unittest. Do not confuse checkbox
 completion with actual artifact, approval or test evidence.
 
@@ -78,8 +81,9 @@ Source-specific absolute paths are provenance only; runtime invocations use
 installed entrypoints from the target repo. No global install, hooks, registry,
 provider, Task runtime or third-party package dependency is added.
 
-## Verification status
+## Verification history and PR-fix status
 
+At the original delivery head `2afebb1a259b163ee47d3b95c6d11ef199dc7591`,
 TC-AGENT-SKILLS-001 completed all six groups with actual Tester `/root/tester`
 PASS. Independent Reviewer `/root/explorer` returned overall bounded PASS on
 2026-10-07, with no blocking issues. Actual discovery, ten intended uses,
@@ -88,13 +92,43 @@ tracker operations and four isolated worktree lifecycle operations were reviewed
 Tracker evidence contains 5 tests / 37 installed CLI calls; worktree evidence
 contains 11 refusal cases. No static file check substitutes for these exercises.
 
-- [Tester report](/private/tmp/agent-skill-implementation-review/test-report.md)
-  and [structured index](/private/tmp/agent-skill-implementation-review/test-report.json)
-- [Independent final review](/private/tmp/agent-skill-implementation-review/code-review/final-review.md)
-  and [native result](/private/tmp/agent-skill-implementation-review/code-review/final-review.json)
+- `/private/tmp/agent-skill-implementation-review/test-report.md`
+  and `/private/tmp/agent-skill-implementation-review/test-report.json`
+- `/private/tmp/agent-skill-implementation-review/code-review/final-review.md`
+  and `/private/tmp/agent-skill-implementation-review/code-review/final-review.json`
 - [TestCase procedure](testcases/TC-AGENT-SKILLS-001.md)
 
-This supports normal bounded use in the observed macOS feature worktree, actual
+The original bounded documentation closeout also received independent PASS in
+`/private/tmp/agent-skill-implementation-review/code-review/doc-sync-review.json`.
+These plain paths are local-session evidence only, unavailable through this PR;
+no evidence is uploaded. Original PASS establishes the originally reviewed
+snapshot, not the runtime and prompt fixes now being applied.
+
+The PR-comment fix stage now has actual targeted Tester `/root/tester` PASS and
+independent Reviewer `/root/explorer` PASS for all 14 groups / 18 threads. The
+final suite passed 12 test methods / 128 CLI calls on observed macOS,
+Python3.14.0 and platform-default temporary directories. Four exact G11
+continuation/sub-list repros now fail closed. Those final checks cover the last
+two-file ancestry correction; the earlier 43-input replay remains versioned
+to the initial fixed runtime and was not falsely relabeled or repeated.
+
+Actual Tester policy applications checked seven routing cases, three
+selection/prelaunch cases and the current-state template using unchanged
+installed-byte-equal snapshots. Genuine earlier result identities were reused;
+contextual/malformed inputs are controlled cases, not new role sessions or
+fabricated dispatch. Forty-two captured Git fixture commands verified root/child
+cwd anchoring, internal/symlink refusal and exact guarded fixture-child cleanup.
+
+The separate current evidence is retained locally at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/targeted-test-report.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review/targeted-test-report.md`, with independent review at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.md`. These are local-session paths,
+unavailable through this PR. Original 5 tests / 37 CLI calls and 62 reviewed
+initial evidence refs remain historical; they are not new-runtime proof. No
+unchanged analysis/discovery/full-six-group sessions were repeated.
+
+Original bounded use was observed in the macOS feature worktree, actual
 Codex runtime and retained disposable fixtures, with Python >=3.11 and Git.
 It is not a guarantee for arbitrary models, environments or unsupported profiles.
 The earlier Tester index's pending overall-gate snapshot is superseded by the
@@ -112,10 +146,11 @@ are separate from this TestCase. Retain the actual topic feature worktree.
 
 ## Imported-file adaptation manifest
 
-32 files adapted; 14 unchanged. Scope: installed paths, local role boundaries,
+34 files adapted; 12 unchanged. Scope: installed paths, local role boundaries,
 Base-only profile and shell, native planning verdict routing, fixture-only
 worktree authorization and minimal shared contracts. Analysis skills and tracker
-Python runtime/tests remain unchanged.
+companion Python tests remain unchanged. The installed tracker runtime now
+contains the authorized PR-comment safety fixes; source pin remains provenance.
 
 | Imported path | Pin comparison |
 | --- | --- |
@@ -149,7 +184,7 @@ Python runtime/tests remain unchanged.
 | `.agents/skills/plan-step-tracker/SKILL.md` | adapted |
 | `.agents/skills/plan-step-tracker/examples.md` | adapted |
 | `.agents/skills/plan-step-tracker/reference.md` | adapted |
-| `.agents/skills/plan-step-tracker/scripts/step_tracker.py` | unchanged |
+| `.agents/skills/plan-step-tracker/scripts/step_tracker.py` | adapted |
 | `.agents/skills/plan-step-tracker/tests/test_step_tracker.py` | unchanged |
 | `.agents/skills/step-creator/SKILL.md` | adapted |
 | `.agents/skills/step-creator/checklist.md` | adapted |
@@ -160,7 +195,7 @@ Python runtime/tests remain unchanged.
 | `.agents/skills/step-creator/references/python-plan-authoring-adapter.md` | adapted |
 | `.agents/skills/step-creator/templates/shared-lifecycle-shell.md` | adapted |
 | `.agents/skills/subagent-dispatch-policy/SKILL.md` | adapted |
-| `.agents/skills/subagent-dispatch-policy/examples.md` | unchanged |
+| `.agents/skills/subagent-dispatch-policy/examples.md` | adapted |
 | `.agents/skills/worktree-manager/SKILL.md` | adapted |
 | `.agents/skills/worktree-manager/checklist.md` | adapted |
 | `.agents/skills/worktree-manager/examples.md` | adapted |
