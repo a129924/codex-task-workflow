@@ -67,7 +67,10 @@ Round3 selfcheck uses the previously authorized external pytest9.1.1 venv only;
 no runtime dependency is added. The repository's acceptance harness uses unittest. Do not confuse checkbox
 completion with actual artifact, approval or test evidence.
 
-worktree-manager requires Git and exact selectors. Ordinary/existing worktree
+worktree-manager requires Git, verified actual active mode and exact selectors.
+Plan/unknown mode permits conversation planning/inspection only, no lifecycle
+or metadata mutation. Default uses existing exact authorization and every
+safety gate; a planned-only result never claims creation or cd. Ordinary/existing worktree
 removal requires explicit human destructive approval. Only this TestCase's
 same-run disposable-repo fixture may use the already-granted test authorization,
 with proof of exact creation, managed non-primary path, clean/no-untracked state,
@@ -329,3 +332,62 @@ contains the authorized PR-comment safety fixes; source pin remains provenance.
 | `.agents/skills/worktree-manager/checklist.md` | adapted |
 | `.agents/skills/worktree-manager/examples.md` | adapted |
 | `.agents/skills/worktree-manager/reference.md` | adapted |
+
+## Round4 bounded PR fixes — independent verification PASS
+
+The five-group correction received actual independent Tester /root/tester
+PASS and independent Reviewer /root/explorer PASS. The once-run affected suite
+passed 21 tests / 303 CLI calls, and the unchanged 703-line companion passed
+56/56 once using the existing external pytest 9.1.1 venv. Twenty separate CLI
+replays over ten immutable fixtures verified seven corrected bug outcomes.
+Earlier 18 tests / 251 CLI calls and 56 companion tests remain historical Round3
+observations; original 5/37, Round1 12/128 and Round2 15/189 stay separate.
+
+The installed tracker now uses column-zero Implementation Steps openers and
+H1/H2 boundaries consistently; nested headings cannot cut or reopen scope or
+manufacture metadata sections. Explicit raw blockquote fence containers preserve
+quote depth and raw info validity; container exit/lower depth is reprocessed as
+visible evidence. Naked quoted task rows remain unsupported. This is bounded
+syntax handling, not a full Markdown parser.
+
+worktree-manager checks actual active mode before any lifecycle mutation.
+Plan/unknown mode gives conversation planning/inspection only; no Git/ref,
+directory/registration or offboarding-metadata writes. Default mutation still
+requires exact existing operation/selector authorization and all original safety
+gates. Controlled labels are policy-only; actual Plan-engine behavior remains
+unverified. A planned-only path is intended, never a created-path or cd claim.
+
+New evidence and disposable fixtures derive from one recorded resolved
+platform-default tempfile.mkdtemp root (or an explicitly authorized configurable
+root). Historical /private/tmp references below remain actual local observations,
+not requirements for a new run and not downloadable through the PR. No Linux
+execution or full original six-group retest is claimed.
+
+This Round4 run's actual platform-selected local evidence root is
+`/private/var/folders/x9/3v967ts5131dfn6x4bsy9th00000gn/T/agent-skill-review-round4-xd8la0hj`.
+Its targeted-test-report.json / targeted-test-report.md record the actual
+Tester result, and final-review.json / final-review.md the later independent
+Reviewer PASS. The Tester index originally pending overall-review field is a
+historical handoff snapshot; the separate final-review artifact records completion.
+These paths are local-only and unavailable through the PR; no evidence is uploaded.
+
+Actual Default created and inspected one owned disposable managed worktree using
+15 recorded fixture Git commands. Five controlled Plan/unknown/missing-authority
+cases caused no file, ref or registration mutation. The child remains retained;
+no remove or offboarding metadata write was executed. Reviewer originally selected
+this run root with host-default tempfile.mkdtemp. Separately, Tester ran the
+documented selector once using explicitly authorized configurable TMPDIR under
+this root: that proves the configured variant, not an unoverridden host-default
+selection by Tester. Actual Plan-engine behavior and Linux remain unverified.
+
+The preserved external guard-capture correction records an overly narrow literal
+None suffix assertion; comparing exact original Open Questions bytes then passed.
+It was a capture error, not a runtime failure, and caused no repository edit or
+test rerun. Implementer selfcheck is not independent evidence. No original
+six-group retest or fresh planning approval cycle was performed. All 46 imports remain pinned to
+60b3b5b77515c354ed355c1adb28a8ed349dda67; current comparison is still 41 adapted /
+5 unchanged. No source/global/dev/product or immutable companion changes.
+Last read-only source HEAD observation is the externally moved
+34f943b26fb007c2d773e37599356a4b9d6c1674,
+without reset or repin. Retain the production feature for human review; no
+merge, release or cleanup.
