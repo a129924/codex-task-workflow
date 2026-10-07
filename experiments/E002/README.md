@@ -32,7 +32,7 @@
 
 ## 環境與前置條件
 
-- 真實目標：`https://a129924-tasks.youtrack.cloud/mcp`；tenant 版本仍未獨立查證；CIMD 初次回傳 false，使用者啟用後重新探測回傳 true。本輪真實 MCP 讀寫證實此帳號對 MCPTEST 的必要可見性與操作權限。
+- 真實目標：`https://a129924-tasks.youtrack.cloud/mcp`；tenant 版本於 review 階段（2026-10-07 07:41:57 UTC）從公開版本 metadata 確認為 YouTrack 2026.2、build 19197（`evidence/tenant-version.json`）；CIMD 初次回傳 false，使用者啟用後重新探測回傳 true。本輪真實 MCP 讀寫證實此帳號對 MCPTEST 的必要可見性與操作權限。
 - Client：目前 Codex；CLI 0.160.1；feature branch `chore/a129924/youtrack-mcp-validation`，基底 `994b509b645755744836d0a8e2baf0056e353799`。
 - 專用測試專案：使用者已建立，Project ID 為 `MCPTEST`；本輪 `find_projects` 與 `get_project` 均經認證後 MCP 確認。
 - `.codex/config.toml` 僅在此 feature worktree 設定 HTTP/OAuth，不含 credentials；Codex 信任該 project 後已載入工具。
@@ -66,7 +66,7 @@ codex mcp login youtrack_feasibility --oauth-client-registration cimd
 ## 是否成功
 
 - 本輪完整驗證日期：2026-10-07。
-- 實驗狀態：**成功**；TC01–TC05 均由真實 MCP 呼叫與寫後讀取支持，TC06 因建立回應明確而不需要執行。
+- 實驗狀態：**成功**；TC01–TC05 均由真實 MCP 呼叫與寫後讀取支持，TC06 因建立回應明確而不需要執行。版本缺口已於 review 階段補查；此處為補齊證據後的判讀，測試當時未獨立保存 tenant build。
 - 本輪驗證任務完成：**是**；同一張 `MCPTEST-1` 的 ID、中文、換行與 resolved 回查有證據。
 - 結果僅支持這一組帳號、tenant、專案與當前 client 條件；正式 Task 整合及採用仍待獨立決策與 human review。
 
@@ -75,12 +75,13 @@ codex mcp login youtrack_feasibility --oauth-client-registration cimd
 已觀察：feature worktree 已建立；CLI 功能說明已查；global Codex 設定未見 YouTrack server；本 topic 無既有 Graphify graph／runtime source，使用限定搜尋 fallback，沒有 graph build 或 provider 呼叫。
 
 - [topic plan](../../plan/youtrack-mcp-validation/youtrack-mcp-validation.plan.md)：九欄邊界、有限實驗與使用者追加的 commit／push／Draft PR 授權。
-- [預期驗證流程](diagram/workflow.html)：先前準備階段的 Archify 設計示意；其中「測試專案未建立」停點現已解除，當前停點為 client／MCP 工具載入。固定 Viewer UI／HTML language fallback English。
+- [預期驗證流程](diagram/workflow.html)：先前準備階段的 Archify 設計示意；其中「測試專案未建立」與 client／MCP 工具載入均為準備階段的歷史停點，已在後續驗證解除；目前停在 PR #2 的 human review。固定 Viewer UI／HTML language fallback English。
 - [產物交付 receipt](diagram/delivery.json) 與 [桌面視覺 receipt](diagram/workflow.visual-check.json)：只證明本地圖表，不能作為 MCP 證據。
 - `evidence/preflight.json`：先前準備階段的歷史 snapshot。
 - `evidence/oauth-preflight.json`：初次公開 metadata／MCP endpoint 探測及設定載入觀察，CIMD false 是當時結果。
 - `evidence/oauth-login.json`：使用者啟用後 CIMD true、CLI 登入成功及當前對話工具未載入的紀錄；不含 credentials、帳號或服務 scope ID。
 - `evidence/mcp-ticket-validation.json`：本輪真實 MCP 工具、去敏身分確認、專案 schema、單張票的各次寫後讀取與 resolved 搜尋結果。先前 `oauth-login.json` 保留當時工具未載入的歷史 snapshot。
+- `evidence/tenant-version.json`：2026-10-07 review 階段補查的公開 tenant 版本 metadata（2026.2、build 19197）；未使用 credentials 或執行 Ticket REST 操作。
 - `evidence/visual-review.md`：真實閱圖狀態與限制。
 
 `MCPTEST-1` 的初次讀取與更新後讀取均比對同一 ID、專案、標題與完整描述。最終更新使用 schema 列出的 `Done`；回讀 State 顯示本地化的「已完成」，`resolvedAt` 為 `2026-10-07 07:18:30`，按 ID 搜尋及 `issue id: MCPTEST-1 #Resolved` 均只回傳同一張票。完整去敏摘要見新增證據檔。
@@ -89,4 +90,4 @@ PR Lens 已對先前真實 topic commits 製作本地 change map；本輪驗證�
 ## 結論與限制
 
 `MCPTEST` 已由真實 MCP 確認，登入代號經使用者核對；當前 Codex 對話透過官方 MCP 完成同一張 Ticket 的建立、讀取、更新、結案與回查。因此 E002 在指定條件下成功。未切換 token／REST、未刪測試票、未建立正式 plugin。
-正式採用仍交回原整合決策與 review；Draft PR 停在 human review。
+版本是在驗證後的 review 階段補查，不能據此證明驗證當時的 build；原先成功判讀的版本證據缺口現已補齊，事前判準保持不變。正式採用仍交回原整合決策與 review；PR #2 已轉為 Ready for review，停在 human review。

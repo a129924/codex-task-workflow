@@ -10,4 +10,4 @@
 - automated receipt 的 `visualReview: pending` 是工具固定語意；人工檢視另在此保存，不改写 receipt。
 - 最終 light／dark、最小／最大尺寸截图由本輪 agent 逐張檢視後記錄。圖文、箭頭與卡片完整，沒有裁切，繁中內容可讀；固定 Viewer UI 與 HTML language 為 English fallback。
 
-圖表與 README 均保留「尚未執行」標示；沒有 OAuth／Ticket 執行證據。
+圖表保留準備階段的「尚未執行」標示，是歷史設計 snapshot；本次視覺檢查只驗證圖表呈現。後續 OAuth／Ticket 執行結果見 E002 README 與 `mcp-ticket-validation.json`，不以圖表作為實驗成功證據。
