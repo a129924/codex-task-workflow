@@ -15,9 +15,11 @@ make publication automatic for installed skills. Actual Tester six-group PASS
 and independent Reviewer `/root/explorer` overall bounded PASS now have external
 evidence; this recorded plan itself is not the approval or test evidence. The
 original documentation delta subsequently received independent PASS; the
-authorized PR-comment runtime/contract fixes now have separate actual targeted
-Tester PASS and independent Reviewer PASS; historical approval and earlier
-installation evidence remain distinct from those current results.
+Round1 PR-comment runtime/contract fixes at
+`f0f484e27c06cb0387a48f16d712eaf5830ecea0` have separate actual targeted Tester PASS
+and independent Reviewer PASS. Round2 actual Tester and independent Reviewer
+also returned seven-group PASS; historical approval and earlier installation
+evidence remain distinct from those targeted results.
 
 Optional analysis warning: analysis/agent-skill-implementation/requirements.md
 and analysis/agent-skill-implementation/technical-spec.md are absent. The approved
@@ -166,7 +168,8 @@ No universal guarantee, Task product implementation, publication or human-review
 approval is implied. The original status-documentation delta completed its independent PASS at
 `/private/tmp/agent-skill-implementation-review/code-review/doc-sync-review.json`.
 These plain local-session paths are unavailable through the PR and are not
-uploaded. The authorized PR-comment fixes now have separate actual targeted
+uploaded. The Round1 PR-comment fixes at
+`f0f484e27c06cb0387a48f16d712eaf5830ecea0` have separate actual targeted
 Tester `/root/tester` PASS and independent Reviewer `/root/explorer` PASS for
 all 14 groups / 18 threads. The final suite passes 12 methods / 128 CLI calls
 on observed macOS / Python3.14.0 / default tempfile; four exact G11 continuation
@@ -184,10 +187,66 @@ Current local-session evidence:
 `/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.json`
 and `/private/tmp/agent-skill-implementation-review/pr-comment-review/final-review.md`.
 It is unavailable through the PR. Original six-group / 5-test / 37-call and
-doc-sync results stay historical; current changed-runtime validation is separate.
+doc-sync results stay historical; Round2 changed-runtime validation is separate.
 No universal environment claim or human approval is implied. Publication and
 per-thread resolution remain separately authorized; human review remains the
 stop and the actual feature worktree is preserved.
+
+### Round2 targeted verification status
+
+Round2 user-authorized fixes address seven additional review threads. The tracker
+rejects invalid backtick info openers, excludes HTML comments outside genuine
+code before evidence/heading interpretation, and fails closed on unknown plain
+task rows throughout the file. The only metadata exception is the existing nine
+exact nonempty label/value bullets under exact Handoff / Gate Notes; no entire
+section is exempt. Read-query behavior and implementation-only scope remain.
+
+Routing examples now show actual Implementer PASS -> declared Tester followed
+by actual Tester PASS -> declared independent Reviewer. PATCH_REQUIRED and
+REPLAN_REQUIRED require independent Reviewer / Code-Reviewer; other roles stop.
+Immutable Base generation requires terminal approved plus explicit empty planning
+transitions, Implementer and bounded action before any temporary/final write;
+all five earlier/rework states stop. Context examples use exact illustrative
+requirements/spec/plan paths and do not certify files exist.
+
+Round2 actual Tester `/root/tester` returned PASS, and independent Reviewer
+`/root/explorer` returned PASS for all seven groups / seven new threads with
+no findings. Tester ran one 15-method suite with 189 captured CLI calls on
+observed macOS / Python3.14.0 / default tempfile, then retained the twelve
+fixed-baseline replay calls showing expected contrasts. The genuine Base wire
+control preserves nine metadata rows; unknown Handoff actions block.
+
+Twenty-three actual Tester routing applications passed, including twelve
+explicitly controlled incompatible role/verdict copies. Genuine Implementer,
+Tester and Reviewer result identities were retained. The historical Reviewer
+REPLAN result belongs only to its original controlled drift fixture; it is no
+new production judgment or planning approval. Controlled aliases/context inputs
+do not represent additional agents or dispatches.
+
+Actual approved-source Base generation preserved three verbatim ordered items,
+eleven pending action markers and nine metadata rows. Five canonical unapproved
+copies were BLOCKED with no output/temp or protected-byte change. Context
+application preserved three exact readable requirements/spec/plan paths; both
+positive examples name consistent illustrative paths without certifying their
+existence. Pending generation markers and all-[X] CLI controls prove no execution
+completion. Independent review includes the generated artifact and these limits.
+
+An initial external capture-schema failure excluded twelve earlier probes from
+successful evidence; corrected capture retained the same twelve baseline calls.
+The full suite ran once. See local-only
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/targeted-test-report.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/targeted-test-report.md`,
+with independent review at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/final-review.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/final-review.md`.
+The excluded attempt is recorded in
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/replay-capture-attempt-failure.json`.
+These local paths are unavailable from the PR; no evidence was uploaded.
+Original 5/37 and Round1 12/128 remain historical snapshots. No original
+six-group session, new profile, dependency or native approval was added.
+This factual synchronization records completed Round2 verification; its
+documentation-only delta remains a separate bounded review artifact.
+Human review remains the stop and the actual feature worktree is retained.
 
 ## Reviewer Handoff
 

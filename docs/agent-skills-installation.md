@@ -39,7 +39,9 @@ Missing contracts or required inputs stop. The local contracts keep the source
 source publishing library's VERSION/registry/release workflow. README navigation
 alone is not stable publishing. Code aliases map to Implementer and Reviewer.
 
-step-creator supports only base-plan, including local development tools. The
+step-creator supports only base-plan from an independently approved terminal
+source with []/none planning transitions, exact Implementer next actor and bounded
+implementation action; all five earlier/rework states stop before any write. The
 source specialized agent-skill-plan / python-implementation-plan profiles are
 explicitly unsupported and stop before any write. No python-plan-authoring or
 11th skill is installed. The Base lifecycle ends at local reviewable delivery;
@@ -81,7 +83,7 @@ Source-specific absolute paths are provenance only; runtime invocations use
 installed entrypoints from the target repo. No global install, hooks, registry,
 provider, Task runtime or third-party package dependency is added.
 
-## Verification history and PR-fix status
+## Verification history and Round1 PR-fix status
 
 At the original delivery head `2afebb1a259b163ee47d3b95c6d11ef199dc7591`,
 TC-AGENT-SKILLS-001 completed all six groups with actual Tester `/root/tester`
@@ -104,7 +106,7 @@ These plain paths are local-session evidence only, unavailable through this PR;
 no evidence is uploaded. Original PASS establishes the originally reviewed
 snapshot, not the runtime and prompt fixes now being applied.
 
-The PR-comment fix stage now has actual targeted Tester `/root/tester` PASS and
+The Round1 PR-comment stage at `f0f484e27c06cb0387a48f16d712eaf5830ecea0` has actual targeted Tester `/root/tester` PASS and
 independent Reviewer `/root/explorer` PASS for all 14 groups / 18 threads. The
 final suite passed 12 test methods / 128 CLI calls on observed macOS,
 Python3.14.0 and platform-default temporary directories. Four exact G11
@@ -144,9 +146,65 @@ switch. Optional source pytest tests were not installed or run. Evidence remains
 external. The Task product is still unimplemented; publication and human review
 are separate from this TestCase. Retain the actual topic feature worktree.
 
+## Round2 bounded fixes and current status
+
+Round2 user-authorized fixes address seven additional review threads. The tracker
+rejects invalid backtick info openers, excludes HTML comments outside genuine
+code before evidence/heading interpretation, and fails closed on unknown plain
+task rows throughout the file. The only metadata exception is the existing nine
+exact nonempty label/value bullets under exact Handoff / Gate Notes; no entire
+section is exempt. Read-query behavior and implementation-only scope remain.
+
+Routing examples now show actual Implementer PASS -> declared Tester followed
+by actual Tester PASS -> declared independent Reviewer. PATCH_REQUIRED and
+REPLAN_REQUIRED require independent Reviewer / Code-Reviewer; other roles stop.
+Immutable Base generation requires terminal approved plus explicit empty planning
+transitions, Implementer and bounded action before any temporary/final write;
+all five earlier/rework states stop. Context examples use exact illustrative
+requirements/spec/plan paths and do not certify files exist.
+
+Round2 actual Tester `/root/tester` returned PASS, and independent Reviewer
+`/root/explorer` returned PASS for all seven groups / seven new threads with
+no findings. Tester ran one 15-method suite with 189 captured CLI calls on
+observed macOS / Python3.14.0 / default tempfile, then retained the twelve
+fixed-baseline replay calls showing expected contrasts. The genuine Base wire
+control preserves nine metadata rows; unknown Handoff actions block.
+
+Twenty-three actual Tester routing applications passed, including twelve
+explicitly controlled incompatible role/verdict copies. Genuine Implementer,
+Tester and Reviewer result identities were retained. The historical Reviewer
+REPLAN result belongs only to its original controlled drift fixture; it is no
+new production judgment or planning approval. Controlled aliases/context inputs
+do not represent additional agents or dispatches.
+
+Actual approved-source Base generation preserved three verbatim ordered items,
+eleven pending action markers and nine metadata rows. Five canonical unapproved
+copies were BLOCKED with no output/temp or protected-byte change. Context
+application preserved three exact readable requirements/spec/plan paths; both
+positive examples name consistent illustrative paths without certifying their
+existence. Pending generation markers and all-[X] CLI controls prove no execution
+completion. Independent review includes the generated artifact and these limits.
+
+An initial external capture-schema failure excluded twelve earlier probes from
+successful evidence; corrected capture retained the same twelve baseline calls.
+The full suite ran once. See local-only
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/targeted-test-report.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/targeted-test-report.md`,
+with independent review at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/final-review.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/final-review.md`.
+The excluded attempt is recorded in
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round2/replay-capture-attempt-failure.json`.
+These local paths are unavailable from the PR; no evidence was uploaded.
+Original 5/37 and Round1 12/128 remain historical snapshots. No original
+six-group session, new profile, dependency or native approval was added.
+This factual synchronization records completed Round2 verification; its
+documentation-only delta remains a separate bounded review artifact.
+Human review remains the stop and the actual feature worktree is retained.
+
 ## Imported-file adaptation manifest
 
-34 files adapted; 12 unchanged. Scope: installed paths, local role boundaries,
+35 files adapted; 11 unchanged. Scope: installed paths, local role boundaries,
 Base-only profile and shell, native planning verdict routing, fixture-only
 worktree authorization and minimal shared contracts. Analysis skills and tracker
 companion Python tests remain unchanged. The installed tracker runtime now
@@ -163,7 +221,7 @@ contains the authorized PR-comment safety fixes; source pin remains provenance.
 | `.agents/skills/business-to-technical-translation/examples.md` | unchanged |
 | `.agents/skills/business-to-technical-translation/reference.md` | unchanged |
 | `.agents/skills/context-package-builder/SKILL.md` | adapted |
-| `.agents/skills/context-package-builder/examples.md` | unchanged |
+| `.agents/skills/context-package-builder/examples.md` | adapted |
 | `.agents/skills/handoff-routing-policy/SKILL.md` | adapted |
 | `.agents/skills/handoff-routing-policy/examples.md` | adapted |
 | `.agents/skills/plan-creator/SKILL.md` | adapted |
