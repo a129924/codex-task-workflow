@@ -5,6 +5,7 @@ skill discovery, independent review, dispatch or worktree authorization policy.
 """
 from pathlib import Path
 import os
+import importlib.util
 import subprocess
 import sys
 import tempfile
@@ -18,7 +19,7 @@ class AgentSkillsTestCase(unittest.TestCase):
     operations = ("read_all", "read_not_run", "read_success", "check_all_succeeded", "check_impl_steps_succeeded")
 
     def run_cli(self, operation, content):
-        with tempfile.TemporaryDirectory(prefix="TC-AGENT-SKILLS-001-", dir="/private/tmp") as fixture:
+        with tempfile.TemporaryDirectory(prefix="TC-AGENT-SKILLS-001-") as fixture:
             if content is not None:
                 destination = Path(fixture) / "plan/fixture/fixture.step.md"
                 destination.parent.mkdir(parents=True)
@@ -100,6 +101,143 @@ class AgentSkillsTestCase(unittest.TestCase):
             with self.subTest(operation=operation, fixture="fenced-only"):
                 result = self.run_cli(operation, fenced)
                 self.assertEqual(result.returncode, 1)
+
+    def test_unsafe_topics_never_read_outside_fixture(self):
+        with tempfile.TemporaryDirectory(prefix="tracker-outside-") as outside:
+            sentinel = Path(outside) / "sentinel.step.md"
+            original = "## Implementation Steps\n- [X] OUTSIDE_SENTINEL\n"
+            sentinel.write_text(original, encoding="utf-8")
+            topics = (str(sentinel.with_suffix("")), "a/b", "a\\b", ".", "..", "")
+            for topic in topics:
+                for operation in self.operations:
+                    with self.subTest(topic=topic, operation=operation):
+                        with tempfile.TemporaryDirectory(prefix="tracker-topic-") as fixture:
+                            result = subprocess.run([sys.executable, str(self.entry), operation, topic], cwd=fixture, text=True, capture_output=True, check=False)
+                        self.assertEqual(result.returncode, 1)
+                        self.assertIn("Error:", result.stderr)
+                        self.assertNotIn("Traceback", result.stderr)
+                        self.assertNotIn("OUTSIDE_SENTINEL", result.stdout + result.stderr)
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), original)
+
+    def test_symlink_escape_is_rejected_by_every_operation(self):
+        with tempfile.TemporaryDirectory(prefix="tracker-links-") as fixture, tempfile.TemporaryDirectory(prefix="tracker-outside-") as outside:
+            root = Path(fixture)
+            sentinel = Path(outside) / "escape.step.md"
+            original = "## Implementation Steps\n- [X] OUTSIDE_SENTINEL\n"
+            sentinel.write_text(original, encoding="utf-8")
+            for variant in ("topic-directory", "step-file", "plan-root"):
+                plan = root / "plan"
+                if variant == "plan-root":
+                    plan.symlink_to(outside, target_is_directory=True)
+                else:
+                    plan.mkdir()
+                    topic = plan / "escape"
+                    if variant == "topic-directory":
+                        topic.symlink_to(outside, target_is_directory=True)
+                    else:
+                        topic.mkdir()
+                        (topic / "escape.step.md").symlink_to(sentinel)
+                for operation in self.operations:
+                    with self.subTest(variant=variant, operation=operation):
+                        result = subprocess.run([sys.executable, str(self.entry), operation, "escape"], cwd=root, text=True, capture_output=True, check=False)
+                        self.assertEqual(result.returncode, 1)
+                        self.assertIn("resolves outside", result.stderr)
+                        self.assertNotIn("Traceback", result.stderr)
+                        self.assertNotIn("OUTSIDE_SENTINEL", result.stdout + result.stderr)
+                if plan.is_symlink():
+                    plan.unlink()
+                else:
+                    if topic.is_symlink():
+                        topic.unlink()
+                    else:
+                        (topic / "escape.step.md").unlink()
+                        topic.rmdir()
+                    plan.rmdir()
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), original)
+
+    def test_read_failures_return_errors_without_traceback(self):
+        for variant in ("directory", "invalid-utf8"):
+            with tempfile.TemporaryDirectory(prefix="tracker-read-error-") as fixture:
+                target = Path(fixture) / "plan/fixture/fixture.step.md"
+                target.parent.mkdir(parents=True)
+                if variant == "directory":
+                    target.mkdir()
+                else:
+                    target.write_bytes(bytes([255]))
+                for operation in self.operations:
+                    with self.subTest(variant=variant, operation=operation):
+                        result = subprocess.run([sys.executable, str(self.entry), operation, "fixture"], cwd=fixture, text=True, capture_output=True, check=False)
+                        self.assertEqual(result.returncode, 1)
+                        self.assertIn("Error:", result.stderr)
+                        self.assertNotIn("Traceback", result.stderr)
+                        self.assertEqual(result.stdout, "")
+
+    def test_fences_require_matching_whitespace_only_closure(self):
+        fences = (("```", "```not-a-closing-fence", "```"), ("~~~", "~~~not-a-closing-fence", "~~~"), ("````", "```", "````"), ("~~~~", "~~~", "~~~~"), ("```", "~~~", "```"), ("~~~", "```", "~~~"))
+        for opening, false_close, real_close in fences:
+            content = "## Implementation Steps\n- [X] Done\n" + opening + "markdown\n" + false_close + "\n- [X] Example only\n" + real_close + "  \n- [ ] Pending\n"
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(opening=opening, false_close=false_close, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, 1)
+                    self.assertIn("[ ] Pending", result.stdout)
+                    self.assertNotIn("Example only", result.stdout)
+
+    def test_nested_tasks_fail_closed_but_code_examples_are_ignored(self):
+        for indentation in ("  ", "    ", "\t"):
+            for marker in ("[ ]", "[X]"):
+                content = "## Implementation Steps\n- [X] Parent\n" + indentation + "- " + marker + " Child\n"
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(indentation=indentation, marker=marker, operation=operation):
+                        result = self.run_cli(operation, content)
+                        self.assertEqual(result.returncode, 1)
+                        self.assertIn("Malformed or unsupported", result.stderr)
+        for continuation in ("  - Notes", "  Description"):
+            content = "## Implementation Steps\n- [X] Parent\n" + continuation + "\n    - [ ] Child\n"
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(continuation=continuation, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, 1)
+                    self.assertIn("Malformed or unsupported", result.stderr)
+        code = "## Implementation Steps\n- [X] Implemented\n\nAn indented code example follows:\n\n    - [ ] Example only\n"
+        for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+            with self.subTest(operation=operation, fixture="indented-code"):
+                result = self.run_cli(operation, code)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("SUCCESS", result.stdout)
+
+    def test_implementation_heading_boundaries(self):
+        for heading in ("# Lifecycle", "## Lifecycle"):
+            content = "## Implementation Steps\n- [X] Implemented\n" + heading + "\n- [ ] Review pending\n"
+            for operation, expected in (("check_impl_steps_succeeded", 0), ("check_all_succeeded", 1)):
+                with self.subTest(heading=heading, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+        for content in ("## Implementation Steps\n- [X] Implemented\n### More implementation\n- [ ] Pending\n", "## Implementation Steps\n- [X] Implemented\n```markdown\n# Example heading\n```\n- [ ] Pending\n"):
+            with self.subTest(content=content):
+                result = self.run_cli("check_impl_steps_succeeded", content)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("[ ] Pending", result.stdout)
+
+    def test_public_parsers_share_path_and_section_boundaries(self):
+        spec = importlib.util.spec_from_file_location("installed_tracker_regression", self.entry)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        try:
+            spec.loader.exec_module(module)
+            with tempfile.TemporaryDirectory(prefix="tracker-parser-") as fixture:
+                plan = Path(fixture) / "plan"
+                target = plan / "fixture/fixture.step.md"
+                target.parent.mkdir(parents=True)
+                target.write_text("## Implementation Steps\n- [X] Implemented\n# Lifecycle\n- [ ] Review pending\n", encoding="utf-8")
+                self.assertEqual([step.text for step in module.parse_impl_steps("fixture", plan)], ["Implemented"])
+                self.assertEqual([step.text for step in module.parse_steps("fixture", plan)], ["Implemented", "Review pending"])
+                for parser in (module.parse_steps, module.parse_impl_steps):
+                    with self.subTest(parser=parser.__name__):
+                        with self.assertRaises(ValueError):
+                            parser("../escape", plan)
+        finally:
+            del sys.modules[spec.name]
 
 
 if __name__ == "__main__":

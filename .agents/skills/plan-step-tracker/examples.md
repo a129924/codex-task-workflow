@@ -40,7 +40,7 @@ Returns both done and pending steps.
 ### Python CLI
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all my-feature
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all my-feature
 [X] plan-authoring
 [X] plan-review
 [ ] implementation
@@ -84,7 +84,7 @@ Returns only steps with `[ ]` or `[x]` (pending markers).
 ### Python CLI
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_not_run my-feature
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_not_run my-feature
 [ ] implementation
 [ ] implementation-review
 [ ] code-review
@@ -128,7 +128,7 @@ Returns only steps with `[X]` (done marker).
 ### Python CLI
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_success my-feature
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_success my-feature
 [X] plan-authoring
 [X] plan-review
 [X] 1. Setup environment
@@ -157,7 +157,7 @@ Returns SUCCESS if all done; BLOCKED if any pending.
 ### Scenario A: All Steps Done
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature-complete
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature-complete
 ✅ SUCCESS: All 3 steps complete
 ```
 
@@ -166,7 +166,7 @@ $ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succ
 ### Scenario B: Pending Steps Exist (BLOCKING)
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature
 ❌ BLOCKED: 7 steps pending (exit code 1)
 [ ] implementation
 [ ] implementation-review
@@ -204,13 +204,13 @@ created: 2025-01-15
 ### Behavior
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all empty-topic
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all empty-topic
 # (empty output)
 
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_not_run empty-topic
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_not_run empty-topic
 # (empty output)
 
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded empty-topic
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded empty-topic
 ❌ BLOCKED: No valid steps found
 ```
 
@@ -223,7 +223,7 @@ $ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succ
 Topic directory exists but `.step.md` is missing.
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all nonexistent-topic
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all nonexistent-topic
 Error: File not found: plan/nonexistent-topic/nonexistent-topic.step.md
 ```
 
@@ -254,10 +254,10 @@ Follow these steps manually:
 ### Behavior
 
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all no-checkboxes
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py read_all no-checkboxes
 # (empty output)
 
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded no-checkboxes
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded no-checkboxes
 ❌ BLOCKED: No valid steps found
 ```
 
@@ -274,7 +274,7 @@ set -e
 TOPIC="my-feature"
 
 # Marker query only: failure stops this local handoff.
-if ! python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded "$TOPIC"; then
+if ! python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded "$TOPIC"; then
   echo "Local handoff blocked: incomplete checkbox evidence"
   exit 1
 fi

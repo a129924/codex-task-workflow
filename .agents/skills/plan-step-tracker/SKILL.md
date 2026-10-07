@@ -41,7 +41,9 @@ Do not use this skill when:
 
 # Inputs
 
-- `<topic>`: required topic name; resolves to `plan/<topic>/<topic>.step.md`
+- `<topic>`: one non-empty path component, excluding absolute paths, either
+  separator and dot/dotdot. Resolves only within the intended repo-local plan
+  root; external symlink targets are rejected before reading.
 - `<operation>`: one of `read_all`, `read_not_run`, `read_success`, `check_all_succeeded`, or `check_impl_steps_succeeded`
 - current working directory at repository root so the Python CLI and fallback paths resolve correctly
 
@@ -50,7 +52,7 @@ Do not use this skill when:
 1. Resolve `plan/<topic>/<topic>.step.md` and keep the interaction read-only.
 2. Prefer the Python CLI:
    ```bash
-   python .agents/skills/plan-step-tracker/scripts/step_tracker.py <operation> <topic>
+   python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py <operation> <topic>
    ```
 3. Interpret checkbox markers exactly as the CLI does:
    - `[X]` = done
@@ -68,7 +70,7 @@ Do not use this skill when:
 
 **Positive: Use the blocking command before a gated handoff**
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature
 ❌ BLOCKED: 2 steps pending (exit code 1)
 [ ] implementation-review
 [x] code-review
@@ -77,7 +79,7 @@ The caller stops and reports the pending steps.
 
 **Negative: Treat lowercase `[x]` as complete or ignore exit code 1**
 ```bash
-$ python .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature
+$ python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py check_all_succeeded my-feature
 Warning: Found lowercase [x] at line 18; treating as pending
 ❌ BLOCKED: 1 steps pending (exit code 1)
 [x] code-review
@@ -97,7 +99,7 @@ Wrong follow-up: continuing anyway or rewriting the file inside this skill.
 
 ## Required Checks
  - run only one of the five supported operations
-- keep the command path as `python .agents/skills/plan-step-tracker/scripts/step_tracker.py <operation> <topic>`
+- keep the command path as `python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py <operation> <topic>`
 - treat exit code `1` from `check_all_succeeded` or missing files as blocking
 - treat exit code `1` from `check_impl_steps_succeeded` as an implementation-only blocking signal
 - treat lowercase `[x]` as pending, not done
@@ -149,3 +151,13 @@ Wrong follow-up: continuing anyway or rewriting the file inside this skill.
 - `examples.md`: detailed command examples, blocking cases, edge cases, and fallback usage patterns
 - `scripts/step_tracker.py`: local Python CLI that implements the preserved command and exit-code contract
 - `tests/`: pytest coverage for parsing, filtering, blocking, missing-file handling, and lowercase `[x]` behavior
+
+## Installed runtime safety
+
+All five operations use one bounded topic/path resolver. Invalid topics,
+symlink escapes, unreadable files or invalid UTF-8 return exit 1 with stderr
+and no traceback/outside content. Completion checks close fences only on a
+matching marker with whitespace-only suffix. Unsupported nested checklist rows,
+including four-space children, fail closed; real fenced/indented code examples
+remain excluded. Implementation scope ends at a non-fenced H1 or H2, while H3+
+subheadings remain inside. These are installed PR-review fixes; source unchanged.

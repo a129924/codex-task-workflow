@@ -16,7 +16,7 @@
 Use the local script from the repository root:
 
 ```bash
-python .agents/skills/plan-step-tracker/scripts/step_tracker.py <operation> <topic>
+python3 .agents/skills/plan-step-tracker/scripts/step_tracker.py <operation> <topic>
 ```
 
 Supported operations:
@@ -73,3 +73,12 @@ Fallback limitation:
 - grep can approximate pending detection for `[x]`, but it does not emit the Python CLI warning automatically
 - when using grep fallback, call out lowercase `[x]` manually if present
 - section-scoped fallback commands are only an approximation of the Python CLI; prefer the CLI when exact implementation-step semantics matter
+
+## Safe topics and Markdown boundaries
+
+Every operation rejects absolute/multi-component/dot topics and resolved paths
+outside the intended plan directory (including directory/file symlinks). Read
+errors return explanatory stderr and exit 1 without a traceback. Both gates
+ignore genuine code examples, require whitespace-only matching fence closure,
+and reject unsupported nested checklist evidence rather than hiding it. The
+implementation-only parser/gate stops at non-fenced H1/H2 headings, not H3+.

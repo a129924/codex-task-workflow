@@ -4,11 +4,11 @@
 """Step status tracker for plan/<topic>/<topic>.step.md files.
 
 Usage:
-  python step_tracker.py read_all <topic>
-  python step_tracker.py read_not_run <topic>
-  python step_tracker.py read_success <topic>
-  python step_tracker.py check_all_succeeded <topic>
-  python step_tracker.py check_impl_steps_succeeded <topic>
+  python3 step_tracker.py read_all <topic>
+  python3 step_tracker.py read_not_run <topic>
+  python3 step_tracker.py read_success <topic>
+  python3 step_tracker.py check_all_succeeded <topic>
+  python3 step_tracker.py check_impl_steps_succeeded <topic>
 """
 
 import sys
@@ -28,6 +28,34 @@ class Step:
     bracket: str  # Original bracket marker: [X], [x], or [ ]
 
 
+def _step_path(topic: str, plan_dir: Path) -> Path:
+    """Resolve one topic inside the intended plan root, before reading it."""
+    if not topic or topic in {".", ".."} or Path(topic).is_absolute() or "/" in topic or "\\" in topic:
+        raise ValueError("Topic must be a single non-empty path component, not a path")
+    declared_root = Path(plan_dir).absolute()
+    intended_root = declared_root.parent.resolve() / declared_root.name
+    plan_root = declared_root.resolve()
+    if plan_root != intended_root:
+        raise ValueError("Plan directory resolves outside its intended location")
+    step_file = Path(plan_dir) / topic / f"{topic}.step.md"
+    resolved_file = step_file.resolve()
+    if not resolved_file.is_relative_to(plan_root):
+        raise ValueError("Step file resolves outside the plan directory")
+    if not resolved_file.exists():
+        raise FileNotFoundError(f"File not found: {step_file}")
+    return resolved_file
+
+
+def _read_step_lines(topic: str, plan_dir: Path) -> list[str]:
+    """Use the same bounded path and UTF-8 read for every operation."""
+    return _step_path(topic, plan_dir).read_text(encoding="utf-8").splitlines()
+
+
+def _ends_implementation_section(line: str) -> bool:
+    """H1/H2 headings end an implementation section; H3+ stay inside it."""
+    return re.match(r"^#{1,2}(?:\s|$)", line.strip()) is not None
+
+
 def parse_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     """Parse steps from plan/<topic>/<topic>.step.md.
 
@@ -41,26 +69,12 @@ def parse_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     Raises:
         FileNotFoundError: If .step.md file does not exist
     """
-    step_file = plan_dir / topic / f"{topic}.step.md"
-
-    if not step_file.exists():
-        raise FileNotFoundError(f"File not found: {step_file}")
-
-    with open(step_file, "r", encoding="utf-8") as f:
-        steps = _parse_step_lines(f.readlines())
-
-    return steps
+    return _parse_step_lines(_read_step_lines(topic, plan_dir))
 
 
 def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     """Parse only steps in the '## Implementation Steps' section."""
-    step_file = plan_dir / topic / f"{topic}.step.md"
-
-    if not step_file.exists():
-        raise FileNotFoundError(f"File not found: {step_file}")
-
-    with open(step_file, "r", encoding="utf-8") as f:
-        lines = f.readlines()
+    lines = _read_step_lines(topic, plan_dir)
 
     impl_lines: list[str] = []
     in_impl_section = False
@@ -71,7 +85,7 @@ def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
             in_impl_section = True
             continue
 
-        if in_impl_section and stripped.startswith("## "):
+        if in_impl_section and _ends_implementation_section(line):
             break
 
         if in_impl_section:
@@ -81,26 +95,35 @@ def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
 
 
 def _without_fenced_code(lines: list[str]) -> list[str]:
-    """Exclude fenced-code examples from Markdown structure checks."""
+    """Exclude code examples while keeping unsupported nested task evidence."""
     visible: list[str] = []
     fence: tuple[str, int] | None = None
+    list_context = False
 
     for line in lines:
-        if line.startswith(("    ", "\t")):
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
+        if fence is not None:
+            if marker:
+                token, suffix = marker.groups()
+                if token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
+                    fence = None
             continue
-        marker = re.match(r"^\s*(`{3,}|~{3,})", line)
+        if line.startswith(("    ", "\t")):
+            nested_checkbox = re.match(r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\]", line.strip())
+            if list_context and nested_checkbox:
+                visible.append(line)  # Existing validator rejects unsupported nesting.
+            continue
         if marker:
             token = marker.group(1)
-            if fence is None:
-                fence = (token[0], len(token))
-            elif token[0] == fence[0] and len(token) >= fence[1]:
-                fence = None
+            fence = (token[0], len(token))
             continue
-        if fence is None:
-            visible.append(line)
+        visible.append(line)
+        if line.strip() and not line[0].isspace():
+            # Indented descriptions/sub-lists retain their enclosing list.
+            # Only a real top-level non-list boundary clears that ancestry.
+            list_context = re.match(r"^(?:[-*+]|\d+[.)])\s+", line) is not None
 
     return visible
-
 
 def _parse_step_lines(lines: list[str]) -> list[Step]:
     """Parse checkbox step lines into Step objects."""
@@ -145,7 +168,7 @@ def read_all(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Read and display all steps."""
     try:
         steps = parse_steps(topic, plan_dir)
-    except FileNotFoundError as e:
+    except (OSError, UnicodeError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
@@ -159,7 +182,7 @@ def read_not_run(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Read and display only pending steps."""
     try:
         steps = parse_steps(topic, plan_dir)
-    except FileNotFoundError as e:
+    except (OSError, UnicodeError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
@@ -175,7 +198,7 @@ def read_success(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Read and display only completed steps."""
     try:
         steps = parse_steps(topic, plan_dir)
-    except FileNotFoundError as e:
+    except (OSError, UnicodeError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
@@ -190,10 +213,7 @@ def read_success(topic: str, plan_dir: Path = Path("plan")) -> int:
 def check_all_succeeded(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Check if all steps are complete. Exit 0 if yes, 1 if any pending."""
     try:
-        step_file = plan_dir / topic / f"{topic}.step.md"
-        if not step_file.exists():
-            raise FileNotFoundError(f"File not found: {step_file}")
-        lines = _without_fenced_code(step_file.read_text(encoding="utf-8").splitlines())
+        lines = _without_fenced_code(_read_step_lines(topic, plan_dir))
         _validate_completion_lines(lines)
         steps = _parse_step_lines(lines)
     except (OSError, UnicodeError, ValueError) as e:
@@ -239,16 +259,13 @@ def _validate_completion_lines(lines: list[str], *, implementation: bool = False
 def check_impl_steps_succeeded(topic: str, plan_dir: Path = Path("plan")) -> int:
     """Check if all implementation steps are complete. Exit 0 if yes, 1 if any pending."""
     try:
-        step_file = plan_dir / topic / f"{topic}.step.md"
-        if not step_file.exists():
-            raise FileNotFoundError(f"File not found: {step_file}")
-        lines = _without_fenced_code(step_file.read_text(encoding="utf-8").splitlines())
+        lines = _without_fenced_code(_read_step_lines(topic, plan_dir))
         headings = [i for i, line in enumerate(lines) if line.strip() == "## Implementation Steps"]
         if len(headings) != 1:
             raise ValueError("Expected exactly one Implementation Steps section")
         section = []
         for line in lines[headings[0] + 1:]:
-            if line.strip().startswith("## "):
+            if _ends_implementation_section(line):
                 break
             section.append(line)
         _validate_completion_lines(section, implementation=True)
