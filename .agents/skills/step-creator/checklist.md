@@ -2,7 +2,9 @@
 
 - [ ] Explicit path-safe topic and base-plan; unsupported profiles stop.
 - [ ] Both shared contracts and exact source plan are readable.
-- [ ] All 11 canonical sections, unique current state/transition/next actor/action.
+- [ ] All 11 canonical sections; terminal approved, explicit []/none planning
+  transitions, exact Implementer next actor and bounded implementation action.
+- [ ] All five earlier/rework states BLOCKED before temporary/final writes.
 - [ ] Exactly one top-level ordered Implementation Steps; no source repair.
 - [ ] One complete selector tuple; primary-worktree=false, no competing tuple.
 - [ ] Explicit local-delivery stop and no release; no publication/cleanup shell.

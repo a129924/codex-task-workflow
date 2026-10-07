@@ -6,18 +6,20 @@ Accept only a source plan that:
 
 - has every canonical topic-plan section required by `plan/topic-plan-contract.md`;
 - uses the local shared contract, not an upstream specialized Agent Skill or Python profile;
-- declares exactly one unambiguous current status, explicit allowed transition(s)
-  valid in `plan/agent-handoff-workflow.md`, one exact next actor, and one exact
-  stage-local action consistent with that state;
+- declares terminal current status `approved`, an explicitly empty next planning
+  transition set (`[]` or `none`), exact next actor `Implementer`, and a bounded
+  implementation action consistent with the shared contract;
 - has exactly one top-level `## Implementation Steps` section with executable
   ordered items; and
 - declares one complete selector and the local-delivery/no-release stop point; and
 - has no conflicting selector, completion or source extraction truth.
 
-For terminal approved, an explicit empty transition set ([] or none) is valid;
-next actor is Implementer and action is bounded implementation. It requires no
-invented outgoing planning transition. Other states require their canonical
-outgoing transition(s) and matching actor/action.
+Terminal `approved` is required before any temporary or final tracker write.
+It requires no invented outgoing planning transition. `planned`,
+`creator-in-progress`, `review-ready`, `reviewer-in-progress` and `needs-rework`
+are all BLOCKED even with valid outgoing transitions and matching actor/action.
+Keep the canonical planning lifecycle unchanged; do not freeze mutable steps
+before independent approval. Approval alone proves no action completed.
 
 Missing, ambiguous, duplicated, contradictory, nested-only, or specialized
 inputs are `BLOCKED`. This profile does not repair source wording.

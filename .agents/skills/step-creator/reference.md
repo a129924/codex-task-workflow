@@ -3,13 +3,16 @@
 ## Generation and eligibility
 
 Only explicit base-plan is supported. Read both shared contracts and the
-source plan; require the 11 canonical sections, unique compatible state and
-next actor/action, top-level ordered Implementation Steps, one complete
+source plan; require the 11 canonical sections, terminal approved with explicit
+[]/none next planning transitions, next actor Implementer and bounded
+implementation action, top-level ordered Implementation Steps, one complete
 selector tuple and an explicit local-delivery/no-release stop point. The Base
 profile also supports repo-local development tools; it does not select or
 emulate upstream specialized profiles. Missing/duplicate/ambiguous inputs,
 existing output or unsupported profiles stop before any write. Do not repair
-source wording. Validate before creating a same-directory temporary file,
+source wording. All five earlier/rework states are BLOCKED even with valid
+canonical edges; approval alone is not execution-completion evidence.
+Validate before creating a same-directory temporary file,
 then recheck absence and atomically promote without overwrite; clean temporary
 output on failure and preserve any existing final artifact.
 

@@ -17,7 +17,7 @@ outputs:
 
 # Purpose
 
-Create one new tracker from a complete local topic plan. Generate a tracking
+Create one new tracker from a complete, independently approved local topic plan. Generate a tracking
 artifact only; never execute the listed actions or update existing trackers.
 
 # Trigger / When to use
@@ -39,6 +39,9 @@ before any write, with no fallback or dependency installation.
    BLOCKED with no temporary or final artifact.
 2. Require explicit base-plan and read reference.md plus
    references/base-plan-profile.md. Run the complete eligibility preflight.
+   Require terminal approved, explicit []/none planning transitions, next actor
+   Implementer and a bounded implementation action before any temporary/final
+   write. All five earlier/rework states are BLOCKED even with canonical edges.
    Missing, duplicate, contradictory or nested-only required input is BLOCKED.
 3. Freeze one tuple: topic, governed branch, managed path intent,
    primary-worktree=false. Competing tuples stop. Planned intent does not prove
@@ -60,7 +63,8 @@ before any write, with no fallback or dependency installation.
 # Validation
 
 Source uses the 11 canonical sections, exactly one top-level Implementation
-Steps, canonical planning state/next transition, one allowed next actor/action,
+Steps, terminal approved with empty next planning transitions, exact Implementer
+next actor and bounded implementation action,
 and one complete selector. Only base-plan is supported. Frozen wire and
 source fidelity hold; all markers are [X] or [ ]; every [X] has evidence.
 Only the new destination is written. Plan Mode forbids even this write for all
