@@ -206,3 +206,14 @@ marker type, sufficient length and whitespace-only suffix. Leaving a quote
 container or moving to lower depth ends that fence and reprocesses the visible
 line. Naked quoted tasks still block; quoted prose and genuine quoted code pass.
 This adds no full Markdown parser or dependency.
+
+## Round5 quoted actions and inline comment-token evidence
+
+Visible quote-prefixed plain/ordered lists are unsupported task evidence just
+like quoted checkboxes, with no quoted-metadata exception. Quoted prose/links
+and genuinely quoted code remain non-task controls. Outside real code/comments,
+raw same-line balanced equal-length tick spans protect inline comment tokens
+without changing line or step text. Unmatched/ambiguous/multiline comment-token
+syntax fails closed rather than hiding later pending steps; real HTML-comment
+mode consumes raw closing markers even inside ticks. Raw fence validity and
+quote-container boundaries remain prior to masking. No full Markdown parser.

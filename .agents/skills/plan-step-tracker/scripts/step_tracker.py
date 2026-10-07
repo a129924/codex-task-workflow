@@ -105,6 +105,21 @@ def _raw_quote_content(line: str) -> tuple[int, str]:
         content = content[prefix.end():]
 
 
+def _inline_tick_end(line: str, start: int) -> int:
+    """Protect one raw same-line balanced equal-length span, never multiline."""
+    tick = chr(96)
+    end = start
+    while end < len(line) and line[end] == tick:
+        end += 1
+    width = end - start
+    for run in re.finditer(re.escape(tick) + "+", line[end:]):
+        if len(run.group()) == width:
+            return end + run.end()
+    if "<!--" in line[end:] or "-->" in line[end:]:
+        raise ValueError("Ambiguous inline-code comment tokens in completion evidence")
+    return end  # No comment tokens: preserve unmatched literal ticks.
+
+
 def _visible_completion_lines(lines: list[str]) -> list[str]:
     """Exclude genuine code/comments while preserving unsupported task evidence."""
     visible: list[str] = []
@@ -133,25 +148,39 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
             if token[0] != "`" or "`" not in suffix:
                 fence = (token[0], len(token), quote_depth)
                 continue  # Comment tokens in a valid fence's info are code too.
-        # Remove only HTML comment spans outside genuine code. Keep all text
-        # before/after a closed span, including headings and pending rows.
+        invalid_raw_fence = bool(marker and marker.group(1).startswith(chr(96))
+                                 and chr(96) in marker.group(2))
+        # Only an invalid raw opener's initial tick run is literal. Later
+        # balanced same-line spans still protect their inline comment tokens.
+        # Genuine comment mode consumes raw closing markers even inside ticks.
+        # Outside it, protect only balanced same-line equal-length code spans.
         fragments: list[str] = []
-        remaining = raw_line
-        while remaining:
+        position = 0
+        while position < len(raw_line):
             if in_comment:
-                closing = remaining.find("-->")
+                closing = raw_line.find("-->", position)
                 if closing < 0:
                     break
-                remaining = remaining[closing + 3:]
+                position = closing + 3
                 in_comment = False
             else:
-                opening = remaining.find("<!--")
-                if opening < 0:
-                    fragments.append(remaining)
+                opening = raw_line.find("<!--", position)
+                tick = raw_line.find(chr(96), position)
+                if tick >= 0 and (opening < 0 or tick < opening):
+                    fragments.append(raw_line[position:tick])
+                    if invalid_raw_fence and tick == raw_line.find(chr(96)):
+                        end = tick + len(marker.group(1))
+                    else:
+                        end = _inline_tick_end(raw_line, tick)
+                    fragments.append(raw_line[tick:end])
+                    position = end
+                elif opening >= 0:
+                    fragments.append(raw_line[position:opening])
+                    position = opening + 4
+                    in_comment = True
+                else:
+                    fragments.append(raw_line[position:])
                     break
-                fragments.append(remaining[:opening])
-                remaining = remaining[opening + 4:]
-                in_comment = True
         line = "".join(fragments)
         visible.append(line)
         if line.strip() and not line[0].isspace():
@@ -297,9 +326,9 @@ def _validate_completion_lines(lines: list[str], *, implementation: bool = False
             r"^\[(?:\s|[^\]\s]|\?+)?\](?![(:])", stripped
         )
         quote = re.match(r"^(?:>\s*)+(.*)$", stripped)
-        if quote and re.match(
-                r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\](?![(:])",
-                quote.group(1)):
+        if quote and (
+                re.match(r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\](?![(:])", quote.group(1))
+                or re.match(r"^(?:[-*+]|\d+[.)])\s+", quote.group(1))):
             raise ValueError(f"Unsupported quoted completion step: {line}")
         list_item = re.match(r"^(?:[-*+]|\d+[.)])\s+", stripped)
         if line and not line[0].isspace() and stripped:

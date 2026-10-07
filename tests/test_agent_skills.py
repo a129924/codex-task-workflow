@@ -495,5 +495,76 @@ class AgentSkillsTestCase(unittest.TestCase):
                     self.assertNotIn("SUCCESS", result.stdout)
 
 
+    def test_quoted_plain_and_ordered_lists_are_unsupported_tasks(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        for quote in ("> ", ">> ", "> > "):
+            for action in ("- Review pending", "* Review pending", "+ Review pending", "1. Review pending", "2) Review pending", "- Source plan: plan/fixture/fixture.plan.md"):
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(quote=quote, action=action, operation=operation):
+                        result = self.run_cli(operation, prefix + quote + action + "\n")
+                        self.assertEqual(result.returncode, 1, result.stderr)
+                        self.assertIn("Unsupported quoted", result.stderr)
+                        self.assertNotIn("SUCCESS", result.stdout)
+        tick = chr(96) * 3
+        controls = (
+            "> Ordinary quoted prose\n> [documentation](https://example.invalid)\n",
+            "> " + tick + "markdown\n> - Review pending\n> 1. Review pending\n> " + tick + "\n",
+            "<!--\n> - Review pending\n> 1. Review pending\n-->\n",
+        )
+        for content in controls:
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(control=content, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_inline_tick_comment_tokens_cannot_hide_real_pending(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        tick = chr(96)
+        hidden = "The token " + tick + "<!--" + tick + " starts a comment\n- [ ] Pending\nThe token " + tick + "-->" + tick + " ends a comment\n"
+        for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+            result = self.run_cli(operation, prefix + hidden)
+            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertIn("[ ] Pending", result.stdout)
+            self.assertNotIn("SUCCESS", result.stdout)
+        for width in (1, 2, 3):
+            fence = tick * width
+            complete = (
+                "## Implementation Steps\n- [X] Describe " + fence + "<!--" + fence + " and " + fence + "-->" + fence + "\n"
+                + "The tokens " + fence + "<!--" + fence + " and " + fence + "-->" + fence + " illustrate comments.\n"
+            )
+            for operation in self.operations:
+                with self.subTest(width=width, operation=operation):
+                    result = self.run_cli(operation, complete)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    if operation in ("read_all", "read_success"):
+                        self.assertEqual(result.stdout, "[X] Describe " + fence + "<!--" + fence + " and " + fence + "-->" + fence + "\n")
+        ambiguous = (
+            "Unmatched " + tick + "<!--\n- [ ] Pending\n-->\n",
+            "Unequal " + tick * 2 + "<!--" + tick + "\n- [ ] Pending\n-->\n",
+            "Multiline " + tick + "<!--\n- [ ] Pending\n" + tick + "-->\n",
+        )
+        for content in ambiguous:
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(ambiguity=content, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, 1)
+                    self.assertIn("Ambiguous inline-code", result.stderr)
+                    self.assertNotIn("SUCCESS", result.stdout)
+        controls = (
+            "<!-- Actual comment with " + tick + "ticks" + tick + "\n- [ ] Example only\n" + tick + "-->" + tick + "\n",
+            "<!-- Actual comment -->- [ ] Pending after comment\n",
+            "Literal unmatched " + tick + " without comment syntax\n- [ ] Pending\n",
+            tick * 3 + "html\nUnmatched " + tick + "<!--\n- [ ] Example only\n" + tick * 3 + "\n",
+            tick * 3 + "lang " + tick + "<!--" + tick + " rest\n- [ ] Pending after raw candidate\n",
+        )
+        for index, content in enumerate(controls):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                expected = 0 if index in (0, 3) else 1
+                with self.subTest(control=index, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if index == 4:
+                        self.assertIn("[ ] Pending after raw candidate", result.stdout)
+
 if __name__ == "__main__":
     unittest.main()
