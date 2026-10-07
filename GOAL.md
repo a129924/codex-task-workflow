@@ -62,7 +62,7 @@ Idea → Draft plan → Implementation plan／實作 → PR → Close
 - 自動追蹤 GitHub PR 事件、建立 PR 或自動結案。
 - 自建任務管理平台、專屬 Dashboard 或完整對話記憶系統。
 
-目前這一輪只交付 baseline 與 repo 骨架，不實作 YouTrack 串接、可執行 plugin、安裝流程或其他 Agent 支援，也不鎖定 runtime、transport、manifest、Skill 結構或 YouTrack schema。
+原始 baseline 階段只交付需求文件與 repo 骨架，當時不實作 YouTrack 串接、可執行 plugin、安裝流程或其他 Agent 支援，也不鎖定 runtime、transport、manifest、Skill 結構或 YouTrack schema。這是歷史交付範圍；目前階段見下方與 README。
 
 ## 產品完成條件
 
@@ -75,8 +75,14 @@ Idea → Draft plan → Implementation plan／實作 → PR → Close
 5. 結案後仍可查詢重要選擇、方向變更理由、最終結果與參考資料。
 6. 四類操作適用於私人、跨專案的 Task 管理，符合本人加至多一個 bot 的使用規模。
 
-## 本輪文件完成條件
+## 原始 baseline 階段文件完成條件（歷史）
 
-正式 repo 包含本文件、README.md 及與來源逐字一致的需求 baseline；文件清楚區分目前階段與產品目標，路徑一致，且未建立占位整合元件或存放實際 Task 資料與憑證。
+該階段的正式 repo 包含本文件、README.md 及與來源逐字一致的需求 baseline；文件清楚區分目前階段與產品目標，路徑一致，且未建立占位整合元件或存放實際 Task 資料與憑證。
 
-文件與骨架驗收通過，只代表本輪交付完成，不代表 Codex plugin 或 YouTrack 整合已完成。
+文件與骨架驗收通過，只代表該 baseline 階段交付完成，不代表 Codex plugin 或 YouTrack 整合已完成。
+
+## 目前驗證階段
+
+後續 [E002](experiments/E002/README.md) 已透過官方 YouTrack MCP，在指定 Codex client、OAuth/CIMD、帳號及 MCPTEST 專案下完成一張測試票的建立、讀取、更新、結案與回查。Repo 保存去敏測試內容、結果與重現範例；沒有交付正式 plugin，也沒有預設啟用的 project MCP 設定。Credentials 仍由 client 保存，不進 repo。
+
+E002 的完成條件與證據記錄於 [topic plan](plan/youtrack-mcp-validation/youtrack-mcp-validation.plan.md) 與實驗 README；本次有限驗證不代表上列第一版產品完成條件已成立。正式整合與採用仍待獨立決策及 human review。
