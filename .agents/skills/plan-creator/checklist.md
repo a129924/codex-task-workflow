@@ -2,10 +2,11 @@
 
 Use this checklist when drafting or sanity-checking a topic plan before handing it to a reviewer or the Observer for execution.
 
-- [ ] The topic plan is repo-visible at `plan/<topic>/<topic>.plan.md`.
+- [ ] Actual mode and exact existing selected-feature write authority checked first; Plan or Default without authority returns conversation-only draft, unknown mode stops without writes.
+- [ ] The topic plan is an authorized Default file, or an intended-path conversation draft (proposed state, no existence/current-phase/approval claim) at `plan/<topic>/<topic>.plan.md`.
 - [ ] `Goal / Outcome`, `Scope`, `Locked Decisions`, and `Boundaries / Exclusions` are explicit.
 - [ ] `Status / Allowed Transitions` uses canonical workflow transitions only.
-- [ ] The current status matches the actual workflow phase.
+- [ ] Written current status matches actual phase; conversation-only fields remain proposed. Owner records reviewer-in-progress only after genuine independent start acknowledgement, then approval only after returned native verdict.
 - [ ] `Artifact Paths` are exact, repo-visible, and role-labeled, not catch-all labels.
 - [ ] If correction artifacts are used, each parent artifact, correction artifact, and any review-log / equivalent handoff artifact is listed with an exact path, owner, and role.
 - [ ] If correction artifacts are used, the minimum correction artifact contract is defined in reference / examples: `correction-plan` covers trigger, scope, what stays / changes, acceptance delta, affected artifacts, parent sync, and retention intent; `correction-step` appears only when multi-step repair / backfill is needed.
@@ -22,3 +23,8 @@ Use this checklist when drafting or sanity-checking a topic plan before handing 
 - [ ] `Post-merge / release actions` match the actual topic scope and timing.
 - [ ] Plan-Creator, Implementer, Plan-Reviewer, Reviewer, and Observer roles are not mixed.
 - [ ] No placeholder wording remains where workflow needs a real contract.
+
+- [ ] Optional analysis remains optional, with named absent/incomplete-layer warnings;
+  complete explicitly frozen input is used without inventing missing analysis facts.
+- [ ] All baseline/analysis revisions obey the same exact Default authority gate;
+  draft-only proposals never claim that files or recorded baselines changed.

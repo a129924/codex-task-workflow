@@ -2,6 +2,12 @@
 
 Use these examples after `SKILL.md` has already narrowed the task to reviewing a repo-visible topic plan for this repository.
 
+All native verdict examples below require a readable plan/contracts, genuine
+independent actual start acknowledgement and authorized owner-recorded current
+reviewer-in-progress first. They illustrate eligible review shapes, not real
+issued approval. Reviewer never edits the source body/phase. Missing eligibility
+returns BLOCKED coordination without any native verdict, including standalone.
+
 ## Approved / non-stable topic
 
 A plan that:
@@ -170,3 +176,15 @@ Typical verdict:
 - treating a prose note as an acceptable reviewer handoff
 - downgrading real contract failures into optional suggestions
 - accepting workflow-body correction-schema bloat because the examples "might be useful later"
+
+## Preflight stop / missing or premature source
+
+A missing plan/contracts/start acknowledgement, unresolved path, or current
+planned, creator-in-progress, review-ready, approved or needs-rework is not
+eligible for a native verdict. Return BLOCKED coordination naming the gap; do
+not output an approved/needs-rework object. At review-ready the independent
+Reviewer may acknowledge actual start, then pause while the exactly authorized
+owner records reviewer-in-progress. Resumed review may emit the fixed schema
+only after that real phase record. A structurally broken but genuinely started
+reviewer-in-progress source may receive native needs-rework. No example creates
+an acknowledgement, phase history, file or approval merely by showing its text.

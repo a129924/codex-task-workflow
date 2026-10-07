@@ -13,3 +13,21 @@ Overview of the stable rules that keep topic-plan authoring aligned with the rep
 - **Examples**: use `examples.md` for field-level correction artifact samples, bounded-path examples, workflow-body versus reference-body separation, and future-extraction boundary examples. Do not embed long correction schemas directly in the workflow body.
 - **Stop-and-ask triggers**: conditions that require stopping and asking before drafting or continuing. See `references/stop-and-ask-triggers.md`.
 - **Template usage rule**: how to use and complete `templates/topic-plan-template.md` without leaving scaffolding in the final plan. See `references/template-usage-rule.md`.
+
+## Actual mode, authority and drafting
+
+Before any write verify actual active mode, selected feature and exact existing
+path authority. Plan Mode and Default without file authority produce complete
+frozen-input conversation drafts only; intended paths/state fields are proposed,
+not disk existence or actual current-phase/approval evidence. Unknown mode stops
+without writes. Reuse existing exact Default authority, no subagent bypass or
+new permission request when already authorized. Controlled labels are policy only.
+Optional analysis remains optional: warn by name when absent/incomplete, obey
+strict baseline routing when supplied, and never invent missing frozen facts.
+Only authorized Default revisions change disk analysis; other revisions are
+conversation proposals. Incomplete required scope/baseline stops authoring.
+
+Only the authorized plan owner records phase metadata: independent actual start
+acknowledgement precedes reviewer-in-progress; native verdict follows resumed
+eligible review, then owner records approved/needs-rework. Preserve source body
+across review, keep author/reviewer distinct and never create approval/history.

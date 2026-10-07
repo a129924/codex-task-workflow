@@ -16,12 +16,13 @@ do_not_use_when:
   - "the request is for a generic project plan outside this repository"
   - "the task is to rewrite the canonical workflow spec itself"
 inputs:
+  - genuine independent start acknowledgement and authorized owner-recorded current reviewer-in-progress source
   - "the target `plan/<topic>/<topic>.plan.md`"
   - "the current workflow contract from `plan/agent-handoff-workflow.md`"
   - "the shared topic-plan contract from `plan/topic-plan-contract.md`"
   - "any contextual review feedback, including Copilot feedback, if it exists"
 outputs:
-  - "exactly one machine-consumable JSON object with no trailing prose"
+  - "eligible review: exactly one fixed native JSON object; preflight failure: BLOCKED coordination without native verdict"
   - "verdict set to approved or needs-rework"
   - "blocking_issues list with issue, file, and fix for each contract-breaking problem"
   - "copilot_feedback_triage with ADDRESS, DISCUSS, and SKIP arrays"
@@ -49,14 +50,35 @@ Do not use this skill when:
 - the shared topic-plan contract from `plan/topic-plan-contract.md`
 - any contextual review feedback, including Copilot feedback, if it exists
 
+## Pre-review eligibility and owner coordination
+
+Before either native verdict, require readable target plan and both contracts,
+a genuine independent actual review-start acknowledgement, and the authorized
+owner's recorded current reviewer-in-progress phase referencing that start.
+Author and Reviewer must be distinct. At review-ready, the Reviewer may actually
+acknowledge start and return BLOCKED coordination asking the authorized owner
+to record the canonical phase; no native approved/needs-rework yet. Resume only
+after the recorded eligible source is readable. Other stages, missing/unresolved
+plan/contracts/start/owner-record evidence stop with BLOCKED coordination and no
+native verdict, even for standalone invocation. These are eligibility failures,
+not structural needs-rework verdicts.
+
+Reviewer keeps the source plan body and phase metadata read-only. Only an
+exactly authorized owner records reviewer-in-progress after the real start event
+and approved/needs-rework after returned native verdict. Preserve source body
+hash/current review basis across the pause; no fake acknowledgement/history,
+self-review or new state/schema. In Plan Mode nobody writes; inspect existing
+eligible evidence or stop for owner coordination, never bypass the mode gate.
+
 # Process
+0. Check pre-review eligibility above before judging structure or issuing either native verdict. If not eligible, return BLOCKED coordination with the exact gap; do not generate the fixed verdict object.
 1. Confirm the task is topic-plan review, not plan authoring, skill review, publish routing, or workflow-spec editing.
 2. Read the target topic plan plus the shared contract sources before judging the plan.
 3. Verify the topic plan path, required sections, canonical status model, artifact-path exactness, stable-library intent, reviewer handoff JSON shape, post-merge timing, and role boundaries.
 4. Treat placeholders such as `TBD`, `later`, or `follow normal process` as contract failures when the workflow requires explicit decisions.
 5. Treat missing sections, invalid transitions, vague artifact paths, undeclared stable intent, wrong timing, non-JSON reviewer handoff, and role-boundary confusion as blocking issues.
 6. Keep the review focused on contract-breaking issues rather than wording polish or stylistic preferences that do not change workflow meaning.
-7. Return exactly one JSON object with this fixed schema:
+7. Only for an eligible review, return exactly one JSON object with the unchanged fixed schema:
    - `verdict`: `approved` or `needs-rework`
    - `blocking_issues[]`: objects with `issue`, `file`, and `fix`
    - `copilot_feedback_triage.ADDRESS[]`: objects with `comment`, `location`, and `why`
@@ -68,7 +90,8 @@ Do not use this skill when:
 - **Negative**: Use this skill to draft the topic plan, approve a plan that says `README/VERSION maybe later`, or return Markdown prose instead of the required JSON verdict.
 
 # Outputs
-- exactly one machine-consumable JSON object and no trailing prose
+- preflight failure: BLOCKED coordination and no native verdict
+- eligible review: exactly one machine-consumable fixed JSON object and no trailing prose
 - `verdict`: `approved` or `needs-rework`
 - `blocking_issues`: only true contract-breaking problems; each item contains `issue`, `file`, and `fix`
 - `copilot_feedback_triage.ADDRESS`: direct required feedback items; each item contains `comment`, `location`, and `why`
@@ -76,6 +99,7 @@ Do not use this skill when:
 - `copilot_feedback_triage.SKIP`: explicitly inapplicable feedback items; each item contains `comment` and `why`
 
 # Verification
+- verify readable plan/contracts, genuine distinct-reviewer start and authorized owner-recorded reviewer-in-progress before any native verdict
 - confirm the review basis explicitly includes `plan/agent-handoff-workflow.md` and `plan/topic-plan-contract.md`
 - confirm required sections are present and named correctly
 - confirm transitions stay canonical and execution timing is coherent
@@ -101,14 +125,14 @@ Do not use this skill when:
 - Do not invent a second topic-plan schema that conflicts with `plan-creator` or the canonical workflow.
 - Do not approve a plan that still has contract-breaking ambiguity.
 - Do not turn this skill into implementation review, branch preparation, or publish execution.
-- Do not emit anything except the single JSON verdict object.
+- For eligible reviews emit only the single unchanged JSON verdict. Preflight failures emit BLOCKED coordination, never native approved/needs-rework.
 
 # Validation
 
 ## Required Checks
 - PASS: the shared contract sources are readable before review begins
-- PASS: the target plan file exists at the expected path
-- BLOCKED: the plan file cannot be read or does not exist — return `needs-rework` in the fixed JSON schema with the missing file recorded as a blocking issue
+- PASS: readable target and actual start proof are present, with authorized owner-recorded current reviewer-in-progress
+- BLOCKED: missing/unreadable plan, contracts, actual start or owner-recorded eligible phase — coordination only, no native verdict
 
 ## Quality Checks
 - all required topic-plan sections are present and named correctly
@@ -120,13 +144,13 @@ Do not use this skill when:
 
 ## On Soft Fail
 - treat placeholder text (`TBD`, `later`, `follow normal process`) as a contract failure, not a soft gap
-- a plan with any blocking issue must return `needs-rework`; partial approval is not allowed
+- after eligibility passes, a plan with any structural blocking issue returns needs-rework; partial approval is not allowed
 
 # Failure Handling
 
 ## Missing Context
 - BLOCKED — if `plan/agent-handoff-workflow.md` or `plan/topic-plan-contract.md` cannot be read, stop before issuing any verdict
-- BLOCKED — if the target plan path cannot be resolved, still return the fixed JSON verdict schema with `verdict: "needs-rework"` and a `blocking_issues` entry describing the unresolved path; do not guess or infer a path
+- BLOCKED — if target plan path cannot be resolved, report coordination gap without a native verdict; never guess a path
 
 ## Ambiguous Requirement
 - if a section name is subtly wrong but the intent is clear, flag it as a contract failure rather than silently accepting it
@@ -143,7 +167,7 @@ When participating in a multi-agent plan review or creator-reviewer handoff, inc
 - next_step: <next step or DONE>
 - status: APPROVED | NEEDS_REWORK | INCOMPLETE | BLOCKED
 
-These fields are for internal agent state coordination only and MUST NOT appear inside the final JSON verdict object; the delivered output must remain the single fixed-schema JSON object (verdict / blocking_issues / copilot_feedback_triage) in all operating modes, whether standalone or in a multi-agent handoff.
+These fields are for internal agent state coordination only and MUST NOT appear inside the final JSON verdict object; eligible delivered reviews remain the single fixed-schema JSON object in all modes and standalone/multi-agent uses. Preflight failures instead return BLOCKED coordination with no native verdict; these state fields never enter native JSON.
 
 Omit this section when the review is performed as a standalone action.
 

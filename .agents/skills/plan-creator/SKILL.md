@@ -15,6 +15,7 @@ do_not_use_when:
   - the task is a tiny wording edit to an already-valid topic plan
   - the request is for a generic project plan outside this repository
 inputs:
+  - verified actual active engine mode and exact existing selected-feature write authority
   - the topic name
   - the intended outcome of the topic
   - the in-scope and out-of-scope boundaries
@@ -26,13 +27,13 @@ inputs:
   - the current workflow contract from `plan/agent-handoff-workflow.md`
   - the shared topic-plan contract from `plan/topic-plan-contract.md`
 outputs:
-  - a repo-visible `plan/<topic>/<topic>.plan.md`
-  - conditionally updated `analysis/<topic>/requirements.md` and/or `analysis/<topic>/technical-spec.md` when a clear authorized revision changes that baseline
+  - mode-appropriate topic plan: authorized Default feature file, otherwise conversation draft with intended path
+  - analysis revisions written only under exact Default authority; otherwise conversation proposals with unchanged disk baseline
   - explicit scope, boundaries, locked decisions, and analysis-layer routing for the topic
   - exact artifact paths and workflow transitions
   - clear stable-library intent declared or explicitly absent
   - explicit semantic warnings when analysis inputs are missing or incomplete
-  - a topic plan ready to hand to Implementer work
+  - complete planning draft for independent review; only genuine subsequent approval permits Implementer handoff
 ---
 
 # Purpose
@@ -51,6 +52,8 @@ Do not use this skill when:
 - the request is for a generic project plan outside this repository
 
 # Inputs
+- actual active engine mode; controlled labels are policy inputs, not engine proof
+- selected feature and exact existing authorized paths for any Default file writes
 - the topic name
 - the intended outcome of the topic
 - the in-scope and out-of-scope boundaries
@@ -63,6 +66,13 @@ Do not use this skill when:
 - the shared topic-plan contract from `plan/topic-plan-contract.md`
 
 # Process
+0. Verify actual active mode and the exact existing authorized target set before
+   any write. Actual Plan Mode or Default without file-write authority returns a
+   complete frozen-input conversation draft only, with intended paths and proposed
+   state fields, never disk-created/current-state/approval claims. Unknown mode
+   stops without writes. Default writes require the selected feature and exact
+   authorized paths; do not ask again when authority already exists. No subagent
+   bypass. Controlled mode labels cannot certify actual Plan-engine execution.
 1. Confirm the task is really topic-plan authoring, not implementation drafting, review, publish, or release execution.
 2. Read the current workflow contract and the shared topic-plan contract, then start from `templates/topic-plan-template.md` instead of drafting the plan from scratch.
 3. Inspect `analysis/<topic>/requirements.md` and `analysis/<topic>/technical-spec.md` if either exists before deciding the plan scope.
@@ -70,18 +80,18 @@ Do not use this skill when:
    - if both files exist, enter strict mode: treat `analysis/<topic>/technical-spec.md` as the execution-facing source of truth, use `analysis/<topic>/requirements.md` as the business-intent guardrail, and map the output plan 100% to the technical spec instead of inventing alternative work from chat context
    - if one file exists without the other, emit an explicit semantic warning that names the missing companion artifact and explains that the analysis layer is incomplete
    - if neither file exists, emit an explicit semantic warning that the plan is being authored without the optional analysis layer
-   - analysis artifacts are the recorded baseline; a clear later user revision updates that baseline without requiring a magic word. Record the affected contract and synchronize authorized artifacts before downstream use
+   - analysis artifacts are the recorded baseline; a clear later user revision updates that baseline without requiring a magic word. Record the affected contract and synchronize only exactly authorized Default artifacts before downstream use; otherwise propose the revision in the conversation without claiming changed disk baseline
 5. Declare local development intent with stable-library intent absent. A README
    navigation link alone is not promotion. If stable publishing is requested,
    stop for a separately approved publishing contract; do not import upstream
    VERSION, registry, release or tag governance.
 6. Lock scope, boundaries, and role ownership before drafting the plan body in the local template.
 7. Enumerate exact `Artifact Paths`; do not use vague catch-all path descriptions.
-8. Write the required topic-plan sections in canonical order from the template.
+8. Produce required sections in canonical order: exactly authorized Default file or complete conversation draft with intended path under the mode gate.
 9. Explicitly state no automatic post-merge/release actions for local work.
    Separately authorized publication must have exact topic paths and stop at
    human review; it is not an automatic lifecycle.
-10. Use only canonical workflow transitions and require machine-consumable reviewer handoff JSON.
+10. Use only canonical transitions and declare reviewer JSON as a schema, not a verdict. Conversation draft state is proposed, not actual disk phase. For authorized phase recording, the owner advances review-ready to reviewer-in-progress only after a genuine independent Reviewer start acknowledgement and before resumed review; record approved/needs-rework only after that Reviewer returns its native verdict. Never invent acknowledgement, phase history or approval.
 11. If scope, artifact paths, role ownership, stable-library timing, stable-library metadata, release intent, or analysis-layer priority is unclear, stop and ask instead of filling placeholders.
 
 # Examples
@@ -89,17 +99,19 @@ Do not use this skill when:
 - **Negative**: Ignore existing analysis files because a newer chat instruction sounds easier, skip semantic warnings when analysis inputs are missing, or draft a plan that says `README/VERSION maybe later`.
 
 # Outputs
-- a repo-visible `plan/<topic>/<topic>.plan.md`
-- conditionally updated `analysis/<topic>/requirements.md` and/or `analysis/<topic>/technical-spec.md` when a clear authorized revision changes that baseline
+- authorized Default topic file, or conversation draft with intended plan path and proposed state only
+- analysis revisions written only under exact Default authority; otherwise conversation proposals with unchanged disk baseline
 - explicit scope, boundaries, locked decisions, and analysis-layer routing for the topic
 - exact artifact paths and workflow transitions
 - clear stable-library intent: declared or explicitly absent
 - explicit semantic warnings when analysis inputs are missing or incomplete
-- a topic plan that is ready to hand to Implementer work
+- a plan for independent review; Implementer receives it only after genuine approval
 
 # Validation
 
 ## Required Checks
+- verify actual mode and exact existing target authority first; draft-only output makes no disk/current-phase/approval claims
+- missing optional analysis is a named warning, not a new globally required file; incomplete supplied frozen scope/baseline never authorizes invented facts or a review-ready claim
 - PASS: topic name, outcome, scope, and artifact paths are all provided
 - PASS: the workflow contract at `plan/agent-handoff-workflow.md` is readable
 - PASS: the shared topic-plan contract at `plan/topic-plan-contract.md` is readable
@@ -119,7 +131,7 @@ Do not use this skill when:
 - clear user revisions are reflected in the affected baseline; ambiguous contradictions are surfaced before handoff
 
 ## On Soft Fail
-- mark the plan as INCOMPLETE; list missing analysis artifacts or unresolvable scope items explicitly
+- mark incomplete-layer routing as INCOMPLETE and name absent optional analysis; draft only known frozen scope, never fill missing required scope by guessing or claim actual review-ready disk state
 - emit a named semantic warning when one analysis file exists without its companion
 - do not silently fall back to chat context when analysis artifacts exist but are partial
 
@@ -142,7 +154,7 @@ Do not use this skill when:
 - Do not implement the topic's actual skill or code artifact.
 - Do not review, approve, or publish the topic.
 - Do not guess stable-library timing or release intent.
-- Do not rely on hidden chat context instead of a repo-visible plan.
+- A complete explicitly supplied frozen conversation baseline may support a mode-appropriate draft; do not invent missing analysis, imply an intended path exists, or claim the draft is disk-readable/current review-ready.
 - Do not let absent analysis files fail silently; warn explicitly.
 - Do not treat ambiguous remarks as blanket permission to discard analysis; honor clear revisions and update only affected contracts.
 - Do not generate a generic project-management plan for another repository.

@@ -2,6 +2,10 @@
 
 Use this checklist when reviewing a repo-visible topic plan before later execution begins.
 
+- [ ] Before native verdict: readable plan/contracts, genuine distinct Reviewer start acknowledgement and authorized owner-recorded current reviewer-in-progress are verified.
+- [ ] Ineligible stage/missing plan/contracts/start evidence returns BLOCKED coordination without native approved/needs-rework, including standalone use.
+- [ ] Reviewer leaves source body/phase metadata read-only; only authorized owner records actual start phase and later returned-verdict phase, with body hash preserved.
+- [ ] Plan Mode never writes or delegates around the boundary.
 - [ ] The plan path is `plan/<topic>/<topic>.plan.md`.
 - [ ] The review uses the shared contract sources:
   - [ ] `plan/agent-handoff-workflow.md`
@@ -39,4 +43,4 @@ Use this checklist when reviewing a repo-visible topic plan before later executi
 - [ ] `Post-merge / release actions` match the actual scope and timing.
 - [ ] Plan-Creator, Implementer, Plan-Reviewer, Reviewer, and Observer responsibilities are not mixed.
 - [ ] No unsafe placeholders such as `TBD`, `later`, or `follow normal process` remain where the workflow needs an explicit contract.
-- [ ] The final output is exactly one JSON verdict object with no trailing prose.
+- [ ] After eligibility passes, final output is exactly one unchanged fixed JSON verdict object; before eligibility it is BLOCKED coordination with no native verdict.
