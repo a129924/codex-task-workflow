@@ -582,3 +582,50 @@ No dev/source/global/product/immutable 703-line companion changes. Preserve
 the original main approval, eleven canonical sections/nine scope fields and
 Open Questions bytes. Retain feature and owned fixtures for human review;
 no merge, release or cleanup.
+
+## Round6 bounded fixes — independent verification PASS
+
+Round6's five bounded corrections passed actual independent Tester and Reviewer
+verification. Once-run results: 24 methods / 400 CLI calls, all 56 immutable
+companion items, plus 12 separate baseline replays across six fixtures correcting
+four false-success outcomes and retaining eight controls. Author selfchecks are
+separate readiness evidence; prior Round5 23/378 and earlier counts remain
+historical, not fresh runs. No new runtime dependency or global install.
+
+The actual distinct Plan-Reviewer applied the missing-plan fallback and returned
+BLOCKED coordination without native verdict. A genuine returned independent
+Reviewer PATCH_REQUIRED routed to Implementer with actual task/result correlation
+and distinct author identity; five other routing cases were controlled policies.
+Implementer actually consumed 27 readable version-bound package references;
+five controlled missing-boundary package inputs stopped.
+
+Normal actual Default step creation used the unchanged genuine approved source,
+canonical source-topic/verified-root destination and separate exact caller final/
+temp authority. No additional source step row or exception was required; explicit
+source conflicts still block. The earlier limited-exception record was superseded,
+retained and never executed. Exact exclusive temp creation, full gate recheck and
+atomic no-overwrite promotion produced one retained-fixture Base step: one
+verbatim implementation item / nine pending actions / zero completed / nine
+metadata fields. Before creation, two complete proposed conversation drafts and
+three no-write BLOCKED inputs preserved all paths. Existing final subsequently
+blocked before temp creation with unchanged bytes. All 111 prior protected entries
+remained identical; the step was the only new final, and its temp is absent.
+
+No production Base, new main approval, planning cycle or report/lifecycle execution
+occurred; the retained fixture Base was created once. Original source/native/
+owner approval proof and report absence remain unchanged. Tracker escape parity,
+real routing provenance and step mode/root/final+temp/no-overwrite gates are
+bounded corrections, not a full parser or new profile.
+
+Actual evidence: `/private/var/folders/x9/3v967ts5131dfn6x4bsy9th00000gn/T/agent-skill-review-round6-rn4zhz_2`.
+`targeted-test-report.json` and `final-review.json` record Tester/Reviewer PASS;
+`implementer-step-application-result.json` records the actual generated artifact.
+These are local-only paths unavailable for download through this PR. Actual
+Default/macOS was observed; Plan/unknown/REPLAN variants are policy controls.
+Actual Plan engine, Linux and an unprovoked destination race remain unverified;
+unexposed provider request IDs were not fabricated. Existing external pytest
+is optional verification tooling. Current immutable 60b3b5b77515c354ed355c1adb28a8ed349dda67
+import comparison remains 41 adapted / 5 unchanged / 46 files. External source
+HEAD is separately observed without reset/repin. Preserve original topic approval,
+eleven sections/nine fields/Open Questions, product readOnly and feature/fixtures.
+Ready human review remains the stop; no merge, release or cleanup.
