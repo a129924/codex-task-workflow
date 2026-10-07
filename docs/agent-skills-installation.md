@@ -62,8 +62,9 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
 The installed tracker runtime was initially copied unchanged. The authorized
 PR-comment fixes now adapt its topic/path validation, error handling and Markdown
 boundaries. The source checkout and imported companion pytest tests remain
-unchanged. pytest is optional for those source tests and is not installed;
-the repository's acceptance harness uses unittest. Do not confuse checkbox
+unchanged. pytest is optional for those companion tests; default Python still has no pytest.
+Round3 selfcheck uses the previously authorized external pytest9.1.1 venv only;
+no runtime dependency is added. The repository's acceptance harness uses unittest. Do not confuse checkbox
 completion with actual artifact, approval or test evidence.
 
 worktree-manager requires Git and exact selectors. Ordinary/existing worktree
@@ -202,24 +203,94 @@ This factual synchronization records completed Round2 verification; its
 documentation-only delta remains a separate bounded review artifact.
 Human review remains the stop and the actual feature worktree is retained.
 
+## Round3 bounded fix status
+
+Round3 addresses five additional review threads within the same bounded topic.
+Raw fence validity cannot be promoted by HTML-comment removal, including a
+same-line comment prefix. Visible quoted checkbox rows fail closed while quoted
+prose/links and genuine code/comments remain controls. Supported top-level
+checkbox parents may have non-task nested descriptions; nested checkboxes,
+orphans, unknown plain lifecycle actions and pending/lowercase parents still block.
+
+Both analysis skills now verify actual active mode before output. Actual Plan
+Mode returns complete conversation drafts with intended paths and no disk
+writes/existence claims. Translation may consume an explicitly identified
+complete frozen conversation requirements draft in actual Plan Mode; missing,
+vague or unfrozen input still blocks. Default file output requires selected
+feature worktree and exact authorized paths; unknown mode never permits writes.
+A controlled mode label is policy input, not evidence that the engine changed.
+
+Actual Round3 Tester `/root/tester` returned PASS and independent Reviewer
+`/root/explorer` returned PASS for all five bounded groups / five new threads,
+with no findings. Tester ran one 18-method suite / 251 CLI calls and all 56
+immutable 703-line companion tests using external optional pytest 9.1.1.
+Fourteen postfix runtime probes matched expected results. These independent
+counts exclude Implementer selfchecks and earlier historical suites.
+
+Eight actual Tester analysis applications distinguish observed Default from
+controlled Plan/unknown-mode policy inputs. Actual Default authorized requirements
+and spec outputs were observed; controlled Plan drafts, missing/unfrozen refusal
+and unknown-mode NoWrite cases support policy only. Actual engine remained
+Default: actual Plan Mode execution is still unverified. No controlled label is
+presented as an engine switch or additional agent dispatch.
+
+Fresh actual Plan-Creator `/root/round3_plan_creator` produced planned,
+creator-in-progress and review-ready versions; distinct Plan-Reviewer
+`/root/round3_plan_reviewer` recorded reviewer-in-progress and returned native
+approved before the actual owner recorded terminal approved. All five ordered
+versions, timestamps, hashes and returned verdict are retained. This disposable
+fixture review does not reapprove the already-authorized production topic.
+Actual Implementer `/root/implementer` then created the absent Base tracker
+atomically/create-only from the genuinely approved source. It mirrors exactly
+one complete implementation item with 9 pending actions / 9 metadata / 0 completed,
+rather than the older three-item fixture's 11 actions. Report implementation
+remains absent; source and protected inventories are unchanged. Approval proves
+planning eligibility only, not report execution or implementation completion.
+
+Current installed-source comparison remains pinned to
+`60b3b5b77515c354ed355c1adb28a8ed349dda67`: 41 adapted / 5 unchanged / 46 files.
+The source checkout's observed HEAD moved externally to
+`34f943b26fb007c2d773e37599356a4b9d6c1674` across eight nonimported paths;
+source was clean and imported-path overlap is empty. No unchanged-HEAD claim,
+reset or repin is made; this task performed no source writes.
+
+Actual formal evidence is retained locally at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round3/targeted-test-report.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review-round3/targeted-test-report.md`,
+with independent review at
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round3/final-review.json`
+and `/private/tmp/agent-skill-implementation-review/pr-comment-review-round3/final-review.md`.
+Fresh planning records and Base creation are under
+`/private/tmp/agent-skill-implementation-review/pr-comment-review-round3/planning-role-evidence/`.
+These plain local paths are unavailable from the PR and not uploaded.
+Original 5 tests / 37 calls, Round1 12/128 and Round2 15/189 remain historical,
+including their distinct source35/11 comparison; none is relabeled fresh.
+Observed macOS/Python 3.14.0/default-temp and actual-mode/control limits remain.
+External pytest is only a verification tool; no runtime dependency, new
+profile/schema/role, universal guarantee or Task product is added.
+This records completed bounded verification; the factual documentation delta
+is a separate review artifact. Retain the real feature for human review;
+no merge/release/cleanup or report execution is implied.
+
 ## Imported-file adaptation manifest
 
-35 files adapted; 11 unchanged. Scope: installed paths, local role boundaries,
+41 files adapted; 5 unchanged. Previous Round2 35/11 remains a historical comparison. Scope: installed paths, local role boundaries,
 Base-only profile and shell, native planning verdict routing, fixture-only
-worktree authorization and minimal shared contracts. Analysis skills and tracker
-companion Python tests remain unchanged. The installed tracker runtime now
+worktree authorization, minimal shared contracts and explicit analysis-mode
+boundaries. The two analysis examples and tracker companion Python tests remain
+unchanged; six analysis instruction/checklist/reference files are now adapted. The installed tracker runtime now
 contains the authorized PR-comment safety fixes; source pin remains provenance.
 
 | Imported path | Pin comparison |
 | --- | --- |
-| `.agents/skills/business-intent-alignment/SKILL.md` | unchanged |
-| `.agents/skills/business-intent-alignment/checklist.md` | unchanged |
+| `.agents/skills/business-intent-alignment/SKILL.md` | adapted |
+| `.agents/skills/business-intent-alignment/checklist.md` | adapted |
 | `.agents/skills/business-intent-alignment/examples.md` | unchanged |
-| `.agents/skills/business-intent-alignment/reference.md` | unchanged |
-| `.agents/skills/business-to-technical-translation/SKILL.md` | unchanged |
-| `.agents/skills/business-to-technical-translation/checklist.md` | unchanged |
+| `.agents/skills/business-intent-alignment/reference.md` | adapted |
+| `.agents/skills/business-to-technical-translation/SKILL.md` | adapted |
+| `.agents/skills/business-to-technical-translation/checklist.md` | adapted |
 | `.agents/skills/business-to-technical-translation/examples.md` | unchanged |
-| `.agents/skills/business-to-technical-translation/reference.md` | unchanged |
+| `.agents/skills/business-to-technical-translation/reference.md` | adapted |
 | `.agents/skills/context-package-builder/SKILL.md` | adapted |
 | `.agents/skills/context-package-builder/examples.md` | adapted |
 | `.agents/skills/handoff-routing-policy/SKILL.md` | adapted |
