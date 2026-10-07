@@ -1,5 +1,12 @@
 # step-creator examples
 
+Positive output examples require actual authorized Default, verified selected
+owned feature and exact absent final/narrowly recorded necessary temp authority.
+They illustrate no issued permission, existence or approval. Plan/known Default
+without output authority returns only a complete eligible source-faithful draft;
+unknown/ambiguous selection or authority BLOCKED before writes. Recheck the
+full gate and absence before promotion, never overwrite or execute actions.
+
 ## Positive: explicit Base
 
 Caller selects base-plan for a complete independently reviewed local 11-section
@@ -25,3 +32,15 @@ write. "Pick the right profile" also stops; never infer from plan content.
 Missing contract, duplicate/nested-only Implementation Steps, competing branch
 selectors, an existing destination or source state/action conflict stops before
 writing. Never repair/overwrite an existing output or manufacture evidence.
+
+## Conversation-only and hard-stop controls
+
+Known Default with explicitly absent output authority may show the complete Base
+draft at an intended path without file/current-phase claims. Controlled Plan is
+no-write policy, not engine evidence. Unknown mode, missing selected feature,
+outside/mismatched final or temp authority stops before output. Source eligibility
+still applies. Derive canonical plan/<topic>/<topic>.step.md from source topic
+and verified owned root, with exact final/temp caller authority and no explicit
+source path/tuple conflict. No separate source step row is required; relocated
+copies remain controlled inputs, not newly approved. Existing/raced
+destination always remains intact.

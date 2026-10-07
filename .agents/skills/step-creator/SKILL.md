@@ -7,12 +7,13 @@ risk_profile:
   - multi_agent_handoff
   - code_modification
 inputs:
+  - actual engine mode, selected owned feature and exact final/temp authority
   - topic name
   - "explicit profile: base-plan"
   - readable source plan at plan/<topic>/<topic>.plan.md
   - repo-visible progression and completion evidence for non-pending markers
 outputs:
-  - one newly created plan/<topic>/<topic>.step.md
+  - exactly authorized Default step or complete eligible conversation-only draft
 ---
 
 # Purpose
@@ -34,7 +35,33 @@ before any write, with no fallback or dependency installation.
 
 # Process
 
-1. Resolve plan/<topic>/<topic>.plan.md and the absent .step.md destination.
+## Actual mode and selected-output authority
+
+Before rendering-for-write or any temporary/final artifact, verify actual engine
+mode, selected owned feature and canonical source-consistent destination
+plan/<topic>/<topic>.step.md derived from the source topic and verified root.
+Verify exact final plus narrowly recorded necessary same-directory temp authority.
+A separate step row in source Artifact Paths is not required; explicit source
+path/selector conflicts remain BLOCKED. Reuse existing
+authorization without repeated permission. Plan or known Default with explicitly
+absent output authority returns a complete eligible source-faithful conversation
+draft with intended path/proposed fields, no artifact/current-phase/execution
+claims. Unknown mode, missing/ambiguous selection or unresolved/mismatched/outside
+authority is BLOCKED without writes. Controlled mode labels are policy only.
+Keep genuine source/native/owner proof read-only; relocating a controlled copy
+does not issue new approval or reconcile explicit source path/selector conflicts.
+
+Authorized Default validates before its exactly authorized temp creation, then
+rechecks actual mode, selected-root containment, exact final/temp authority and
+absence immediately before atomic no-overwrite promotion. Lost authority or
+destination race stops, preserves existing final bytes and cleans only the
+just-created owned temporary artifact under its existing authority. No action
+executes. Unsupported/source-ineligible inputs remain BLOCKED in draft-only cases.
+
+1. After the mode/selection/authority gate, resolve the source and absent step
+   destination from the source topic within the verified selected feature.
+   Require canonical source-consistent path and exact final/temp caller authority;
+   explicit source path/tuple conflicts stop. Planned intent is not actual ownership.
    Missing contracts, unsafe topic, unreadable source or existing output is
    BLOCKED with no temporary or final artifact.
 2. Require explicit base-plan and read reference.md plus
@@ -53,12 +80,14 @@ before any write, with no fallback or dependency installation.
    Lowercase source [x] is pending and warns. Initial generation permits
    pending worktree actions; do not invent evidence, approval or test results.
 6. Validate the entire rendered content and destination absence. Only then
-   create a same-directory temporary file, validate it, recheck absence and
-   atomically promote without overwrite. On failure or destination race,
+   create only the exactly authorized same-directory temporary artifact,
+   validate it, recheck actual mode/selection/containment/final+temp authority
+   and absence, then atomically promote without overwrite. On failure or destination race,
    remove the temporary file, preserve existing output and leave no partial
    final artifact. If atomic no-overwrite creation is unavailable, INCOMPLETE.
-7. Return review-ready with profile, generated path, evidence, warnings and
-   an independent Reviewer handoff. Do not self-approve or execute lifecycle.
+7. Authorized creation returns generated path/profile/evidence/warnings for
+   independent Reviewer handoff. Draft-only output returns complete content
+   with intended path/proposed fields and no generated-file/current-phase claim. Do not self-approve or execute lifecycle.
 
 # Validation
 
@@ -67,8 +96,10 @@ Steps, terminal approved with empty next planning transitions, exact Implementer
 next actor and bounded implementation action,
 and one complete selector. Only base-plan is supported. Frozen wire and
 source fidelity hold; all markers are [X] or [ ]; every [X] has evidence.
-Only the new destination is written. Plan Mode forbids even this write for all
-roles; draft only in conversation when Plan Mode is active.
+Only exact authorized final/necessary temp artifacts may be written. Both
+pre-write and pre-promotion mode/root/authority/absence gates are mandatory.
+Plan/known no-output-authority drafts stay in conversation; unknown or ambiguous
+inputs stop without writes. No overwrite or execution evidence is inferred.
 
 # Failure Handling
 

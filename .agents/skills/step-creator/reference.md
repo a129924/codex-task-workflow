@@ -1,5 +1,28 @@
 # Shared step-creator reference
 
+## Actual mode and selected-output authority
+
+Before rendering-for-write or any temporary/final artifact, verify actual engine
+mode, selected owned feature and canonical source-consistent destination
+plan/<topic>/<topic>.step.md derived from the source topic and verified root.
+Verify exact final plus narrowly recorded necessary same-directory temp authority.
+A separate step row in source Artifact Paths is not required; explicit source
+path/selector conflicts remain BLOCKED. Reuse existing
+authorization without repeated permission. Plan or known Default with explicitly
+absent output authority returns a complete eligible source-faithful conversation
+draft with intended path/proposed fields, no artifact/current-phase/execution
+claims. Unknown mode, missing/ambiguous selection or unresolved/mismatched/outside
+authority is BLOCKED without writes. Controlled mode labels are policy only.
+Keep genuine source/native/owner proof read-only; relocating a controlled copy
+does not issue new approval or reconcile explicit source path/selector conflicts.
+
+Authorized Default validates before its exactly authorized temp creation, then
+rechecks actual mode, selected-root containment, exact final/temp authority and
+absence immediately before atomic no-overwrite promotion. Lost authority or
+destination race stops, preserves existing final bytes and cleans only the
+just-created owned temporary artifact under its existing authority. No action
+executes. Unsupported/source-ineligible inputs remain BLOCKED in draft-only cases.
+
 ## Generation and eligibility
 
 Only explicit base-plan is supported. Read both shared contracts and the
@@ -12,8 +35,9 @@ emulate upstream specialized profiles. Missing/duplicate/ambiguous inputs,
 existing output or unsupported profiles stop before any write. Do not repair
 source wording. All five earlier/rework states are BLOCKED even with valid
 canonical edges; approval alone is not execution-completion evidence.
-Validate before creating a same-directory temporary file,
-then recheck absence and atomically promote without overwrite; clean temporary
+After authority passes, validate before exactly authorized same-directory
+temporary creation, recheck full mode/root/authority/absence before atomic
+no-overwrite promotion; clean only owned temporary
 output on failure and preserve any existing final artifact.
 
 ## Evidence and tracker

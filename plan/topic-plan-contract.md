@@ -74,7 +74,11 @@ unsupported and stop before writing; do not substitute a different profile.
 
 ## Independent reviewer JSON
 
-Return exactly one JSON object with no trailing prose:
+For eligible independent reviews only, return exactly one JSON object with no
+trailing prose. First verify readable plan/contracts, genuine independent
+actual start acknowledgement and authorized owner-recorded current
+reviewer-in-progress. Missing eligibility returns BLOCKED coordination,
+not a native approved/needs-rework verdict:
 
 ```json
 {
@@ -89,5 +93,7 @@ file, fix; ADDRESS entries contain comment, location, why; DISCUSS entries
 contain comment, optional, why; SKIP entries contain comment, why. Missing
 feedback means empty arrays. A blocker requires needs-rework, never partial
 approval. Internal workflow state does not belong in the output JSON. The
-schema above is a template, not a real review result. Missing source contracts
-prevent issuing any verdict. Missing plan uses needs-rework with its exact path.
+schema above is a template, not a real review result. Missing, unresolved or
+unreadable plan/contracts/start/owner eligible-phase proof stops with BLOCKED
+coordination and no native verdict. Name the exact missing path or evidence.
+After eligibility passes, structural defects use unchanged native needs-rework.
