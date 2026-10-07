@@ -1,0 +1,29 @@
+{
+  "observedAt": "2026-10-07T06:39:51.148787+00:00",
+  "baseCommit": "994b509b645755744836d0a8e2baf0056e353799",
+  "branch": "chore/a129924/youtrack-mcp-validation",
+  "client": "codex-cli 0.160.1",
+  "targetEndpoint": "https://a129924-tasks.youtrack.cloud/mcp",
+  "experimentNumber": {
+    "reserved": "E002",
+    "E001": "reserved per user information about PR #1",
+    "checked": "local all-ref path history, remote branch listing, PR #1 files; E002 not found"
+  },
+  "project": "not created per user",
+  "tenantVersion": "unverified",
+  "CIMD": "unverified",
+  "OAuth": "not attempted",
+  "MCP": "not attempted",
+  "ticketId": null,
+  "experimentState": "未執行",
+  "validationTaskComplete": false,
+  "globalCodexConfigModified": false,
+  "projectConfig": "added only in feature worktree; TOML syntax checked; current session tool load unverified",
+  "graphify": {
+    "existingGraph": false,
+    "strategy": "targeted search/source reads",
+    "buildPerformed": false,
+    "providerCalls": false
+  },
+  "PRLens": "pending actual topic commits; local-only artifact"
+}

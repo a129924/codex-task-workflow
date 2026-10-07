@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-07T07:14:02.170051+00:00",
+  "CIMD": {
+    "enabledBy": "user",
+    "reprobeHttpStatus": 200,
+    "client_id_metadata_document_supported": true
+  },
+  "authentication": {
+    "client": "codex-cli 0.160.1",
+    "command": "codex mcp login youtrack_feasibility --oauth-client-registration cimd",
+    "exitCode": 0,
+    "reportedSuccess": true,
+    "userConfirmed": "Authentication complete. You may close this window.",
+    "credentialsLocation": "managed by Codex; not inspected or copied"
+  },
+  "project": {
+    "shortName": "MCPTEST",
+    "verifiedViaMCP": false
+  },
+  "currentConversation": {
+    "youtrackToolsAvailable": false,
+    "getCurrentUserCalled": false
+  },
+  "authenticatedMCPCalls": 0,
+  "ticketId": null,
+  "experimentState": "無法判定",
+  "validationTaskComplete": false,
+  "stopCondition": "Restart/reload Codex MCP in trusted feature project; current conversation has no YouTrack tools",
+  "nextEvidence": [
+    "get_current_user identity check",
+    "MCPTEST project and field schema",
+    "same-ticket create/read/update/resolve/search"
+  ],
+  "scopePreserved": [
+    "No admin setting changed by agent",
+    "No permanent token or REST fallback",
+    "No Ticket created"
+  ]
+}

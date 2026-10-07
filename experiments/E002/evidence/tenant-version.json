@@ -1,0 +1,13 @@
+{
+  "observedAtUtc": "2026-10-07T07:41:57.033027Z",
+  "source": "https://a129924-tasks.youtrack.cloud/api/config?fields=version,build",
+  "method": "GET",
+  "authenticated": false,
+  "purpose": "read-only public tenant version metadata; no issue operations",
+  "httpStatus": 200,
+  "returnedMetadata": {
+    "version": "2026.2",
+    "build": "19197",
+    "$type": "FrontendConfig"
+  }
+}
