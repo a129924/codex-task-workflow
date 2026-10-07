@@ -36,6 +36,8 @@ Do not use this skill when:
   - `REPLAN_REQUIRED` (independent Reviewer / Code-Reviewer only)
   - `MISSING_EVIDENCE`
   - `BLOCKED`
+- actual returned actor identity and genuine parent dispatch/returned-result correlation
+- actual author identity for Reviewer repair/replan; Reviewer must differ from author
 - bounded evidence summary
 - explicit blocker list, if any
 - optional evidence owner for `MISSING_EVIDENCE`
@@ -43,7 +45,14 @@ Do not use this skill when:
 
 # Process
 
-1. Confirm the result came from real dispatch rather than Observer simulation.
+1. Confirm actual actor identity and genuine parent dispatch/returned-result
+   correlation before routing. Bind the actual bounded task, dispatched actor
+   and returned result using exposed receipts or retained parent task/result
+   provenance. A role label is not proof. Unexposed provider request IDs are
+   disclosed, never fabricated or replaced by registry/launcher identifiers.
+   Missing linkage or actor identity stops. PATCH_REQUIRED/REPLAN_REQUIRED also
+   requires an actual author identity distinct from the actual Reviewer; absent
+   identity or the same author/Reviewer stops even with a Reviewer role label.
 2. Confirm the result role is permitted (normalize only Code-Implementer and
    Code-Reviewer aliases) and the verdict is role-compatible. approved and
    needs-rework belong only to Plan-Reviewer; Plan-Reviewer returns native
@@ -88,7 +97,9 @@ Do not use this skill when:
 - `PASS`: the result came from real dispatch, the Observer is in `ROUTING`, the
   verdict is exactly one frozen allowed value, and the skill returns exactly
   one allowed `next_role` or `stop` consistent with the stated verdict.
-- `BLOCKED`: stop when the verdict is unknown, unstructured, or unsupported;
+- BLOCKED: stop when actual dispatch/result correlation or actor identity is
+  missing, or repair/replan lacks actual distinct Reviewer/author proof;
+  stop when the verdict is unknown, unstructured, or unsupported;
   when the evidence owner for `MISSING_EVIDENCE` is unknown; or when proceeding
   would require invented workflow state, registry behavior, runtime semantics,
   or a broader routing model than this skill allows.
@@ -97,7 +108,8 @@ Do not use this skill when:
 
 - `SOFT FAIL`: mark status as `INCOMPLETE` when the allowed verdict is clear
   enough to route or stop, but the bounded evidence summary or blocker detail is
-  incomplete.
+  incomplete. Identity/correlation/required independence are hard preflight
+  inputs and never eligible for this soft-fail route.
 - Under `SOFT FAIL`, keep the routing decision within the frozen verdict set,
   state the missing evidence explicitly, and avoid inventing additional workflow
   state.
@@ -106,8 +118,10 @@ Do not use this skill when:
 
 ## Missing Context
 
-- If the verdict is valid but supporting evidence is partial, return the bounded
-  best-effort route or `stop` with the limitation stated explicitly.
+- Missing actual linkage, actor identity or required Reviewer independence
+  is BLOCKED and stops; no best-effort route.
+- Only after hard preflight may partial non-routing supporting detail allow a
+  bounded route or stop with the limitation stated explicitly.
 - If missing context could reasonably change the next allowed role, mark the
   result `BLOCKED` and stop.
 

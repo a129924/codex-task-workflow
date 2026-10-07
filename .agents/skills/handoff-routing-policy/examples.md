@@ -1,11 +1,20 @@
 # handoff-routing-policy examples
 
+Positive provenance below is illustrative, not issued IDs/dispatch/authority.
+Real routing verifies genuine returned parent-task/actor/result linkage.
+Unexposed provider request IDs are disclosed, never fabricated or replaced by
+registry/launcher binding.
+
 ## Positive: patch required
 
 Input:
 
 - `result_role`: `Reviewer`
 - `verdict`: `PATCH_REQUIRED`
+- actual parent dispatch: the bounded review task delivered to the independent Reviewer
+- actual returned actor: that dispatched Reviewer, distinct from the recorded actual author
+- actual result correlation: returned PATCH_REQUIRED belongs to that same task and actor
+- actual author: independently identified implementation author, not a role label
 - bounded evidence summary: one accepted artifact is still missing required text
 
 Output:
@@ -24,7 +33,9 @@ Input:
 
 - `result_role`: `Reviewer`
 - `verdict`: `REPLAN_REQUIRED`
+- actual dispatch/result correlation and returned actor: verified as above, Reviewer distinct from actual author
 - blocker: the required change would expand outside the frozen write set
+- policy example only: without a genuine historical REPLAN_REQUIRED result, do not label it actual dispatch or manufacture replan
 
 Output:
 
@@ -150,3 +161,11 @@ Unknown verdicts, BLOCKED and MISSING_EVIDENCE without a known allowed owner sto
 PATCH_REQUIRED and REPLAN_REQUIRED are compatible only with independent
 Reviewer / normalized Code-Reviewer. Implementer, Code-Implementer, Tester,
 Planner, Plan-Creator and Explorer emitting either review verdict stop.
+
+## Hard preflight stop: missing provenance or independence
+
+Reviewer/Code-Reviewer plus PATCH_REQUIRED/REPLAN_REQUIRED is not identity proof.
+Missing actual dispatch/result linkage, returned actor, actual author or identical
+author/Reviewer returns next_role stop with that exact gap as stop_condition.
+These hard inputs never use soft-fail routing. Alias normalization proves no
+independence; positive outputs apply only after these real inputs pass.

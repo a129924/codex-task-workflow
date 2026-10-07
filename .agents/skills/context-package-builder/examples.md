@@ -19,11 +19,15 @@ Output:
     "plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md"
   ],
   "constraints": [
-    "Write only the bounded artifact set.",
-    "Stop if runtime semantics or registry behavior becomes necessary."
+    "Actual mode: Default, illustrative only; verify the real engine mode.",
+    "Selected owned feature: /example/project.worktrees/agent-20261007-observer-dispatcher-canonical-baseline; verify actual ownership/selection.",
+    "Exact authorized Written: .agents/skills/example/SKILL.md, owned by Implementer in the selected feature; no other file/temp authority is implied.",
+    "ReadOnly: analysis/observer-dispatcher-canonical-baseline/requirements.md, analysis/observer-dispatcher-canonical-baseline/technical-spec.md, plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md, plan/agent-handoff-workflow.md, plan/topic-plan-contract.md, GOAL.md, docs/task-workflow.baseline.md, all other feature paths, dev/source/global.",
+    "Stop after bounded implementation handoff to Tester then independent Reviewer; no commit/push/PR, merge/release or cleanup authority.",
+    "Missing/ambiguous actual mode/root/exact path authority stops packaging before writes; runtime or registry expansion also stops."
   ],
   "evidence": [
-    "topic-local step artifact says implementation is the current workflow phase"
+    "plan/observer-dispatcher-canonical-baseline/observer-dispatcher-canonical-baseline.plan.md: verify actual approved status and exact owner/action; illustrative, not issued approval"
   ],
   "unknowns": []
 }
@@ -33,8 +37,14 @@ Why it is valid:
 
 - one target role
 - one bounded task slice
-- one bounded workflow-derived fact
+- concrete illustrative mode, selected-root, write/read-only ownership and stop boundaries
 - no unrelated history
+
+These strings confer no authority or existence. Real Implementer packages
+verify actual mode, selected owned feature, exact existing final/necessary temp
+write authority, readable frozen inputs, read-only sets and explicit Tester/
+Reviewer stop. Missing required boundaries stops packaging before mutation.
+Actual Default is distinct from controlled Plan policy; Plan permits no writes.
 
 ## Positive: reviewer package
 
