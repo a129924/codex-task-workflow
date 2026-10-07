@@ -114,3 +114,16 @@ top-level checkbox are prose; a pending/lowercase parent still blocks.
 Nested checkboxes remain unsupported across descriptive children. Genuine
 top-level boundaries reset ancestry; orphan/unknown plain actions and the exact
 nine-metadata rule retain fail-closed semantics.
+
+## Round4 supported heading and quoted-code scope
+
+Only column-zero `## Implementation Steps` opens implementation scope; only
+column-zero H1/H2 ends it or changes the Handoff / Gate Notes metadata section.
+Nested headings stay within their parent and cannot cut/reopen scope; genuine
+code/comments remain excluded and nested tasks still block. Explicit raw
+blockquote prefixes support quoted fences at their recorded depth. Raw info
+validity is checked before comment masking; closure requires matching depth,
+marker type, sufficient length and whitespace-only suffix. Leaving a quote
+container or moving to lower depth ends that fence and reprocesses the visible
+line. Naked quoted tasks still block; quoted prose and genuine quoted code pass.
+This adds no full Markdown parser or dependency.

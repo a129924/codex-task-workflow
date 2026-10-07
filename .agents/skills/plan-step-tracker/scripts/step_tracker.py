@@ -52,8 +52,8 @@ def _read_step_lines(topic: str, plan_dir: Path) -> list[str]:
 
 
 def _ends_implementation_section(line: str) -> bool:
-    """H1/H2 headings end an implementation section; H3+ stay inside it."""
-    return re.match(r"^#{1,2}(?:\s|$)", line.strip()) is not None
+    """Only column-zero H1/H2 end implementation scope; H3+ stay inside."""
+    return re.match(r"^#{1,2}(?:\s|$)", line) is not None
 
 
 def parse_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
@@ -80,8 +80,7 @@ def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     in_impl_section = False
 
     for line in _visible_completion_lines(lines):
-        stripped = line.strip()
-        if stripped == "## Implementation Steps":
+        if line == "## Implementation Steps":
             in_impl_section = True
             continue
 
@@ -94,21 +93,37 @@ def parse_impl_steps(topic: str, plan_dir: Path = Path("plan")) -> list[Step]:
     return _parse_step_lines(impl_lines)
 
 
+def _raw_quote_content(line: str) -> tuple[int, str]:
+    """Separate an explicit raw blockquote prefix; no lazy Markdown parsing."""
+    depth = 0
+    content = line
+    while True:
+        prefix = re.match(r"^ {0,3}>[ \t]?", content)
+        if prefix is None:
+            return depth, content
+        depth += 1
+        content = content[prefix.end():]
+
+
 def _visible_completion_lines(lines: list[str]) -> list[str]:
     """Exclude genuine code/comments while preserving unsupported task evidence."""
     visible: list[str] = []
-    fence: tuple[str, int] | None = None
+    fence: tuple[str, int, int] | None = None
     list_context = False
     in_comment = False
 
     for raw_line in lines:
-        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", raw_line.rstrip("\r\n"))
+        quote_depth, raw_content = _raw_quote_content(raw_line.rstrip("\r\n"))
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", raw_content)
         if fence is not None:
-            if marker:
-                token, suffix = marker.groups()
-                if token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
-                    fence = None
-            continue
+            if quote_depth < fence[2]:
+                fence = None  # Container ended; re-process this visible boundary line.
+            else:
+                if quote_depth == fence[2] and marker:
+                    token, suffix = marker.groups()
+                    if token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
+                        fence = None
+                continue
         if not in_comment and raw_line.startswith(("    ", "\t")):
             nested_checkbox = re.match(r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\]", raw_line.strip())
             if not (list_context and nested_checkbox):
@@ -116,7 +131,7 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
         if not in_comment and marker:
             token, suffix = marker.groups()
             if token[0] != "`" or "`" not in suffix:
-                fence = (token[0], len(token))
+                fence = (token[0], len(token), quote_depth)
                 continue  # Comment tokens in a valid fence's info are code too.
         # Remove only HTML comment spans outside genuine code. Keep all text
         # before/after a closed span, including headings and pending rows.
@@ -304,7 +319,7 @@ def check_impl_steps_succeeded(topic: str, plan_dir: Path = Path("plan")) -> int
     """Check if all implementation steps are complete. Exit 0 if yes, 1 if any pending."""
     try:
         lines = _visible_completion_lines(_read_step_lines(topic, plan_dir))
-        headings = [i for i, line in enumerate(lines) if line.strip() == "## Implementation Steps"]
+        headings = [i for i, line in enumerate(lines) if line == "## Implementation Steps"]
         if len(headings) != 1:
             raise ValueError("Expected exactly one Implementation Steps section")
         section = []

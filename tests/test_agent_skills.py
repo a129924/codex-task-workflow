@@ -418,5 +418,82 @@ class AgentSkillsTestCase(unittest.TestCase):
                     self.assertEqual(result.returncode, expected, result.stderr)
 
 
+    def test_only_top_level_headings_control_implementation_scope(self):
+        prefix = "## Implementation Steps\n- [X] Parent\n"
+        fixtures = {
+            "nested-H1": (prefix + "  # Details\n  - [ ] Pending child\n", 1, 1),
+            "nested-H2": (prefix + "  ## Details\n  - [ ] Pending child\n", 1, 1),
+            "nested-heading-ancestry": (prefix + "  ## Details\n  Description\n    - [ ] Pending child\n", 1, 1),
+            "nested-only-opener": ("  ## Implementation Steps\n- [X] Done\n", 0, 1),
+            "nested-opener-no-reset": (prefix + "  ## Implementation Steps\n- [ ] Still pending\n", 1, 1),
+            "nested-metadata-no-section": (prefix + "  ## Handoff / Gate Notes\n- Selected profile: base-plan\n", 1, 1),
+            "H3-stays-inside": (prefix + "### Details\n- [ ] Still pending\n", 1, 1),
+            "actual-top-level-tail": (prefix + "## Lifecycle\n- [ ] Review pending\n", 1, 0),
+            "actual-top-level-duplicate": (prefix + "## Implementation Steps\n- [X] Duplicate\n", 0, 1),
+            "nested-opener-in-tail": (prefix + "# Lifecycle\n  ## Implementation Steps\n- [ ] Review pending\n", 1, 0),
+        }
+        for name, (content, whole, implementation) in fixtures.items():
+            for operation, expected in (("check_all_succeeded", whole), ("check_impl_steps_succeeded", implementation)):
+                with self.subTest(fixture=name, operation=operation):
+                    result = self.run_cli(operation, content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if expected:
+                        self.assertNotIn("SUCCESS", result.stdout)
+        spec = importlib.util.spec_from_file_location("installed_tracker_heading_regression", self.entry)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        try:
+            spec.loader.exec_module(module)
+            with tempfile.TemporaryDirectory(prefix="tracker-heading-parser-") as fixture:
+                plan = Path(fixture) / "plan"
+                target = plan / "fixture/fixture.step.md"
+                target.parent.mkdir(parents=True)
+                for name, content, expected in (
+                    ("nested-boundary", prefix + "  ## Details\n- [ ] Still pending\n", ["Parent", "Still pending"]),
+                    ("nested-only", "  ## Implementation Steps\n- [X] Done\n", []),
+                    ("actual-tail", fixtures["actual-top-level-tail"][0], ["Parent"]),
+                ):
+                    target.write_text(content, encoding="utf-8")
+                    with self.subTest(public_parser=name):
+                        self.assertEqual([step.text for step in module.parse_impl_steps("fixture", plan)], expected)
+        finally:
+            del sys.modules[spec.name]
+
+    def test_explicit_quoted_fences_are_code_at_matching_container(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        for quote in ("> ", ">> ", "> > "):
+            for token in ("`" * 3, "~" * 4):
+                content = prefix + quote + token + "markdown\n" + quote + "- [ ] Example only\n" + quote + token + "  \n"
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(quote=quote, token=token, operation=operation):
+                        result = self.run_cli(operation, content)
+                        self.assertEqual(result.returncode, 0, result.stderr)
+        content = prefix + "> <!-- old -->\n> " + "`" * 3 + "html<!--info-->\n> - [ ] Example only\n> " + "`" * 3 + "\n"
+        for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+            result = self.run_cli(operation, content)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_quoted_fence_container_exit_preserves_pending_evidence(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        tick = "`" * 3
+        cases = {
+            "unquoted-exit": "> " + tick + "markdown\n> Example\n- [ ] Actual pending\n> " + tick + "\n",
+            "lower-depth-exit": ">> " + tick + "markdown\n>> Example\n> - [ ] Actual pending\n>> " + tick + "\n",
+            "wrong-type": "> " + tick + "markdown\n> ~~~\n> - [ ] Example only\n- [ ] Actual pending\n",
+            "short-token": "> " + tick + "`markdown\n> " + tick + "\n> - [ ] Example only\n- [ ] Actual pending\n",
+            "nonspace-suffix": "> " + tick + "markdown\n> " + tick + "not-a-close\n> - [ ] Example only\n- [ ] Actual pending\n",
+            "higher-depth-not-close": "> " + tick + "markdown\n>> " + tick + "\n> - [ ] Example only\n- [ ] Actual pending\n",
+            "raw-invalid-info": "> " + tick + "lang<!--`-->rest\n> - [ ] Actual pending\n> " + tick + "\n",
+            "comment-prefix-not-opener": "> <!-- x -->" + tick + "lang\n> - [ ] Actual pending\n> " + tick + "\n",
+            "multiple-fake-closures": ">> ````markdown\n>> Example\n> ````\n>> ~~~~\n>> ```\n>> ````not-a-close\n- [ ] Actual pending\n",
+        }
+        for name, content in cases.items():
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(fixture=name, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, 1, result.stderr)
+                    self.assertNotIn("SUCCESS", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()
