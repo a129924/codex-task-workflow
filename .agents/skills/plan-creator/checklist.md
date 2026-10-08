@@ -28,3 +28,8 @@ Use this checklist when drafting or sanity-checking a topic plan before handing 
   complete explicitly frozen input is used without inventing missing analysis facts.
 - [ ] All baseline/analysis revisions obey the same exact Default authority gate;
   draft-only proposals never claim that files or recorded baselines changed.
+
+- [ ] Immediately before EVERY plan/analysis/owner-phase write, mkdir, temp creation and promotion, recheck Default mode, verified canonical selected root and exact lexical/resolved destination authority.
+- [ ] Target and parent symlink chains (or strict nearest existing ancestor plus exact prospective suffix) are inside the selected root; resolved destination matches existing canonical authority.
+- [ ] Escapes, development/external aliases, dangling/unreadable/ambiguous components stop before mutation; no earlier batch check substitutes for each operation.
+- [ ] The containment gate is prompt policy only; no executable sandbox or unprovoked race-proof claim.

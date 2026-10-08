@@ -31,3 +31,24 @@ Only the authorized plan owner records phase metadata: independent actual start
 acknowledgement precedes reviewer-in-progress; native verdict follows resumed
 eligible review, then owner records approved/needs-rework. Preserve source body
 across review, keep author/reviewer distinct and never create approval/history.
+
+## Resolved-output containment gate
+
+Immediately before EVERY actual write, mkdir, temporary-file creation,
+no-overwrite promotion or owner-phase update, recheck actual Default mode and
+existing exact authority against the selected feature's verified canonical root.
+This includes plan, optional analysis revisions and every phase-recording write.
+Resolve the target and existing parent symlink chains; for an absent target or
+parent, strictly resolve the nearest existing ancestor and append the exact
+prospective suffix. Inspect existing components so dangling symlinks, unreadable
+or ambiguous chains never become silently accepted prospective directories.
+Require both resolved destination and parent/ancestor to stay within that selected
+canonical feature, and require the resolved destination to match the exact
+canonical destination covered by existing authority, as well as its declared
+lexical path. Recheck immediately before each individual operation, including
+before directory creation and before promotion; an earlier batch check is not
+sufficient. Outside-root/development/external aliases, unknown root/authority,
+dangling or ambiguous targets stop before any mutation. Reuse authority already
+given; never infer new destination permission from lexical containment alone.
+Plan/no-authority conversation drafts remain non-writing. This is prompt policy,
+not an executable sandbox or a guarantee against unprovoked TOCTOU races.

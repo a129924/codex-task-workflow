@@ -73,6 +73,7 @@ Do not use this skill when:
    stops without writes. Default writes require the selected feature and exact
    authorized paths; do not ask again when authority already exists. No subagent
    bypass. Controlled mode labels cannot certify actual Plan-engine execution.
+   Apply the resolved-output containment gate below before every file operation.
 1. Confirm the task is really topic-plan authoring, not implementation drafting, review, publish, or release execution.
 2. Read the current workflow contract and the shared topic-plan contract, then start from `templates/topic-plan-template.md` instead of drafting the plan from scratch.
 3. Inspect `analysis/<topic>/requirements.md` and `analysis/<topic>/technical-spec.md` if either exists before deciding the plan scope.
@@ -94,6 +95,27 @@ Do not use this skill when:
 10. Use only canonical transitions and declare reviewer JSON as a schema, not a verdict. Conversation draft state is proposed, not actual disk phase. For authorized phase recording, the owner advances review-ready to reviewer-in-progress only after a genuine independent Reviewer start acknowledgement and before resumed review; record approved/needs-rework only after that Reviewer returns its native verdict. Never invent acknowledgement, phase history or approval.
 11. If scope, artifact paths, role ownership, stable-library timing, stable-library metadata, release intent, or analysis-layer priority is unclear, stop and ask instead of filling placeholders.
 
+## Resolved-output containment gate
+
+Immediately before EVERY actual write, mkdir, temporary-file creation,
+no-overwrite promotion or owner-phase update, recheck actual Default mode and
+existing exact authority against the selected feature's verified canonical root.
+This includes plan, optional analysis revisions and every phase-recording write.
+Resolve the target and existing parent symlink chains; for an absent target or
+parent, strictly resolve the nearest existing ancestor and append the exact
+prospective suffix. Inspect existing components so dangling symlinks, unreadable
+or ambiguous chains never become silently accepted prospective directories.
+Require both resolved destination and parent/ancestor to stay within that selected
+canonical feature, and require the resolved destination to match the exact
+canonical destination covered by existing authority, as well as its declared
+lexical path. Recheck immediately before each individual operation, including
+before directory creation and before promotion; an earlier batch check is not
+sufficient. Outside-root/development/external aliases, unknown root/authority,
+dangling or ambiguous targets stop before any mutation. Reuse authority already
+given; never infer new destination permission from lexical containment alone.
+Plan/no-authority conversation drafts remain non-writing. This is prompt policy,
+not an executable sandbox or a guarantee against unprovoked TOCTOU races.
+
 # Examples
 - **Positive**: Draft `plan/offline-order-capture/offline-order-capture.plan.md` so it uses exact artifact paths, canonical transitions, and JSON reviewer handoff, while entering strict mode because both `analysis/offline-order-capture/requirements.md` and `analysis/offline-order-capture/technical-spec.md` exist.
 - **Negative**: Ignore existing analysis files because a newer chat instruction sounds easier, skip semantic warnings when analysis inputs are missing, or draft a plan that says `README/VERSION maybe later`.
@@ -110,7 +132,7 @@ Do not use this skill when:
 # Validation
 
 ## Required Checks
-- verify actual mode and exact existing target authority first; draft-only output makes no disk/current-phase/approval claims
+- verify actual mode and exact existing target authority first; apply the canonical-root/target/parent containment gate immediately before every write/mkdir/temp/promote/phase/analysis operation; draft-only output makes no disk/current-phase/approval claims
 - missing optional analysis is a named warning, not a new globally required file; incomplete supplied frozen scope/baseline never authorizes invented facts or a review-ready claim
 - PASS: topic name, outcome, scope, and artifact paths are all provided
 - PASS: the workflow contract at `plan/agent-handoff-workflow.md` is readable
