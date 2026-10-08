@@ -547,6 +547,40 @@ Local-only evidence: /private/var/folders/x9/3v967ts5131dfn6x4bsy9th00000gn/T/ag
 these paths are unavailable from GitHub and no evidence assets were uploaded.
 
 
+### Round8 bounded fixes — independent verification PASS
+
+Round8 actual independent Tester and Reviewer returned seven-group PASS.
+The independent stdlib suite ran once: 30 methods / 604 CLI calls; the unchanged
+703-line companion passed all 56 items once. Separate replay covered 14 fixtures /
+28 CLI calls: eight false-success and two valid-code rejection fixes, with 18
+controls preserved. These counts are distinct from author readiness and history.
+
+The four runtime fixes preserve link/CDATA literal tokens, list-relative fences
+and genuine description indentation while keeping real pending evidence visible.
+Routing applied 39 inputs: six genuine returned results and 33 controlled inputs.
+G02 verified retained native/review/owner/current-source binding, allowing the
+legitimate Status-only version change; five proof controls stopped. The current
+Tester-to-independent-Reviewer delivery and consumption subsequently completed
+in final-review.json; earlier pending captures remain unchanged. Implementer PASS
+requires Tester, then Tester PASS requires Reviewer/Code-Reviewer.
+
+Worktree application inspected three actual caller contexts with 18 read-only
+Git commands, all selecting the same verified primary-root family. These commands
+are separate from tracker CLI counts. The dirty feature was retained for human
+inspection; no production worktree creation/removal occurred. No fresh approval,
+Base, native cycle, step/temp/report or Task execution was performed this round.
+Merged README/GOAL/E002 content inherited from dev 692d33… remains unchanged.
+Imports remain 41 adapted / 5 unchanged against immutable pin
+60b3b5b77515c354ed355c1adb28a8ed349dda67; external source HEAD 34f943… is separate.
+
+Actual Default/macOS only; actual Plan engine, Linux, full Markdown conformance
+and unprovoked races remain unverified. Controlled inputs are policy applications.
+External pytest is optional verification tooling; no dependency/global install,
+role or registry was added. Local-only evidence: `/private/tmp/agent-skill-review-round8-20261008/targeted-test-report.json`
+and `/private/tmp/agent-skill-review-round8-20261008/final-review.json`.
+These paths are unavailable from GitHub; no evidence assets were uploaded.
+
+
 ## Reviewer Handoff
 
 The following object declares the independent output schema only. It is not a
