@@ -7,6 +7,25 @@ without output authority returns only a complete eligible source-faithful draft;
 unknown/ambiguous selection or authority BLOCKED before writes. Recheck the
 full gate and absence before promotion, never overwrite or execute actions.
 
+## Independent approval and current-source binding
+
+Terminal approved fields alone are not approval evidence. Before any draft or
+write, require the genuinely returned independent Plan-Reviewer native approved
+result, actual distinct author/reviewer and parent-task/reviewed-version linkage,
+and the authorized owner's recorded reviewer-in-progress to approved transition.
+Bind the native result to the reviewed snapshot/hash and the owner's transition
+to both reviewed and approved snapshots. The current source whole-file hash must
+match that owner-approved snapshot; compare bytes outside the exact authorized
+Status/Allowed next transitions metadata against the reviewed snapshot. Those
+remaining bytes must be unchanged. Legitimate owner status metadata can change
+the whole-file hash; do not require equality of reviewed and approved whole hashes.
+Missing, forged, stale/version-mismatched proof or body changes under nominal
+approved fields are BLOCKED without writes, including draft-only requests.
+Keep source, native result, owner trace and snapshots read-only. Recheck all
+approval/version/body bindings before temp creation and immediately before
+no-overwrite promotion, alongside mode/root/exact authority/absence. Approval
+proves source eligibility only, never action completion or permission.
+
 ## Positive: explicit Base
 
 Caller selects base-plan for a complete independently reviewed local 11-section
@@ -44,3 +63,14 @@ and verified owned root, with exact final/temp caller authority and no explicit
 source path/tuple conflict. No separate source step row is required; relocated
 copies remain controlled inputs, not newly approved. Existing/raced
 destination always remains intact.
+
+## Retained genuine approval, existing destination
+
+Read an unchanged genuinely reviewed source, native approved, actual independent
+review/task evidence and owner reviewer-in-progress to approved trace. Accept
+source eligibility only when the current owner-approved snapshot and unchanged
+non-status body bindings verify; status-only changes may alter the whole hash.
+Then an existing final still returns BLOCKED before temp creation and preserves
+all bytes. No fresh review, approval, source update or action execution follows.
+Controlled missing/forged approval, stale owner version or changed body under
+unchanged approved fields stops; controlled copies are never newly approved.

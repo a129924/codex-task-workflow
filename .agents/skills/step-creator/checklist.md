@@ -1,5 +1,9 @@
 # step-creator checklist
 
+- [ ] Genuine independent native approved, actual author/reviewer distinction and task/reviewed-version binding verified; nominal status alone is insufficient.
+- [ ] Authorized owner reviewer-in-progress to approved trace binds reviewed and approved snapshots; current whole-source hash matches owner approved snapshot and bytes outside exact authorized status/transition metadata match reviewed body (whole hashes may differ).
+- [ ] Recheck approval/snapshot/current-body bindings before temp creation and promotion; missing/forged/stale/body-mutated proof BLOCKED even in draft-only mode; all proof stays read-only.
+
 - [ ] Actual mode, actual selected owned feature and exact final/necessary temp authority verified before rendering-for-write or any writes.
 - [ ] Plan/known Default with explicitly absent output authority produces only eligible source-faithful conversation draft; unknown/ambiguous/mismatched/outside authority BLOCKED.
 - [ ] Canonical destination derives from source topic plus verified owned root, without explicit source path/selector conflicts; no separate source step row required, relocated copies never claim new approval.
