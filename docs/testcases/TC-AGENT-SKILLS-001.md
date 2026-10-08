@@ -629,3 +629,29 @@ import comparison remains 41 adapted / 5 unchanged / 46 files. External source
 HEAD is separately observed without reset/repin. Preserve original topic approval,
 eleven sections/nine fields/Open Questions, product readOnly and feature/fixtures.
 Ready human review remains the stop; no merge, release or cleanup.
+
+## Round7 bounded fixes — independent verification PASS
+
+Round7's five bounded corrections have actual Tester /root/tester PASS and
+independent Reviewer /root/explorer PASS. The once-run stdlib suite passed
+26 methods / 448 CLI calls; the unchanged companion passed 56 items once.
+Separate 28 CLI replays across 14 fixtures corrected six false-success outcomes
+and six valid-code rejections; real pending stdout after code was verified.
+G01's real independent Reviewer consumed 22 current refs; six controlled missing
+boundaries stopped packaging. G04 applied four genuine review payloads and an
+ordinary nonreview PASS; 14 controlled missing/same-author inputs across seven
+review verdict types stopped. Alias/REPLAN examples remain controlled policy.
+G05's actual Implementer consumed 26 refs, verified genuine historical native/
+owner/current-source binding with legitimate Status-only version changes, then
+refused the existing final before temp/draft. Four synthetic proof failures
+blocked; all 112 retained fixture entries stayed unchanged. Existing step d47aed…
+remains; temp/report are absent. No fresh Base, native cycle or approval was
+created this round. Earlier rounds' counts and results remain historical.
+Actual Default/macOS only: actual Plan engine, Linux and unprovoked races remain
+unverified; no full Markdown conformance or new dependency is claimed. External
+pytest is optional verification tooling, not a runtime dependency. Imports remain
+41 adapted / 5 unchanged against immutable pin 60b3b5b77515c354ed355c1adb28a8ed349dda67;
+source external HEAD 34f943… is separate and was not reset/repinned. Current dev
+startup 692d33… stays clean with 23 guarded files, distinct from historical 994b509.
+Local-only evidence: /private/var/folders/x9/3v967ts5131dfn6x4bsy9th00000gn/T/agent-skill-review-round7-a80fg_d3/final-review.json and /private/var/folders/x9/3v967ts5131dfn6x4bsy9th00000gn/T/agent-skill-review-round7-a80fg_d3/targeted-test-report.json;
+these paths are unavailable from GitHub and no evidence assets were uploaded.
