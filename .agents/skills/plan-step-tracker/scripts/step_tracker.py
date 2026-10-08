@@ -133,11 +133,41 @@ def _unescaped_comment_opening(line: str, start: int) -> int:
     return -1
 
 
+def _raw_html_tag_end(line: str, start: int) -> int:
+    """Recognize one valid same-line tag; quoted attributes are literal tokens."""
+    quote: str | None = None
+    end = start + 1
+    while end < len(line):
+        char = line[end]
+        if quote is not None:
+            if char == quote:
+                quote = None
+        elif char in (chr(34), chr(39)):
+            quote = char
+        elif char == ">":
+            break
+        end += 1
+    candidate = line[start:end + 1]
+    # This narrow tag grammar carries no HTML context onto the next task line.
+    name = r"[A-Za-z][A-Za-z0-9-]*"
+    attribute = r"[A-Za-z_:][A-Za-z0-9_.:-]*"
+    value = r'''(?:"[^"\r\n]*"|'[^'\r\n]*'|[^\s\x22\x27=<>\x60]+)'''
+    tag = (r"<(?:/" + name + r"[ \t]*|" + name
+           + r"(?:[ \t]+" + attribute + r"(?:[ \t]*=[ \t]*" + value + r")?)*[ \t]*/?)>")
+    if end < len(line) and re.fullmatch(tag, candidate):
+        return end + 1
+    if "<!--" in candidate or "-->" in candidate:
+        raise ValueError("Ambiguous HTML tag comment tokens in completion evidence")
+    return start + 1
+
+
 def _visible_completion_lines(lines: list[str]) -> list[str]:
     """Exclude genuine code/comments while preserving unsupported task evidence."""
     visible: list[str] = []
     fence: tuple[str, int, int] | None = None
-    list_context = False
+    list_content_indent: int | None = None
+    blank_boundary = False
+    list_code = False
     in_comment = False
 
     for raw_line in lines:
@@ -152,10 +182,19 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
                     if token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
                         fence = None
                 continue
-        if not in_comment and raw_line.startswith(("    ", "\t")):
-            nested_checkbox = re.match(r"^(?:(?:[-*+]|\d+[.)])\s+)?\[[^\]]*\]", raw_line.strip())
-            if not (list_context and nested_checkbox):
-                continue  # Real indented code; its comment tokens have no effect.
+        expanded = raw_line.expandtabs(4)
+        indent = len(expanded) - len(expanded.lstrip(" "))
+        if not in_comment and not raw_line.strip():
+            blank_boundary = True
+        elif not in_comment:
+            if list_content_indent is not None:
+                if indent >= list_content_indent + 4 and (blank_boundary or list_code):
+                    list_code = True
+                    continue  # Established indented code inside this supported list.
+                list_code = False  # Exit must re-process visible task evidence.
+            elif indent >= 4:
+                continue  # Ordinary indented code outside a checklist container.
+            blank_boundary = False
         if not in_comment and marker:
             token, suffix = marker.groups()
             if token[0] != "`" or "`" not in suffix:
@@ -179,7 +218,13 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
             else:
                 opening = _unescaped_comment_opening(raw_line, position)
                 tick = raw_line.find(chr(96), position)
-                if tick >= 0 and (opening < 0 or tick < opening):
+                tag_match = re.search(r"</?[A-Za-z]", raw_line[position:])
+                tag_start = position + tag_match.start() if tag_match else -1
+                if tag_start >= 0 and (opening < 0 or tag_start < opening) and (tick < 0 or tag_start < tick):
+                    end = _raw_html_tag_end(raw_line, tag_start)
+                    fragments.append(raw_line[position:end])
+                    position = end
+                elif tick >= 0 and (opening < 0 or tick < opening):
                     fragments.append(raw_line[position:tick])
                     if invalid_raw_fence and tick == raw_line.find(chr(96)):
                         end = tick + len(marker.group(1))
@@ -198,7 +243,11 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
         visible.append(line)
         if line.strip() and not line[0].isspace():
             # Indented descriptions/sub-lists retain their enclosing list.
-            list_context = re.fullmatch(r"- \[[ Xx]\] \S.*", line.rstrip()) is not None
+            parent = re.fullmatch(r"(-)( )\[[ Xx]\] \S.*", line.rstrip())
+            # Content starts after the marker and its following whitespace,
+            # not after the checkbox text. Blank lines retain this ancestry.
+            list_content_indent = len(parent.group(1) + parent.group(2)) if parent else None
+            list_code = False
     if in_comment:
         raise ValueError("Unclosed HTML comment in completion evidence")
     return visible

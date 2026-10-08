@@ -600,5 +600,59 @@ class AgentSkillsTestCase(unittest.TestCase):
                         self.assertIn("[ ] Pending", result.stdout)
                         self.assertNotIn("SUCCESS", result.stdout)
 
+    def test_list_code_requires_blank_boundary_and_content_indent(self):
+        prefix = "## Implementation Steps\n- [X] Parent\n"
+        cases = {
+            "blank-six": ("\n      - [ ] Code example only\n", 0),
+            "blank-eight": ("\n        - [ ] Code example only\n", 0),
+            "blank-tabs": ("\n\t\t- [ ] Code example only\n", 0),
+            "code-continuation": ("\n      - [ ] Code example only\n      - [ ] Another code example\n", 0),
+            "no-blank-six": ("      - [ ] Unsupported child\n", 1),
+            "no-blank-eight": ("        - [ ] Unsupported child\n", 1),
+            "no-blank-tabs": ("\t\t- [ ] Unsupported child\n", 1),
+            "blank-shallow-two": ("\n  - [ ] Unsupported child\n", 1),
+            "blank-shallow-four": ("\n    - [ ] Unsupported child\n", 1),
+            "code-exit-pending": ("\n      - [ ] Code example only\n\n- [ ] Visible pending\n", 1),
+            "tab-code-exit-pending": ("\n\t\t- [ ] Code example only\n- [ ] Visible pending\n", 1),
+            "code-exit-shallow-child": ("\n      - [ ] Code example only\n  - [ ] Unsupported child\n", 1),
+            "code-comment-tokens": ("\n      <!--\n      - [ ] Code example only\n- [ ] Visible pending\n", 1),
+        }
+        for name, (body, expected) in cases.items():
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(fixture=name, operation=operation):
+                    result = self.run_cli(operation, prefix + body)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if "Visible pending" in body:
+                        self.assertIn("[ ] Visible pending", result.stdout)
+                        self.assertNotIn("[ ] Code example only", result.stdout)
+
+    def test_raw_html_attributes_do_not_open_comment_mode(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        tick = chr(96)
+        for quote in (chr(34), chr(39)):
+            for literal in ("<!--", "> <!--", tick + " <!-- >"):
+                body = ("<span title=" + quote + literal + quote + ">\n"
+                        "- [ ] Real pending\n<span title=" + quote + "-->" + quote + ">\n")
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(quote=quote, literal=literal, operation=operation):
+                        result = self.run_cli(operation, prefix + body)
+                        self.assertEqual(result.returncode, 1, result.stderr)
+                        self.assertIn("[ ] Real pending", result.stdout)
+        controls = (
+            ("<span title=\"<!--\"\n- [ ] Real pending\n<span title=\"-->\">\n", 1),
+            ("<span title=<!-->\n- [ ] Real pending\n<span title=\"-->\">\n", 1),
+            ("<!-- real\n- [ ] Comment example only\n<span title=\"-->\">\n- [ ] Real pending\n", 1),
+            (tick + '<span title="<!--">' + tick + "\n- [ ] Real pending\n", 1),
+            (tick * 3 + "html\n<span title=\"<!--\">\n- [ ] Code example only\n<span title=\"-->\">\n" + tick * 3 + "\n", 0),
+        )
+        for index, (body, expected) in enumerate(controls):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(control=index, operation=operation):
+                    result = self.run_cli(operation, prefix + body)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if index in (2, 3):
+                        self.assertIn("[ ] Real pending", result.stdout)
+                        self.assertNotIn("[ ] Comment example only", result.stdout)
+
 if __name__ == "__main__":
     unittest.main()

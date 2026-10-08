@@ -146,3 +146,18 @@ opener controls recognition: odd literal, even eligible. Continue looking for
 a later genuine same-line opener. Balanced inline spans and genuine fences
 remain code. In active real HTML comment mode, raw closing markers retain
 precedence regardless of backslashes/ticks. No full Markdown parser is added.
+
+## Narrow list-code and raw-tag boundaries
+
+Under a supported top-level checkbox parent, indented code requires an actual
+blank/block boundary (or continuation of that code) and at least four columns
+beyond list content indentation. Content indentation is the marker width plus
+following whitespace, not checkbox text width; tabs use four-column stops.
+Shallow nested tasks and deep no-blank task ambiguity remain unsupported and
+block. Code exit reprocesses visible pending evidence; descriptions retain
+parent ancestry. This is a narrow evidence lexer, not full Markdown support.
+Raw valid same-line HTML tags protect quoted attribute tokens, including literal
+comment markers, greater-than characters and ticks, without masking following
+task lines or changing original text. Invalid/unclosed comment-token tag syntax
+blocks. A genuine active comment's raw close takes precedence; earlier-starting
+balanced inline code, raw fences and escaped opener parity retain their rules.
