@@ -42,6 +42,7 @@ Do not use this skill when:
 - explicit blocker list, if any
 - optional evidence owner for `MISSING_EVIDENCE`
 - explicitly declared next role for PASS: Implementer requires Tester; Tester requires Reviewer (normalize Code aliases); other compatible PASS keeps its bounded declaration
+- for REPLAN_REQUIRED: current source/body/version, known authorized Plan-Creator owner, eligible canonical rework source or distinct new canonical topic/path intent with complete frozen initial inputs and exact existing mode/root/path authority
 - for native approved: genuine native/reviewer proof, authorized owner transition, reviewed/approved snapshots and readable current approved source with version/body binding; explicit Implementer (or Code alias) next role
 
 # Process
@@ -90,7 +91,19 @@ Do not use this skill when:
      Reviewer. Independent Reviewer and other compatible nonimplementation PASS
      retain their explicit bounded permitted-role route or stop.
    - `PATCH_REQUIRED`: only independent Reviewer routes to `Implementer`
-   - `REPLAN_REQUIRED`: only independent Reviewer routes to `Plan-Creator`
+   - `REPLAN_REQUIRED`: only a genuinely correlated independent Reviewer may
+     route to Plan-Creator, and only after checking an eligible destination:
+     known authorized Plan-Creator ownership of a current canonical planned or
+     needs-rework source with a valid authoring edge/action, OR an explicitly
+     distinct new canonical topic/plan path and complete frozen initial planned
+     authoring inputs under exact existing mode/selected-root/path authority.
+     Bind the actual verdict/task/author, old source body/version and destination
+     baseline/version; new intent must identify outcome, scope, locked decisions,
+     artifact paths, contracts and optional-analysis disposition without guessing.
+     A new planned intent is not a created phase or approval. The old approved
+     source/body/approval/step remains immutable with no outgoing planning edge.
+     Missing/ambiguous owner, authority, destination or baseline stops; REPLAN
+     itself grants no write authority or approved-to-creator transition.
    - `MISSING_EVIDENCE`: route only to the bounded role that can supply the
      missing evidence; if that owner is unknown, stop
    - `BLOCKED`: stop
@@ -130,7 +143,8 @@ Do not use this skill when:
   enough to route or stop, but the bounded evidence summary or blocker detail is
   incomplete. Identity/correlation/required independence are hard preflight
   inputs and never eligible for this soft-fail route. Required owner-approved
-  source binding and implementation-chain successors are also hard gates.
+  source binding, REPLAN destination/owner/authority/frozen-input eligibility
+  and implementation-chain successors are also hard gates.
 - Under `SOFT FAIL`, keep the routing decision within the frozen verdict set,
   state the missing evidence explicitly, and avoid inventing additional workflow
   state.

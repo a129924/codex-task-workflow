@@ -54,7 +54,11 @@ results to an independent Reviewer. Reviewer returns PASS, PATCH_REQUIRED,
 REPLAN_REQUIRED, MISSING_EVIDENCE or BLOCKED with evidence. Only independent
 Reviewer (or normalized Code-Reviewer) may issue PATCH_REQUIRED / REPLAN_REQUIRED;
 these verdicts from any other role stop as incompatible. PATCH_REQUIRED goes
-to Implementer; REPLAN_REQUIRED goes to Plan-Creator; MISSING_EVIDENCE goes to
+to Implementer; REPLAN_REQUIRED goes to a known authorized Plan-Creator only
+with an eligible canonical planned/needs-rework source and valid authoring action,
+or a distinct new canonical topic/path intent with complete frozen initial planned
+inputs and exact existing authority; otherwise stop. The old approved source and
+its evidence remain immutable, with no outgoing planning edge; MISSING_EVIDENCE goes to
 its known owner, otherwise stops. PASS permits the explicitly declared next
 handoff or stops at local reviewable delivery. It does not imply publication.
 

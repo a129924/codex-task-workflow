@@ -39,6 +39,11 @@ Input:
 - `verdict`: `REPLAN_REQUIRED`
 - actual dispatch/result correlation and returned actor: verified as above, Reviewer distinct from actual author
 - blocker: the required change would expand outside the frozen write set
+- old approved source: actual current body/version and retained approval/step are read-only, with no outgoing planning edge
+- destination: illustrative distinct topic offline-order-replan and canonical plan/offline-order-replan/offline-order-replan.plan.md, not an existing-file claim
+- known authorized Plan-Creator owner and exact existing Default selected-root/destination authority, verified before routing
+- complete frozen new initial planned-authoring baseline: outcome, scope, locked decisions, exact artifacts, readable shared contracts and optional-analysis disposition
+- actual verdict/task/author and old-source version binding verified; new intent is proposed only, not a phase, created source or approval
 - policy example only: without a genuine historical REPLAN_REQUIRED result, do not label it actual dispatch or manufacture replan
 
 Output:
@@ -46,7 +51,7 @@ Output:
 ```json
 {
   "next_role": "Plan-Creator",
-  "reason": "The returned verdict requires a bounded replan before implementation can continue.",
+  "reason": "The independent verdict and verified authorized distinct new planned intent permit bounded Plan-Creator authoring.",
   "stop_condition": "none"
 }
 ```
@@ -205,3 +210,15 @@ Implementer PASS declaring Reviewer (or no successor) stops; Tester PASS
 declaring Implementer/another role (or no successor) stops. The separate actual
 Implementer -> Tester -> independent Reviewer results must each correlate to
 their real task/artifact version. Examples issue no future payload or dispatch.
+
+## REPLAN destination stops and canonical rework
+
+An old approved source without a separately identified eligible destination stops.
+Missing owner, exact existing authority, distinct new path/topic or complete frozen
+inputs also stops. Never edit the terminal approved source or infer authorization
+from REPLAN_REQUIRED. A known authorized canonical planned/needs-rework source
+with its actual valid next authoring action is the other eligible destination.
+A genuinely returned native Plan-Reviewer needs-rework keeps its canonical
+Plan-Creator route; it is not an approved-source restart. These REPLAN examples
+are controlled policy inputs unless an actual independently returned result and
+its task/version/author correlation are supplied. No new native cycle is issued.
