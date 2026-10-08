@@ -654,5 +654,104 @@ class AgentSkillsTestCase(unittest.TestCase):
                         self.assertIn("[ ] Real pending", result.stdout)
                         self.assertNotIn("[ ] Comment example only", result.stdout)
 
+    def test_link_destinations_and_titles_preserve_pending_evidence(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        tick = chr(96)
+        pairs = (
+            ('[open](url "<!--")', '[close](url "-->")'),
+            ("[open](url '<!--')", "[close](url '-->')"),
+            ('[open](url (<!--))', '[close](url (-->))'),
+            ('[open](<!--)', '[close](-->)'),
+            ('[open](path(inner) "<!--")', '[close](path(inner) "-->")'),
+            ('[open](url "a' + chr(92) + '"<!--")', '[close](url "-->")'),
+            ('[open](url "' + tick + '<!--")', '[close](url "-->")'),
+        )
+        for first, last in pairs:
+            for pending in (False, True):
+                content = prefix + first + "\n" + ("- [ ] Still pending\n" if pending else "") + last + "\n"
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(link=first, pending=pending, operation=operation):
+                        result = self.run_cli(operation, content)
+                        self.assertEqual(result.returncode, int(pending), result.stderr)
+                        if pending:
+                            self.assertIn("[ ] Still pending", result.stdout)
+        ambiguous = '[open](url "<!--"\n- [ ] Still pending\n[close](url "-->")\n'
+        active = '<!-- actual\n[close](url "-->")\n- [ ] Still pending\n'
+        for content in (ambiguous, active):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                result = self.run_cli(operation, prefix + content)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                if content == active:
+                    self.assertIn("[ ] Still pending", result.stdout)
+
+    def test_list_relative_fences_and_dedent_keep_visible_pending(self):
+        prefix = "## Implementation Steps\n- [X] Parent\n"
+        tick = chr(96)
+        for indent in (2, 4, 5):
+            for token in (tick * 3, "~~~"):
+                for blank in ("", "\n"):
+                    code = blank + " " * indent + token + "text\n" + " " * indent + "- [ ] Code example\n" + " " * indent + token + "\n"
+                    for pending in (False, True):
+                        content = prefix + code + ("- [ ] Still pending\n" if pending else "")
+                        for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                            with self.subTest(indent=indent, token=token, blank=blank, pending=pending, operation=operation):
+                                result = self.run_cli(operation, content)
+                                self.assertEqual(result.returncode, int(pending), result.stderr)
+                                if pending:
+                                    self.assertIn("[ ] Still pending", result.stdout)
+                                    self.assertNotIn("[ ] Code example", result.stdout)
+        controls = (
+            "    " + tick * 3 + "text\n    - [ ] Code example\n- [ ] Still pending\n",
+            "    " + tick * 4 + "text\n    " + tick * 3 + "\n    - [ ] Code example\n    " + tick * 4 + "\n- [ ] Still pending\n",
+            "    " + tick * 3 + "text\n    ~~~\n    - [ ] Code example\n    " + tick * 3 + "\n- [ ] Still pending\n",
+            "    " + tick * 3 + "text\n    " + tick * 3 + "not-close\n    - [ ] Code example\n    " + tick * 3 + "\n- [ ] Still pending\n",
+            "    " + tick * 3 + "lang" + tick + "rest\n    - [ ] Unsupported child\n",
+            "    <!-- note -->" + tick * 3 + "text\n    - [ ] Unsupported child\n",
+        )
+        for index, content in enumerate(controls):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(control=index, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, 1, result.stderr)
+                    if index < 4:
+                        self.assertIn("[ ] Still pending", result.stdout)
+                        self.assertNotIn("[ ] Code example", result.stdout)
+
+    def test_plain_actions_require_actual_parent_content_indent(self):
+        prefix = "## Implementation Steps\n- [X] Parent\n"
+        for marker in ("-", "*", "+", "1.", "2)"):
+            for indent in (0, 1, 2, 4):
+                content = prefix + " " * indent + marker + " Review pending\n"
+                for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                    with self.subTest(marker=marker, indent=indent, operation=operation):
+                        result = self.run_cli(operation, content)
+                        self.assertEqual(result.returncode, int(indent < 2), result.stderr)
+        for content in (" - [ ] Pending child\n", "  - [ ] Pending child\n", "  Description\n - Review pending\n"):
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                result = self.run_cli(operation, prefix + content)
+                self.assertEqual(result.returncode, 1, result.stderr)
+
+    def test_cdata_literals_do_not_start_global_comments(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        cases = (
+            ('<![CDATA[<!--]]>\n- [ ] Still pending\n<![CDATA[-->]]>\n', 1, True),
+            ('<![CDATA[<!-- -->]]>\n', 0, False),
+            ('<![CDATA[<!--\n- [ ] Code example\n-->]]>\n- [ ] Still pending\n', 1, True),
+            ('<![CDATA[<!--\n- [ ] Code example\n-->]]>\n', 0, False),
+            ('<![CDATA[<!--]]>- [ ] Still pending\n', 1, True),
+            ('<![CDATA[<!--\n- [ ] Still pending\n', 1, False),
+            ('<!-- actual\n<![CDATA[-->]]>\n- [ ] Still pending\n', 1, True),
+            ('Inline ' + chr(96) + '<![CDATA[<!--]]>' + chr(96) + '\n- [ ] Still pending\n', 1, True),
+            ('<span title="<![CDATA[<!--]]>">\n- [ ] Still pending\n', 1, True),
+        )
+        for content, expected, visible in cases:
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(content=content, operation=operation):
+                    result = self.run_cli(operation, prefix + content)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if visible:
+                        self.assertIn("[ ] Still pending", result.stdout)
+                        self.assertNotIn("[ ] Code example", result.stdout)
+
 if __name__ == "__main__":
     unittest.main()

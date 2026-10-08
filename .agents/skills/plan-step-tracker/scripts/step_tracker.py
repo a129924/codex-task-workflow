@@ -161,20 +161,44 @@ def _raw_html_tag_end(line: str, start: int) -> int:
     return start + 1
 
 
+def _raw_link_end(line: str, start: int) -> int:
+    """Protect bounded same-line inline link destinations/titles, not blocks."""
+    label = r"\[(?:\\.|[^\]\\\r\n])*\]"
+    # At most one balanced inner destination pair; deeper/ambiguous token
+    # syntax fails closed when it contains comment delimiters.
+    destination = r"(?:<[^<>\r\n]*>|(?:\\.|[^\s()\\]|\((?:\\.|[^()\\\r\n])*\))*)"
+    title = r'''(?:"(?:\\.|[^"\\\r\n])*"|'(?:\\.|[^'\\\r\n])*'|\((?:\\.|[^()\\\r\n])*\))'''
+    pattern = label + r"\([ \t]*" + destination + r"(?:[ \t]+" + title + r")?[ \t]*\)"
+    match = re.match(pattern, line[start:])
+    if match:
+        return start + match.end()
+    if "<!--" in line[start:] or "-->" in line[start:]:
+        raise ValueError("Ambiguous Markdown link comment tokens in completion evidence")
+    return start + 1
+
+
 def _visible_completion_lines(lines: list[str]) -> list[str]:
     """Exclude genuine code/comments while preserving unsupported task evidence."""
     visible: list[str] = []
-    fence: tuple[str, int, int] | None = None
+    fence: tuple[str, int, int, int] | None = None
     list_content_indent: int | None = None
     blank_boundary = False
     list_code = False
     in_comment = False
+    in_cdata = False
 
     for raw_line in lines:
         quote_depth, raw_content = _raw_quote_content(raw_line.rstrip("\r\n"))
-        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", raw_content)
+        expanded_content = raw_content.expandtabs(4)
+        content_indent = len(expanded_content) - len(expanded_content.lstrip(" "))
+        container_indent = (fence[3] if fence is not None else
+                            list_content_indent if quote_depth == 0 and list_content_indent is not None
+                            and content_indent >= list_content_indent else 0)
+        relative_content = expanded_content[container_indent:]
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", relative_content)
         if fence is not None:
-            if quote_depth < fence[2]:
+            if quote_depth < fence[2] or (container_indent and raw_content.strip()
+                                         and content_indent < container_indent):
                 fence = None  # Container ended; re-process this visible boundary line.
             else:
                 if quote_depth == fence[2] and marker:
@@ -184,9 +208,9 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
                 continue
         expanded = raw_line.expandtabs(4)
         indent = len(expanded) - len(expanded.lstrip(" "))
-        if not in_comment and not raw_line.strip():
+        if not in_comment and not in_cdata and not raw_line.strip():
             blank_boundary = True
-        elif not in_comment:
+        elif not in_comment and not in_cdata:
             if list_content_indent is not None:
                 if indent >= list_content_indent + 4 and (blank_boundary or list_code):
                     list_code = True
@@ -195,10 +219,10 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
             elif indent >= 4:
                 continue  # Ordinary indented code outside a checklist container.
             blank_boundary = False
-        if not in_comment and marker:
+        if not in_comment and not in_cdata and marker:
             token, suffix = marker.groups()
             if token[0] != "`" or "`" not in suffix:
-                fence = (token[0], len(token), quote_depth)
+                fence = (token[0], len(token), quote_depth, container_indent)
                 continue  # Comment tokens in a valid fence's info are code too.
         invalid_raw_fence = bool(marker and marker.group(1).startswith(chr(96))
                                  and chr(96) in marker.group(2))
@@ -215,16 +239,34 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
                     break
                 position = closing + 3
                 in_comment = False
+            elif in_cdata:
+                closing = raw_line.find("]]>", position)
+                if closing < 0:
+                    break
+                position = closing + 3
+                in_cdata = False
             else:
                 opening = _unescaped_comment_opening(raw_line, position)
                 tick = raw_line.find(chr(96), position)
                 tag_match = re.search(r"</?[A-Za-z]", raw_line[position:])
                 tag_start = position + tag_match.start() if tag_match else -1
-                if tag_start >= 0 and (opening < 0 or tag_start < opening) and (tick < 0 or tag_start < tick):
+                link_match = re.search(r"\[(?:\\.|[^\]\r\n])*\]\(", raw_line[position:])
+                link_start = position + link_match.start() if link_match else -1
+                cdata_start = raw_line.find("<![CDATA[", position)
+                first = min((x for x in (opening, tick, tag_start, link_start, cdata_start) if x >= 0), default=-1)
+                if first >= 0 and first == link_start:
+                    end = _raw_link_end(raw_line, link_start)
+                    fragments.append(raw_line[position:end])
+                    position = end
+                elif first >= 0 and first == cdata_start:
+                    fragments.append(raw_line[position:cdata_start])
+                    position = cdata_start + len("<![CDATA[")
+                    in_cdata = True
+                elif first >= 0 and first == tag_start:
                     end = _raw_html_tag_end(raw_line, tag_start)
                     fragments.append(raw_line[position:end])
                     position = end
-                elif tick >= 0 and (opening < 0 or tick < opening):
+                elif tick >= 0 and first == tick:
                     fragments.append(raw_line[position:tick])
                     if invalid_raw_fence and tick == raw_line.find(chr(96)):
                         end = tick + len(marker.group(1))
@@ -250,6 +292,8 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
             list_code = False
     if in_comment:
         raise ValueError("Unclosed HTML comment in completion evidence")
+    if in_cdata:
+        raise ValueError("Unclosed CDATA in completion evidence")
     return visible
 
 def _parse_step_lines(lines: list[str]) -> list[Step]:
@@ -376,7 +420,7 @@ _HANDOFF_METADATA_KEYS = frozenset({
 def _validate_completion_lines(lines: list[str], *, implementation: bool = False) -> None:
     """Reject unsupported tasks; only the frozen Base metadata is non-task data."""
     in_handoff_notes = False
-    checkbox_parent = False
+    parent_content_indent: int | None = None
     for line in lines:
         stripped = line.strip()
         if _ends_implementation_section(line):
@@ -394,9 +438,13 @@ def _validate_completion_lines(lines: list[str], *, implementation: bool = False
             raise ValueError(f"Unsupported quoted completion step: {line}")
         list_item = re.match(r"^(?:[-*+]|\d+[.)])\s+", stripped)
         if line and not line[0].isspace() and stripped:
-            checkbox_parent = re.fullmatch(r"- \[[ Xx]\] \S.*", line.rstrip()) is not None
-        if line[:1].isspace() and checkbox_parent and not (list_checkbox_like or bare_checkbox_like):
-            continue  # Descriptive children are prose; nested checkboxes still fail.
+            parent = re.fullmatch(r"(-)( )\[[ Xx]\] \S.*", line.rstrip())
+            parent_content_indent = len(parent.group(1) + parent.group(2)) if parent else None
+        expanded = line.expandtabs(4)
+        indent = len(expanded) - len(expanded.lstrip(" "))
+        if (parent_content_indent is not None and indent >= parent_content_indent
+                and not (list_checkbox_like or bare_checkbox_like)):
+            continue  # Genuine descriptive children only; underindented actions fail.
         metadata = re.fullmatch(r"- ([^:]+): (\S.*)", line.rstrip())
         if (not implementation and in_handoff_notes and not list_checkbox_like
                 and metadata and metadata.group(1) in _HANDOFF_METADATA_KEYS):

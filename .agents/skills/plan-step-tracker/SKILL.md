@@ -240,3 +240,20 @@ comment markers, greater-than characters and ticks, without masking following
 task lines or changing original text. Invalid/unclosed comment-token tag syntax
 blocks. A genuine active comment's raw close takes precedence; earlier-starting
 balanced inline code, raw fences and escaped opener parity retain their rules.
+
+## Bounded link, list-container and CDATA evidence
+
+Valid same-line inline link destinations/titles protect literal comment tokens;
+ambiguous comment-token link syntax fails closed without multiline inline
+masking. Genuine raw active comments retain raw-close precedence. List fences
+use supported parent content indentation plus zero-to-three columns, including
+no-blank openings, matching marker/length and whitespace-only closure; dedent
+or quote-container exit reprocesses visible pending evidence. Ordinary indented
+list code still needs its established blank boundary. Descriptive child prose
+requires at least the supported parent's content indent; one-space unordered/
+ordered action rows block. Nine exact Base metadata keys stay unchanged.
+Genuine bounded CDATA ends only at its raw closing delimiter; literal comment
+tokens inside cannot open global comments. Pending after closure stays visible,
+unclosed/ambiguous evidence blocks, and an already-active real HTML comment's
+raw closing marker takes precedence. This remains a narrow stdlib evidence
+lexer, not full Markdown conformance.
