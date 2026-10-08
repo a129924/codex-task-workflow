@@ -590,3 +590,27 @@ External pytest is optional verification tooling; no dependency/global install,
 role or registry was added. Local-only evidence: `/private/tmp/agent-skill-review-round8-20261008/targeted-test-report.json`
 and `/private/tmp/agent-skill-review-round8-20261008/final-review.json`.
 These paths are unavailable from GitHub; no evidence assets were uploaded.
+
+## Round9 bounded fixes — independent verification pending
+
+Round9 adds three bounded fixes: raw type-1 script/pre/style/textarea literal
+blocks before comment scanning; eligible known-owner authorized REPLAN destination
+routing without an outgoing approved edge; and canonical-root/target/parent exact
+authority checks before every Plan-Creator file operation. The Creator gate is
+prompt policy, not a runtime sandbox or race-resistance guarantee.
+
+Current independent Tester/Reviewer verification is pending. Verify the affected
+stdlib suite once plus the unchanged companion as appropriate, the frozen baseline
+replay, bounded routing controls, and a genuine distinct Plan-Creator application
+in an owned disposable feature fixture with protected sentinel bytes. No new
+production planning/native cycle or main approval is required. Previous counts
+remain historical; author checks are separate from independent acceptance.
+
+Imports currently compare 41 adapted / 5 unchanged against immutable pin
+60b3b5b77515c354ed355c1adb28a8ed349dda67; external source HEAD is separate and not repinned.
+Main scope/approval/eleven canonical headings/nine fields/Open Questions and
+product README/GOAL/E002 remain unchanged. Actual Default/macOS only; actual Plan
+engine, Linux, full Markdown conformance and unprovoked races remain unverified.
+No dependency, role, registry or global install is added. Local-only Round9
+evidence is at `/private/tmp/agent-skill-review-round9-20261008`, unavailable from
+GitHub; no evidence assets are uploaded.
