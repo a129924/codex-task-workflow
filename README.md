@@ -23,3 +23,16 @@
 依 GOAL.md、baseline 與 E002 的有限驗證結果，繼續確認正式 Codex plugin 的整合方式、私人存取、跨專案查詢，以及本人加至多一個 bot 的免費方案限制，再提出可實作與驗證的設計。E002 未驗證這些後續產品需求。
 
 正式 plugin 的 runtime、transport、manifest、Skill 結構及產品 YouTrack schema 尚未定案。E002 僅增加需手動啟用的 MCP 重現範例、實驗紀錄與一張已結案測試票；OAuth credentials 由 client 保存，不進 repo。後續 Task 工作流須能獨立使用，不以本 repo 的文件、特定檔名或其他工作流 Skill 作為必要依賴。
+
+## Repo 開發工具
+
+本 repo 已引入 10 個 repo-local Agent Skills，供需求分析、規劃、step 查詢、
+分離 agent 交接及 worktree 開發使用。它們與 Task 產品獨立，未實作可執行
+Task plugin 或 YouTrack 串接；Task 不依賴這些 skills 或規劃文件。
+
+- [Skills 安裝、支援範圍與驗證狀態](docs/agent-skills-installation.md)
+- [agent-skill-implementation Topic Plan](plan/agent-skill-implementation/agent-skill-implementation.plan.md)
+- [TC-AGENT-SKILLS-001](docs/testcases/TC-AGENT-SKILLS-001.md)
+
+Step 目前僅支援明確選定的 base-plan；全部正常用途需以 TestCase 的實際
+執行及獨立 review 證據確認，不能由檔案存在推定通過。

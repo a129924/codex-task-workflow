@@ -1,0 +1,145 @@
+---
+name: subagent-dispatch-policy
+description: "Select a permitted role or stop for one bounded task before a real subagent dispatch."
+complexity: medium
+---
+
+# Purpose
+
+Choose the next role for one bounded task slice, or stop.
+
+This skill decides only whether the Observer should dispatch and which allowed
+role name should receive the handoff.
+
+# Trigger / When to use
+
+Use this skill when:
+
+- one bounded task slice is in `INTAKE` or `ROUTING`
+- the Observer needs to choose the next role
+- the available evidence is already narrowed to one task slice
+
+Do not use this skill when:
+
+- the work is to build the context package itself
+- the work is to route after a returned subAgent verdict
+- the task requires workflow-to-agent binding, registry lookup, or runtime
+  dispatch semantics
+
+# Inputs
+
+- one bounded task slice
+- bounded evidence for that task slice
+- current Observer state
+- allowed target roles:
+  - `Planner`
+  - `Implementer`
+  - `Reviewer`
+  - `Plan-Creator`
+  - `Plan-Reviewer`
+  - `Tester`
+  - `Explorer`
+
+# Process
+
+1. Confirm the task is a single bounded slice.
+2. Confirm the Observer is not being asked to self-perform Planner,
+   Implementer, Reviewer, Plan-Creator, Plan-Reviewer, Tester or Explorer work.
+3. At role selection, check whether real separated role instructions,
+   bounded context packaging, explicit handoff payload and result contract
+   facilities can be established. A completed role-specific package is not
+   required yet; select its target first. No hidden role simulation.
+4. If any required capability is unavailable, stop. Immediately before actual
+   dispatch, require the actual complete bounded context package, separated
+   instructions and explicit handoff/result contracts; missing actual payload
+   stops without launching. Selection permission alone is not a dispatch.
+5. If the task requires registry behavior, workflow binding, runtime semantics,
+   or concrete role-agent files, stop.
+6. Choose exactly one next role name or return `stop`.
+7. Emit the decision without file paths, registry keys, catalog identifiers, or
+   launcher-specific names.
+
+# Examples
+
+- **Positive**: A frozen implementation task slice needs concrete edits within
+  an allowed write set, real dispatch is available, and the skill returns
+  `Implementer`.
+- **Negative**: The request asks for "whoever owns `.github/agents/...`" or
+  depends on runtime launcher wiring, and the skill returns `stop` instead of a
+  path-based target.
+
+# Outputs
+
+- `next_role`: `Planner` | `Plan-Creator` | `Plan-Reviewer` | `Implementer` | `Reviewer` | `Tester` | `Explorer` |
+  `stop`
+- `reason`: short factual reason
+- `stop_condition`: `none` or exact blocker
+
+# Validation
+
+## Required Checks
+
+- `PASS`: the input is one bounded task slice, the Observer is in `INTAKE` or
+  `ROUTING`, real dispatch capability can be established, and the result is
+  exactly one allowed `next_role` or `stop`.
+- `BLOCKED`: stop when the available evidence cannot distinguish between more
+  than one allowed next role, when real dispatch capability cannot be established, or when
+  proceeding would require workflow binding, registry behavior, runtime
+  semantics, or concrete role-agent files.
+
+## Quality Checks (best effort)
+
+- `SOFT FAIL`: mark status as `INCOMPLETE` when the bounded slice is clear
+  enough to return `stop`, but the factual reason or blocker evidence is thin,
+  incomplete, or not crisply cited.
+- Under `SOFT FAIL`, still return the best bounded decision, list the missing
+  evidence explicitly, and avoid expanding the routing scope.
+
+# Failure Handling
+
+## Missing Context
+
+- If required dispatch evidence is missing but `stop` is still clearly the only
+  safe output, return incomplete output with `next_role: stop` and name the
+  missing inputs in `stop_condition`.
+- If missing context could reasonably change which allowed role should receive
+  the handoff, mark the result `BLOCKED` and stop instead of guessing.
+
+## Ambiguous Requirement
+
+- If the request blurs dispatch selection with context-building, verdict
+  routing, workflow reconstruction, or runtime binding, stop and state that the
+  request is outside this skill's boundary.
+- Do not guess between allowed roles when more than one reasonable
+  interpretation remains.
+
+## Execution Limitation
+
+- If the environment exposes only path-based targets, registry hints, or
+  launcher-specific names, return `stop` or `BLOCKED` with the limitation stated
+  explicitly.
+- Do not fabricate hidden role support, concrete agent ownership, or runtime
+  dispatch capability.
+
+# Boundaries
+
+- Do not build the context package.
+- Do not route based on a returned subAgent verdict.
+- Do not encode full existing workflows.
+- Do not output concrete file paths as targets.
+- Do not infer agent registry, catalog, or runtime capabilities.
+
+# Local references
+
+- `examples.md`: positive and negative dispatch-selection scenarios, including
+  hard-stop cases
+
+## Local role selection
+
+Planner checks sufficiency/readiness; Plan-Creator drafts/revises plans;
+Plan-Reviewer independently reviews planning contracts; Implementer writes
+bounded code/fixes; Tester runs bounded verification; Reviewer independently
+reviews implementation/evidence; Explorer does read-only exploration.
+Code-Implementer and Code-Reviewer are aliases, not additional roles.
+All roles obey current mode and write authorization. In Plan Mode every role
+is read-only and Plan-Creator drafts only in conversation.
