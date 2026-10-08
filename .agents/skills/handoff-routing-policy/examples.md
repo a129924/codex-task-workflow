@@ -4,8 +4,8 @@ Positive provenance below is illustrative, not issued IDs/dispatch/authority.
 Real routing verifies genuine returned parent-task/actor/result and artifact-version
 linkage. Every Reviewer/Code-Reviewer/Plan-Reviewer verdict requires the actual
 returned reviewer to differ from the identified actual author, including PASS,
-approved, needs-rework, MISSING_EVIDENCE and BLOCKED. Ordinary nonreview PASS
-retains its usual explicit next-role rule.
+approved, needs-rework, MISSING_EVIDENCE and BLOCKED. Implementer PASS requires Tester; Tester PASS requires Reviewer/Code-Reviewer.
+Other compatible ordinary PASS retains its explicitly declared bounded next role.
 Unexposed provider request IDs are disclosed, never fabricated or replaced by
 registry/launcher binding.
 
@@ -152,12 +152,18 @@ Output:
 A real Plan-Reviewer dispatch returns the fixed JSON verdict approved, bound to
 its actual parent task and reviewed snapshot/version; its actual returned actor
 is distinct from the identified plan author. With
-an explicitly declared Implementer next handoff, return next_role Implementer;
-without a declared next Implementer handoff, stop. A declared Tester, Reviewer
+an explicitly declared Implementer next handoff AND genuine authorized owner
+reviewer-in-progress to approved recording bound to the current approved snapshot,
+return next_role Implementer. Verify actual reviewed snapshot/native linkage and
+unchanged non-Status body; reviewed/current whole hashes may differ only for the
+authorized Status transition. Native alone or current reviewer-in-progress is
+not execution-ready: stop awaiting the owner record, never write source or issue
+approval. Missing/stale owner or changed body also stops. Without a declared next Implementer handoff, stop. A declared Tester, Reviewer
 or any other actor also stops: approval terminates planning and hands execution
 to Implementer only. Code-Implementer is its permitted alias. Keep approved
-native, do not map to PASS. Ordinary PASS still uses its explicitly declared
-permitted next role.
+native, do not map to PASS. Implementer/Code-Implementer PASS requires Tester;
+Tester PASS requires Reviewer/Code-Reviewer. Other compatible PASS uses its
+explicitly declared bounded permitted role.
 
 ## Native plan rework and role incompatibility
 
@@ -187,3 +193,15 @@ from the returned Reviewer, and explicitly declared next permitted role (or
 stop). Only after these hard inputs pass may ordinary PASS routing apply.
 Missing author, same author or stale/unlinked version stops for any review-role
 verdict; do not invent approval, actor identifiers or a real dispatch.
+
+## Hard stops: recorded approval and implementation successors
+
+A genuinely independent native approved may be correlated correctly while the
+read-only source remains reviewer-in-progress. Stop until the authorized owner
+record/current approved snapshot and reviewed-body bindings verify. Retained
+genuine native/owner evidence can be read for eligibility; it issues no fresh
+approval or phase. Nominal labels, missing owner or changed body stop.
+Implementer PASS declaring Reviewer (or no successor) stops; Tester PASS
+declaring Implementer/another role (or no successor) stops. The separate actual
+Implementer -> Tester -> independent Reviewer results must each correlate to
+their real task/artifact version. Examples issue no future payload or dispatch.

@@ -41,7 +41,8 @@ Do not use this skill when:
 - bounded evidence summary
 - explicit blocker list, if any
 - optional evidence owner for `MISSING_EVIDENCE`
-- optional explicitly declared next role after `PASS`; native `approved` requires explicit `Implementer` (or its Code alias)
+- explicitly declared next role for PASS: Implementer requires Tester; Tester requires Reviewer (normalize Code aliases); other compatible PASS keeps its bounded declaration
+- for native approved: genuine native/reviewer proof, authorized owner transition, reviewed/approved snapshots and readable current approved source with version/body binding; explicit Implementer (or Code alias) next role
 
 # Process
 
@@ -56,8 +57,9 @@ Do not use this skill when:
    needs-rework, PATCH_REQUIRED, REPLAN_REQUIRED, MISSING_EVIDENCE and BLOCKED
    wherever role-compatible; missing/same-author proof stops before routing.
    Bind the task, returned evidence/artifact version and actual author; role or
-   verdict labels do not prove independence. Other-role PASS keeps its ordinary
-   correlation and explicitly declared next-role contract.
+   verdict labels do not prove independence. Other-role PASS keeps its actual
+   correlation; the Implementer-to-Tester-to-Reviewer successor gate below still
+   applies before any route.
 2. Confirm the result role is permitted (normalize only Code-Implementer and
    Code-Reviewer aliases) and the verdict is role-compatible. approved and
    needs-rework belong only to Plan-Reviewer; Plan-Reviewer returns native
@@ -71,9 +73,22 @@ Do not use this skill when:
 4. Route by verdict without inventing a broader workflow model:
    - `approved`: route only when the declared next role is explicitly
      `Implementer` (normalize Code-Implementer); every other or missing next
-     role stops. Keep the native verdict; never convert it to PASS
+     role stops. Before returning Implementer, verify the genuinely returned
+     native/reviewer proof and authorized owner-recorded reviewer-in-progress
+     to approved transition. Bind the reviewed snapshot/version to actual review,
+     current whole source to owner-approved snapshot, and identical bytes outside
+     the exact authorized Status metadata to the reviewed body. Legitimate
+     Status-only changes may change whole hashes. Native approval alone, current
+     reviewer-in-progress, absent/stale owner evidence or mismatched body stops
+     awaiting owner proof; routing never writes status or invents approval.
+     Keep the native verdict; never convert it to PASS
    - `needs-rework`: route to `Plan-Creator`
-   - `PASS`: route to the explicitly declared permitted next role or stop
+   - `PASS`: Implementer (including Code-Implementer) routes only to explicitly
+     declared Tester; Tester routes only to explicitly declared Reviewer
+     (normalize Code-Reviewer). Missing/wrong successor stops, even if permitted
+     for other tasks. This preserves Implementer -> Tester -> independent
+     Reviewer. Independent Reviewer and other compatible nonimplementation PASS
+     retain their explicit bounded permitted-role route or stop.
    - `PATCH_REQUIRED`: only independent Reviewer routes to `Implementer`
    - `REPLAN_REQUIRED`: only independent Reviewer routes to `Plan-Creator`
    - `MISSING_EVIDENCE`: route only to the bounded role that can supply the
@@ -114,7 +129,8 @@ Do not use this skill when:
 - `SOFT FAIL`: mark status as `INCOMPLETE` when the allowed verdict is clear
   enough to route or stop, but the bounded evidence summary or blocker detail is
   incomplete. Identity/correlation/required independence are hard preflight
-  inputs and never eligible for this soft-fail route.
+  inputs and never eligible for this soft-fail route. Required owner-approved
+  source binding and implementation-chain successors are also hard gates.
 - Under `SOFT FAIL`, keep the routing decision within the frozen verdict set,
   state the missing evidence explicitly, and avoid inventing additional workflow
   state.
