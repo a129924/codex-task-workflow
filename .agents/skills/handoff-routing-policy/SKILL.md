@@ -37,7 +37,7 @@ Do not use this skill when:
   - `MISSING_EVIDENCE`
   - `BLOCKED`
 - actual returned actor identity and genuine parent dispatch/returned-result correlation
-- actual author identity for Reviewer repair/replan; Reviewer must differ from author
+- actual author identity for every Reviewer / Code-Reviewer / Plan-Reviewer verdict; actual returned reviewer must differ from author
 - bounded evidence summary
 - explicit blocker list, if any
 - optional evidence owner for `MISSING_EVIDENCE`
@@ -50,9 +50,14 @@ Do not use this skill when:
    and returned result using exposed receipts or retained parent task/result
    provenance. A role label is not proof. Unexposed provider request IDs are
    disclosed, never fabricated or replaced by registry/launcher identifiers.
-   Missing linkage or actor identity stops. PATCH_REQUIRED/REPLAN_REQUIRED also
-   requires an actual author identity distinct from the actual Reviewer; absent
-   identity or the same author/Reviewer stops even with a Reviewer role label.
+   Missing linkage or actor identity stops. Every verdict owned by Reviewer
+   (including Code-Reviewer) or Plan-Reviewer also requires actual author identity
+   distinct from that actual returned reviewer. This applies to PASS, approved,
+   needs-rework, PATCH_REQUIRED, REPLAN_REQUIRED, MISSING_EVIDENCE and BLOCKED
+   wherever role-compatible; missing/same-author proof stops before routing.
+   Bind the task, returned evidence/artifact version and actual author; role or
+   verdict labels do not prove independence. Other-role PASS keeps its ordinary
+   correlation and explicitly declared next-role contract.
 2. Confirm the result role is permitted (normalize only Code-Implementer and
    Code-Reviewer aliases) and the verdict is role-compatible. approved and
    needs-rework belong only to Plan-Reviewer; Plan-Reviewer returns native
@@ -98,7 +103,7 @@ Do not use this skill when:
   verdict is exactly one frozen allowed value, and the skill returns exactly
   one allowed `next_role` or `stop` consistent with the stated verdict.
 - BLOCKED: stop when actual dispatch/result correlation or actor identity is
-  missing, or repair/replan lacks actual distinct Reviewer/author proof;
+  missing, or any review-role verdict lacks actual distinct reviewer/author proof;
   stop when the verdict is unknown, unstructured, or unsupported;
   when the evidence owner for `MISSING_EVIDENCE` is unknown; or when proceeding
   would require invented workflow state, registry behavior, runtime semantics,

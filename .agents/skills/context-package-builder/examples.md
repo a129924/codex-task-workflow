@@ -64,8 +64,13 @@ Output:
     "artifacts/observer-dispatcher-canonical-baseline/tester-result.json"
   ],
   "constraints": [
-    "Judge only the bounded write set.",
-    "Do not broaden into runtime semantics."
+    "Actual mode: Default, illustrative only; verify the real engine mode before packaging.",
+    "Selected owned feature: /example/project.worktrees/agent-20261007-observer-dispatcher-canonical-baseline; verify actual selection and ownership.",
+    "Repo write set: empty. Reviewer may not modify any source, artifact, diff, test input or other repository path.",
+    "External evidence output: only /example/review-evidence/feature-1-review.json if that exact external path is separately authorized; otherwise return the result in conversation without writes.",
+    "ReadOnly: all frozen source, plan, changed-artifact, bounded diff and actual Tester inputs; all other feature paths, dev/source/global, Git and existing evidence.",
+    "Stop after the bounded independent review result; no implementation, Git, publication, cleanup or runtime expansion authority.",
+    "Missing or ambiguous actual mode, selected root, empty repo write boundary, exact external authority/read-only set or stop boundary stops packaging."
   ],
   "evidence": [
     "artifacts/observer-dispatcher-canonical-baseline/changed-artifacts.json: exact changed paths and current content hashes",
@@ -83,7 +88,11 @@ For a real implementation Reviewer handoff, verify every required changed
 artifact, bounded diff and actual Tester result is readable and current for the
 same supplied revision/hash. Include bounded contents only with actual provenance.
 Absent or stale required proof stops packaging; a completion assertion is not
-evidence. These inputs apply to implementation Reviewer, not every unrelated role.
+evidence. Every real Reviewer package also verifies the concrete mode/root,
+empty repo write set, full read-only set, exact separately authorized external
+output (or conversation-only result) and stop boundaries above. Omitting any
+required boundary stops packaging. These inputs apply to implementation Reviewer,
+not every unrelated role.
 
 ## Negative: full conversation dump
 

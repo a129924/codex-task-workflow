@@ -1,7 +1,11 @@
 # handoff-routing-policy examples
 
 Positive provenance below is illustrative, not issued IDs/dispatch/authority.
-Real routing verifies genuine returned parent-task/actor/result linkage.
+Real routing verifies genuine returned parent-task/actor/result and artifact-version
+linkage. Every Reviewer/Code-Reviewer/Plan-Reviewer verdict requires the actual
+returned reviewer to differ from the identified actual author, including PASS,
+approved, needs-rework, MISSING_EVIDENCE and BLOCKED. Ordinary nonreview PASS
+retains its usual explicit next-role rule.
 Unexposed provider request IDs are disclosed, never fabricated or replaced by
 registry/launcher binding.
 
@@ -145,7 +149,9 @@ Output:
 
 ## Native plan approval
 
-A real Plan-Reviewer dispatch returns the fixed JSON verdict approved. With
+A real Plan-Reviewer dispatch returns the fixed JSON verdict approved, bound to
+its actual parent task and reviewed snapshot/version; its actual returned actor
+is distinct from the identified plan author. With
 an explicitly declared Implementer next handoff, return next_role Implementer;
 without a declared next Implementer handoff, stop. A declared Tester, Reviewer
 or any other actor also stops: approval terminates planning and hands execution
@@ -155,7 +161,8 @@ permitted next role.
 
 ## Native plan rework and role incompatibility
 
-Plan-Reviewer needs-rework routes to Plan-Creator. Implementer approved is
+A genuine Plan-Reviewer needs-rework result with the same actual linkage,
+version binding and distinct-author preflight routes to Plan-Creator. Implementer approved is
 role-incompatible and stops. Plan-Reviewer PASS is also incompatible and stops.
 Unknown verdicts, BLOCKED and MISSING_EVIDENCE without a known allowed owner stop.
 PATCH_REQUIRED and REPLAN_REQUIRED are compatible only with independent
@@ -164,8 +171,19 @@ Planner, Plan-Creator and Explorer emitting either review verdict stop.
 
 ## Hard preflight stop: missing provenance or independence
 
-Reviewer/Code-Reviewer plus PATCH_REQUIRED/REPLAN_REQUIRED is not identity proof.
+Reviewer/Code-Reviewer/Plan-Reviewer plus any role-compatible verdict is not
+identity proof. This includes PASS, approved, needs-rework and evidence/stop
+verdicts, as well as PATCH_REQUIRED/REPLAN_REQUIRED.
 Missing actual dispatch/result linkage, returned actor, actual author or identical
 author/Reviewer returns next_role stop with that exact gap as stop_condition.
 These hard inputs never use soft-fail routing. Alias normalization proves no
 independence; positive outputs apply only after these real inputs pass.
+
+## Independent Reviewer PASS
+
+Illustrative input: actual Reviewer PASS, genuine parent-task/returned-result
+correlation and reviewed artifact version, identified actual author distinct
+from the returned Reviewer, and explicitly declared next permitted role (or
+stop). Only after these hard inputs pass may ordinary PASS routing apply.
+Missing author, same author or stale/unlinked version stops for any review-role
+verdict; do not invent approval, actor identifiers or a real dispatch.
