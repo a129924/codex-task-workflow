@@ -1,0 +1,59 @@
+{
+  "observedAtUtc": "2026-10-07T07:18:30Z",
+  "client": "current Codex conversation, project-scoped YouTrack MCP",
+  "server": "youtrack_feasibility",
+  "toolCatalogLoaded": true,
+  "toolsUsed": [
+    "get_current_user",
+    "find_projects",
+    "get_project",
+    "get_issue_fields_schema",
+    "create_issue",
+    "get_issue",
+    "update_issue",
+    "search_issues"
+  ],
+  "identity": {
+    "getCurrentUserSucceeded": true,
+    "login": "admin",
+    "userConfirmedExpectedAccount": true,
+    "personalDetailsStored": false
+  },
+  "project": {
+    "key": "MCPTEST",
+    "findProjectsMatched": true,
+    "getProjectSucceeded": true,
+    "stateSchemaEnum": ["To do", "In Progress", "Done"],
+    "requiredCustomFields": []
+  },
+  "issue": {
+    "id": "MCPTEST-1",
+    "url": "https://a129924-tasks.youtrack.cloud/issue/MCPTEST-1",
+    "marker": "E002-YT-MCP-20261007T071810Z-WLIOG6",
+    "createdSummary": "E002-YT-MCP-20261007T071810Z-WLIOG6 測試",
+    "createdDescription": "YouTrack MCP 測試第一版",
+    "initialGetIssueMatched": ["id", "project", "summary", "description"],
+    "updatedSummary": "E002-YT-MCP-20261007T071810Z-WLIOG6 已更新",
+    "updatedDescription": "YouTrack MCP 測試第二版\n中文與換行留存驗證",
+    "updatedGetIssueMatched": ["id", "summary", "description", "newline"],
+    "resolveInput": {"State": "Done"},
+    "resolveUpdateFailedFields": [],
+    "finalDescription": "YouTrack MCP 測試第二版\n中文與換行留存驗證\n測試結果：本票用於 MCP 可行性驗證。",
+    "finalGetIssueMatched": ["id", "project", "summary", "description"],
+    "finalStateReturned": "已完成",
+    "resolvedAtReturned": "2026-10-07 07:18:30",
+    "searchByIdReturnedSameIssue": true,
+    "searchByIdAndResolvedReturnedSameIssue": true
+  },
+  "testCases": {
+    "TC01": "passed: user confirmed returned login",
+    "TC02": "passed: project and State schema returned",
+    "TC03": "passed: created and read same issue",
+    "TC04": "passed: updated and read same issue with Chinese and newline",
+    "TC05": "passed: State update, resolved timestamp and #Resolved search",
+    "TC06": "not needed: create result was unambiguous"
+  },
+  "experimentState": "成功",
+  "validationTaskComplete": true,
+  "scope": "one test issue; no token or REST fallback; no project workflow changes"
+}

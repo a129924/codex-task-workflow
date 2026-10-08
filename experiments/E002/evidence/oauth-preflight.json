@@ -1,0 +1,55 @@
+{
+  "observedAt": "2026-10-07T07:11:28.846266+00:00",
+  "project": {
+    "shortName": "MCPTEST",
+    "created": "confirmed by user",
+    "verifiedViaMCP": false
+  },
+  "projectScopedConfig": {
+    "command": "codex mcp get youtrack_feasibility --json",
+    "loadedByCLI": true,
+    "transport": "streamable_http",
+    "url": "https://a129924-tasks.youtrack.cloud/mcp",
+    "bearerTokenEnvVar": null,
+    "httpHeaders": null,
+    "currentSessionToolsLoaded": false
+  },
+  "probes": [
+    {
+      "url": "https://a129924-tasks.youtrack.cloud/.well-known/oauth-protected-resource/mcp",
+      "httpStatus": 200,
+      "resource": "https://a129924-tasks.youtrack.cloud/mcp",
+      "authorizationServers": [
+        "https://a129924-tasks.youtrack.cloud/hub"
+      ]
+    },
+    {
+      "url": "https://a129924-tasks.youtrack.cloud/.well-known/oauth-authorization-server",
+      "httpStatus": 200,
+      "issuer": "https://a129924-tasks.youtrack.cloud/hub",
+      "client_id_metadata_document_supported": false,
+      "token_endpoint_auth_methods_supported": [
+        "client_secret_basic",
+        "client_secret_post",
+        "none"
+      ]
+    },
+    {
+      "url": "https://a129924-tasks.youtrack.cloud/mcp",
+      "httpStatus": 401,
+      "challenge": "Bearer; no access token provided; OAuth resource metadata advertised"
+    }
+  ],
+  "authenticationAttempted": false,
+  "authenticatedMCPCalls": 0,
+  "ticketId": null,
+  "experimentState": "無法判定",
+  "validationTaskComplete": false,
+  "stopCondition": "Administrator must enable CIMD; no administrator setting was changed",
+  "limitations": [
+    "No OAuth or authenticated tool call evidence",
+    "Project ID is user-provided",
+    "Public HTTP challenge is not a successful MCP initialize/tools call",
+    "No token/REST fallback"
+  ]
+}

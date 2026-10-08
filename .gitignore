@@ -1,0 +1,2 @@
+# E002 uses an explicit local project override for reproduction.
+/.codex/config.toml
