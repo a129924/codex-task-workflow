@@ -53,6 +53,28 @@ Do not use this skill when:
 - explicit human destructive approval before any remove path (including already-authorized exact TestCase fixture removal described below)
 - explicit human choice when branch-name collision requires reuse or rename
 
+## Verified primary root and caller context
+
+Retain the actual caller cwd and its canonical current-worktree top-level
+separately. show-toplevel identifies that caller's worktree, not the primary.
+Read git rev-parse --path-format=absolute --git-common-dir and git worktree list
+--porcelain -z without mutations. Parse NUL-terminated attributes/records, never
+split paths on whitespace or assume cwd/common-dir.parent is primary. The first
+inventory entry identifies the main worktree; bare entries are unsupported.
+Resolve its path aliases and verify it exists, is a non-bare working tree, its
+own show-toplevel equals that candidate and its absolute common Git directory
+matches the caller's. Confirm caller and selected worktree registration in the
+same inventory/common metadata. Missing/stale/ambiguous/inconsistent primary,
+bare repository or unreadable metadata is BLOCKED before any mutation.
+Use that verified primary as resolved_root for all sibling family/path checks:
+primary.parent / (primary.name + ".worktrees"). Primary, linked and nested caller
+contexts must derive the same family. Preserve caller identity in evidence;
+never derive caller-feature.worktrees. Resolve final symlinks and preserve all
+original mode, exact-authority, containment, selector, collision and removal
+gates; this inspection grants no creation/removal authority.
+Git references: [worktree list/porcelain](https://git-scm.com/docs/git-worktree#_list_output_format),
+[common Git directory](https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir).
+
 # Process
 0. Verify actual active engine mode before any lifecycle mutation. In Plan Mode
    give conversation planning/inspection guidance only: no Git worktree add/remove,
@@ -63,10 +85,11 @@ Do not use this skill when:
    repository/path/branch/removal safety gate below. Do not ask again when that
    authorization is already present; missing authority blocks mutation. Controlled
    mode labels test policy only and never certify actual Plan-engine behavior.
-1. Resolve the intended absolute Git top-level using
-   `git rev-parse --show-toplevel`, then resolve filesystem aliases. The caller
-   may be at repo root or any nested child; never anchor managed paths at cwd.
-   Confirm that resolved root identifies the intended Git repository.
+1. Verify the intended primary Git root using shared common metadata and the
+   first main entry of actual NUL-safe worktree porcelain inventory, following
+   Verified primary root and caller context below. Keep actual caller root
+   separate; show-toplevel alone may be a linked feature. Primary, linked and
+   nested callers must derive one verified primary sibling family.
    - If repo-root validation fails, return `BLOCKED`, tell the operator to switch to the correct repository, and make no worktree mutation.
 2. Resolve the requested lifecycle operation exactly as one of `create`, `get-worktree`, `release worktree`, or `remove worktree`.
    - If the intent is ambiguous (for example, "clean up this worktree"), stop and ask whether the user means `release worktree` or `remove worktree`.

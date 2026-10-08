@@ -37,6 +37,28 @@ A selector should resolve to one worktree without guessing. Prefer, in order:
 If a selector matches more than one candidate or cannot be verified, stop at
 inspection or ask for clarification instead of mutating state.
 
+## Verified primary root and caller context
+
+Retain the actual caller cwd and its canonical current-worktree top-level
+separately. show-toplevel identifies that caller's worktree, not the primary.
+Read git rev-parse --path-format=absolute --git-common-dir and git worktree list
+--porcelain -z without mutations. Parse NUL-terminated attributes/records, never
+split paths on whitespace or assume cwd/common-dir.parent is primary. The first
+inventory entry identifies the main worktree; bare entries are unsupported.
+Resolve its path aliases and verify it exists, is a non-bare working tree, its
+own show-toplevel equals that candidate and its absolute common Git directory
+matches the caller's. Confirm caller and selected worktree registration in the
+same inventory/common metadata. Missing/stale/ambiguous/inconsistent primary,
+bare repository or unreadable metadata is BLOCKED before any mutation.
+Use that verified primary as resolved_root for all sibling family/path checks:
+primary.parent / (primary.name + ".worktrees"). Primary, linked and nested caller
+contexts must derive the same family. Preserve caller identity in evidence;
+never derive caller-feature.worktrees. Resolve final symlinks and preserve all
+original mode, exact-authority, containment, selector, collision and removal
+gates; this inspection grants no creation/removal authority.
+Git references: [worktree list/porcelain](https://git-scm.com/docs/git-worktree#_list_output_format),
+[common Git directory](https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir).
+
 ## Managed-path policy
 
 Managed worktrees use this path family:
@@ -44,8 +66,8 @@ Managed worktrees use this path family:
 `<resolved-git-root-parent>/<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`
 
 Rules:
-- Resolve `git rev-parse --show-toplevel` to the absolute intended Git root.
-- Compute the sibling family from root.parent / (root.name + ".worktrees");
+- Derive and verify the primary root with the common-metadata/porcelain checks above; retain caller show-toplevel separately.
+- Compute the sibling family from primary.parent / (primary.name + ".worktrees");
   never use invocation cwd to interpret `..`, even from a nested child.
 - Resolve the final destination and verify it is outside that Git root, within
   the intended managed family, with no symlink alias into the root.

@@ -16,8 +16,9 @@ User intent:
 
 Correct handling:
 - validate that the current directory belongs to the target Git repository
-- resolve absolute Git top-level; from `/workspace/agent-skills` or its nested
-  child, construct the same managed sibling path such as `/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`
+- verify primary `/workspace/agent-skills` through common metadata and first
+  actual non-bare NUL-safe porcelain entry; from primary, linked or nested
+  callers retain caller root separately and construct the same managed path such as `/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`
 - create the intended branch/worktree only in actual Default under exact existing
   authorization, after confirming all safety conditions and no branch collision
 - return the path, branch, and immediate next step
@@ -197,7 +198,8 @@ review. Do not clean it up. Evidence must precede any fixture removal.
 ## Nested invocation and symlink refusal
 
 Calling create from `/workspace/agent-skills/src/nested` anchors at the resolved
-Git root `/workspace/agent-skills`, so the same example selector returns
+primary `/workspace/agent-skills`, verified through common metadata plus the
+first actual non-bare NUL-safe porcelain entry, so the same selector returns
 `/workspace/agent-skills.worktrees/agent-20260507-worktree-skill`. After actual authorized Default creation the returned
 cd is absolute; Plan/unknown-mode guidance reports an intended path and stop only. If a candidate family/destination symlink resolves inside
 `/workspace/agent-skills`, stop before mutation. These are illustrative paths,
@@ -213,3 +215,31 @@ without deletion; release evidence remains in the conversation. An actual
 Default request with missing authorization also stops. Existing exact Default
 authorization is reused once all original gates pass, without asking again.
 Controlled mode inputs test this policy only, not actual Plan-engine execution.
+
+## Verified primary root and caller context
+
+Retain the actual caller cwd and its canonical current-worktree top-level
+separately. show-toplevel identifies that caller's worktree, not the primary.
+Read git rev-parse --path-format=absolute --git-common-dir and git worktree list
+--porcelain -z without mutations. Parse NUL-terminated attributes/records, never
+split paths on whitespace or assume cwd/common-dir.parent is primary. The first
+inventory entry identifies the main worktree; bare entries are unsupported.
+Resolve its path aliases and verify it exists, is a non-bare working tree, its
+own show-toplevel equals that candidate and its absolute common Git directory
+matches the caller's. Confirm caller and selected worktree registration in the
+same inventory/common metadata. Missing/stale/ambiguous/inconsistent primary,
+bare repository or unreadable metadata is BLOCKED before any mutation.
+Use that verified primary as resolved_root for all sibling family/path checks:
+primary.parent / (primary.name + ".worktrees"). Primary, linked and nested caller
+contexts must derive the same family. Preserve caller identity in evidence;
+never derive caller-feature.worktrees. Resolve final symlinks and preserve all
+original mode, exact-authority, containment, selector, collision and removal
+gates; this inspection grants no creation/removal authority.
+Git references: [worktree list/porcelain](https://git-scm.com/docs/git-worktree#_list_output_format),
+[common Git directory](https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir).
+
+Illustrative primary `/workspace/project with spaces`, linked
+`/workspace/project with spaces.worktrees/agent-20261008-topic`, and either
+nested child all select that primary and the same sibling family. Actual
+read-only inspection verifies inventory/common-dir/path equivalence; these
+examples claim no execution/existence. Bare/stale/mismatched primary stops.
