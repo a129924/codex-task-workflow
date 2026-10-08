@@ -753,5 +753,58 @@ class AgentSkillsTestCase(unittest.TestCase):
                         self.assertIn("[ ] Still pending", result.stdout)
                         self.assertNotIn("[ ] Code example", result.stdout)
 
+
+    def test_type1_literal_html_blocks_preserve_real_pending(self):
+        prefix = "## Implementation Steps\n- [X] Done\n"
+        cases = []
+        for index, tag in enumerate(("script", "pre", "style", "textarea")):
+            for name, indent in ((tag, index), (tag.upper(), 3 - index)):
+                pad = " " * indent
+                block = "Prose boundary\n" + pad + "<" + name + ">\n<!-- literal\n- [ ] Example only\n" + pad + "</" + name + ">\n"
+                for pending in (False, True):
+                    cases.append((block + ("- [ ] Still pending\n" if pending else ""), int(pending), pending))
+        for indent in (2, 4, 5):
+            pad = " " * indent
+            block = pad + "<script>\n  <!-- literal\n  - [ ] Example only\n" + pad + "</script>\n"
+            for pending in (False, True):
+                cases.append((block + ("- [ ] Still pending\n" if pending else ""), int(pending), pending))
+        for quote in ("> ", "> > "):
+            block = quote + "<pre>\n" + quote + "<!-- literal\n" + quote + "- [ ] Example only\n" + quote + "</pre>\n"
+            for pending in (False, True):
+                cases.append((block + ("- [ ] Still pending\n" if pending else ""), int(pending), pending))
+        # Quote/list exits reprocess true pending before any literal close.
+        cases.extend((
+            ("> <script>\n> <!-- literal\n- [ ] Still pending\n", 1, True),
+            ("> > <script>\n> > <!-- literal\n> prose\n- [ ] Still pending\n", 1, True),
+            ("  <script>\n  <!-- literal\n- [ ] Still pending\n", 1, True),
+        ))
+        tick = chr(96)
+        cases.extend((
+            ("<script\n<!-- literal\n</script>\n- [ ] Still pending\n", 1, True),
+            ("<script>\n<!-- literal\n</STYLE>\n- [ ] Still pending\n", 1, True),
+            ("<script>\n<!-- literal\n</script >\n", 1, False),
+            ("<script>\n<!-- literal\n", 1, False),
+            ("<scripture>\n- [ ] Still pending\n</scripture>\n", 1, True),
+            ("Inline <script>\n- [ ] Still pending\n</script>\n", 1, True),
+            ("\\<script>\n- [ ] Still pending\n</script>\n", 1, True),
+            ("<!-- actual\n<script>\n-->\n- [ ] Still pending\n", 1, True),
+            ("<!-- closed --><script>\n- [ ] Still pending\n</script>\n", 1, True),
+            (tick * 3 + "html\n<script>\n<!--\n- [ ] Example only\n</script>\n" + tick * 3 + "\n- [ ] Still pending\n", 1, True),
+            ("Prose boundary\n\n    <script>\n    <!-- literal\n    - [ ] Example only\n    </script>\n- [ ] Still pending\n", 1, True),
+            (tick + "<script>" + tick + "\n- [ ] Still pending\n", 1, True),
+            ("<![CDATA[<script>\n<!-- literal\n- [ ] Example only\n]]>\n- [ ] Still pending\n", 1, True),
+            ("<script><!-- literal</script>\n- [ ] Still pending\n", 1, True),
+        ))
+        for body, expected, visible in cases:
+            for operation in ("check_all_succeeded", "check_impl_steps_succeeded"):
+                with self.subTest(body=body, operation=operation):
+                    result = self.run_cli(operation, prefix + body)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if visible:
+                        self.assertIn("[ ] Still pending", result.stdout)
+                        self.assertNotIn("[ ] Example only", result.stdout)
+                    if expected:
+                        self.assertNotIn("SUCCESS", result.stdout)
+
 if __name__ == "__main__":
     unittest.main()

@@ -178,3 +178,15 @@ tokens inside cannot open global comments. Pending after closure stays visible,
 unclosed/ambiguous evidence blocks, and an already-active real HTML comment's
 raw closing marker takes precedence. This remains a narrow stdlib evidence
 lexer, not full Markdown conformance.
+
+## Bounded literal HTML blocks
+
+Completion visibility recognizes raw type-1 script/pre/style/textarea line starts,
+case-insensitive tag-name boundaries and zero-to-three relative spaces in the
+supported quote/list container. Literal data, including comment tokens, stays
+inside that block through its closing line; any of the four exact closing tags
+ends it. Container exit reprocesses real visible evidence. Active genuine comments
+and code retain precedence; inline/escaped or comment-stripped text never opens
+a new block. Unclosed supported literal blocks fail closed. This narrow lexer
+is not full HTML or Markdown conformance.
+See [CommonMark HTML blocks](https://spec.commonmark.org/0.31.2/#html-blocks).

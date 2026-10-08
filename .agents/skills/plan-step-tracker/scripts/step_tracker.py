@@ -186,6 +186,8 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
     list_code = False
     in_comment = False
     in_cdata = False
+    literal_html: tuple[int, int] | None = None  # quote depth, list content indent
+    literal_close = re.compile(r"</(?:script|pre|style|textarea)>", re.IGNORECASE)
 
     for raw_line in lines:
         quote_depth, raw_content = _raw_quote_content(raw_line.rstrip("\r\n"))
@@ -206,6 +208,15 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
                     if token[0] == fence[0] and len(token) >= fence[1] and not suffix.strip():
                         fence = None
                 continue
+        if literal_html is not None:
+            depth, required_indent = literal_html
+            if quote_depth < depth or (required_indent and raw_content.strip()
+                                      and content_indent < required_indent):
+                literal_html = None  # Container ended; process this visible line.
+            else:
+                if literal_close.search(raw_content):
+                    literal_html = None
+                continue  # Type-1 literal data includes the whole closing line.
         expanded = raw_line.expandtabs(4)
         indent = len(expanded) - len(expanded.lstrip(" "))
         if not in_comment and not in_cdata and not raw_line.strip():
@@ -224,6 +235,18 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
             if token[0] != "`" or "`" not in suffix:
                 fence = (token[0], len(token), quote_depth, container_indent)
                 continue  # Comment tokens in a valid fence's info are code too.
+        # Recognize only a genuine raw type-1 line start, never an opener
+        # promoted from inline text, escaped markup or stripped comments.
+        if not in_comment and not in_cdata and re.match(
+                r"^ {0,3}<(?:script|pre|style|textarea)(?=[ \t>]|$)",
+                relative_content, re.IGNORECASE):
+            if not literal_close.search(raw_content):
+                literal_html = (quote_depth, container_indent)
+            if not container_indent:
+                list_content_indent = None  # This top-level block ends ancestry.
+                list_code = False
+            blank_boundary = False
+            continue
         invalid_raw_fence = bool(marker and marker.group(1).startswith(chr(96))
                                  and chr(96) in marker.group(2))
         # Only an invalid raw opener's initial tick run is literal. Later
@@ -294,6 +317,8 @@ def _visible_completion_lines(lines: list[str]) -> list[str]:
         raise ValueError("Unclosed HTML comment in completion evidence")
     if in_cdata:
         raise ValueError("Unclosed CDATA in completion evidence")
+    if literal_html is not None:
+        raise ValueError("Unclosed literal HTML block in completion evidence")
     return visible
 
 def _parse_step_lines(lines: list[str]) -> list[Step]:
