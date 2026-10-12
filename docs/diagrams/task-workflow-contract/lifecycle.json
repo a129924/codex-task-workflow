@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Task 工作脈絡生命週期",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1150,
+      640
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "同一 Task 的五階段"
+    },
+    {
+      "id": "waiting",
+      "label": "外部情況：只依要求更新紀錄"
+    },
+    {
+      "id": "terminal",
+      "label": "結案之後：保留工作脈絡"
+    }
+  ],
+  "states": [
+    {
+      "id": "idea",
+      "type": "start",
+      "label": "Idea",
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "draft",
+      "type": "active",
+      "label": "Draft plan",
+      "lane": "main",
+      "col": 1
+    },
+    {
+      "id": "implement",
+      "type": "active",
+      "label": "Implementation plan／實作",
+      "lane": "main",
+      "col": 2,
+      "width": 166
+    },
+    {
+      "id": "pr",
+      "type": "active",
+      "label": "PR",
+      "lane": "main",
+      "col": 3
+    },
+    {
+      "id": "close",
+      "type": "neutral",
+      "label": "Close",
+      "lane": "main",
+      "col": 4
+    },
+    {
+      "id": "merged",
+      "type": "external",
+      "label": "PR 合併仍未結案",
+      "lane": "waiting",
+      "col": 1,
+      "width": 150
+    },
+    {
+      "id": "readback",
+      "type": "external",
+      "label": "按需要讀取 Close 紀錄",
+      "lane": "terminal",
+      "col": 2,
+      "width": 180
+    }
+  ],
+  "transitions": [
+    {
+      "id": "skip-planning",
+      "from": "idea",
+      "to": "implement",
+      "label": "直接實作",
+      "variant": "emphasis",
+      "route": "top-channel"
+    },
+    {
+      "id": "return-to-draft",
+      "from": "implement",
+      "to": "draft",
+      "label": "新事實，返回規劃",
+      "variant": "dashed",
+      "route": "bottom-channel",
+      "fromSide": "bottom",
+      "toSide": "bottom"
+    },
+    {
+      "id": "early-stop",
+      "from": "idea",
+      "to": "close",
+      "label": "使用者決定停止",
+      "variant": "dashed",
+      "route": "bottom-channel",
+      "channelY": 360
+    },
+    {
+      "id": "record-merge",
+      "from": "pr",
+      "to": "merged",
+      "label": "記錄合併情況",
+      "variant": "dashed",
+      "labelAt": [
+        556,
+        202
+      ]
+    },
+    {
+      "id": "read-closed",
+      "from": "close",
+      "to": "readback",
+      "label": "回查結果與歷史",
+      "variant": "dashed",
+      "labelAt": [
+        710,
+        202
+      ]
+    }
+  ]
+}

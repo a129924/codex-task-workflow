@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "/Users/andrew/code/plugins/codex-task-workflow.worktrees/agent-20261012-task-workflow-contract/docs/diagrams/task-workflow-contract/lifecycle.json",
+  "output": "/Users/andrew/code/plugins/codex-task-workflow.worktrees/agent-20261012-task-workflow-contract/docs/diagrams/task-workflow-contract/lifecycle.html",
+  "specification": {
+    "sha256": "2be6814780c4d3dda850bf3445a09f191282efbd651c50b119e41c73e80c46d5",
+    "bytes": 2520
+  },
+  "artifact": {
+    "sha256": "85490e2feab177f7e2084b5adeec31a105f29727199f6141fb95e7a3f509c05a",
+    "bytes": 699610
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
