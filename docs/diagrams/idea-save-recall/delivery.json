@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "workflow",
+  "input": "docs/diagrams/idea-save-recall/workflow.json",
+  "output": "docs/diagrams/idea-save-recall/workflow.html",
+  "specification": {
+    "sha256": "a388bb6a64e9ba376980e3bf2f1973c27c747464afdc0aa4f481a474e21aed59",
+    "bytes": 3545
+  },
+  "artifact": {
+    "sha256": "145ab8deddab6370d861698749f1b52dad48854b0e730a80d395fe1016ec58a5",
+    "bytes": 700472
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
