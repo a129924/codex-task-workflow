@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "youtrack-idea",
+  "version": "0.2.0",
+  "description": "將 Idea 保存為私人 YouTrack Task，經授權更新既有內容並寫後確認，或依同一識別讀回概要。"
+}
