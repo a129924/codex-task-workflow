@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "私人 Idea 保存與讀回",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "viewBox": [
+      760,
+      466
+    ]
+  },
+  "lanes": [
+    {
+      "id": "gate",
+      "label": "保存意圖與建立前提"
+    },
+    {
+      "id": "write",
+      "label": "單次建立與寫後確認"
+    },
+    {
+      "id": "read",
+      "label": "新 Session 依同 ID 恢復"
+    }
+  ],
+  "mainPath": [
+    "preflight",
+    "create_confirm",
+    "recall"
+  ],
+  "nodes": [
+    {
+      "id": "preflight",
+      "lane": "gate",
+      "col": 1,
+      "type": "security",
+      "label": "主動保存：建立前檢查",
+      "sublabel": "目的、project、啟用、schema、private/license",
+      "width": 200
+    },
+    {
+      "id": "existing_read",
+      "lane": "gate",
+      "col": 4,
+      "type": "database",
+      "label": "既有同事情唯讀",
+      "sublabel": "get_issue；不另建、不更新",
+      "width": 160
+    },
+    {
+      "id": "create_confirm",
+      "lane": "write",
+      "col": 1,
+      "type": "backend",
+      "label": "單次建立 → 同 ID 核對",
+      "sublabel": "create_issue → get_issue；完整內容一致",
+      "width": 200
+    },
+    {
+      "id": "recover",
+      "lane": "write",
+      "col": 4,
+      "type": "security",
+      "label": "結果不明：限定查證",
+      "sublabel": "可信 ID 先 get；否則 project 候選",
+      "width": 160
+    },
+    {
+      "id": "recall",
+      "lane": "read",
+      "col": 1,
+      "type": "backend",
+      "label": "新 Session 僅依同 ID",
+      "sublabel": "get_issue；恢復概要、未知與缺口",
+      "width": 200
+    }
+  ],
+  "edges": [
+    {
+      "id": "gate-create",
+      "from": "preflight",
+      "to": "create_confirm",
+      "label": "條件充分"
+    },
+    {
+      "id": "confirm-session",
+      "from": "create_confirm",
+      "to": "recall",
+      "label": "全部一致才確認保存、交付 ID"
+    },
+    {
+      "id": "existing-only",
+      "from": "preflight",
+      "to": "existing_read",
+      "label": "既有 ID",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "id": "create-unknown",
+      "from": "create_confirm",
+      "to": "recover",
+      "label": "提交不明",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "id": "recovery-confirm",
+      "from": "recover",
+      "to": "create_confirm",
+      "label": "充分同次證據",
+      "role": "return",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "via": [
+        [
+          500,
+          285
+        ],
+        [
+          360,
+          285
+        ],
+        [
+          360,
+          243
+        ]
+      ],
+      "labelAt": [
+        430,
+        283
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "建立與唯讀邊界",
+      "items": [
+        "目的、project、啟用、schema 與 private/license 充分才建立；揭露 admin 例外。",
+        "正文自足、階段 Idea，不推定 State；未知與矛盾明記。既有事情及新 Session 僅讀。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "結果不明即限定查證",
+      "items": [
+        "可信 ID 先 get；否則限本次 project，完成分頁並核對完整 snapshot、reporter、時間與操作關聯。",
+        "證據不足、不符或不可讀即停，不 retry create、不報成功。Viewer UI／HTML lang：English。"
+      ]
+    }
+  ]
+}

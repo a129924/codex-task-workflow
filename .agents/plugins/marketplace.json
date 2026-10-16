@@ -1,0 +1,20 @@
+{
+  "name": "idea-save-recall-local",
+  "interface": {
+    "displayName": "私人 Idea 留存"
+  },
+  "plugins": [
+    {
+      "name": "youtrack-idea",
+      "source": {
+        "source": "local",
+        "path": "./plugins/youtrack-idea"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
