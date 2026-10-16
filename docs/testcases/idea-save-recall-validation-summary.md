@@ -22,3 +22,9 @@ This release provides a portable skill-only plugin for private Idea creation, ID
 ## Publication boundary
 
 Detailed planning, live tenant/Task evidence, license/ACL audits and local operation records are excluded from public Git history. The public summary reports bounded outcomes without tenant URLs, Task/project IDs, account identities, private text or credentials. Full local evidence is retained separately.
+
+## Portable manifest review clarification — 2026-10-16
+
+The review concern that Codex discovery always requires `.codex-plugin/plugin.json` does not apply to the portable package format used here. [Official packaging documentation](https://developers.openai.com/plugins/build/plugins) supports root `plugin.json` with Agent Plugins schemas; the Codex layout is an optional compatibility fallback. Directory-submission metadata requirements are distinct from this local/repository marketplace installation.
+
+The official `codex plugin add youtrack-idea@idea-save-recall-local --json` command was rerun successfully for version 0.2.0. Installed manifest, skill and all three references byte-match the source. Skill quick_validate also passed again. This proves current-client discovery/installation and copied skill files, not universal client compatibility, directory ingestion validation or a new-session behavioral acceptance run. No separate plugin-validator command was available in the installed CLI; it is not claimed as executed. The existing runtime and acceptance limits above remain.
