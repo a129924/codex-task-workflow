@@ -11,16 +11,22 @@
 | In-Scope | 單一主機、既有 CLI、固定 OBS cwd 的唯讀觀察；重用固定歷史來源；本報告與私人審閱輔助。 |
 | Out-Of-Scope | desktop／host matrix、neutral-directory 比較、安裝／重裝／註冊／登入／啟停／設定或 PATH 修復、live Task、新 Session、bytes 重驗、core summary 修改及新測試套件。 |
 | ReadOnly | OBS／CORE 的指定 commit 來源、必要 CLI help／host context、限定非秘密設定鍵、既有 graph／overlay 是否存在。 |
-| Written | Plan-Creator 新建 `plan/plugin-installation-evidence/plugin-installation-evidence.plan.md`；Implementer 新建本報告。私人 RUN 只含 approved plan allowlist 的 index、原始查詢與 review aids；Tester 的 `verification.json` 尚待其本人執行。 |
-| Modify | 既有 tracked files 無修改；上述兩份是新增檔，不列為修改。 |
+| Written | 初次交付由 Plan-Creator 新建 plan、Implementer 新建本報告；私人 RUN 保存 allowlist 的原始觀察與 review aids，Tester 已完成其 `verification.json`。本次 PR #7 修訂只更新本報告，另存私人修訂 receipt，不新增 repo 檔案。 |
+| Modify | 相對初次交付的 c198f80，本次只修改 `docs/youtrack-idea-installation-evidence.md`；terminal approved plan 與既有 plugin／core 檔案不改。初次交付本身是兩份新增文件。 |
 | Deleted | 無。 |
 | TestCase | 本文件末尾的人工表格；未遇分支維持 method-only，沒有 fault injection。 |
 
 OBS 是原始 main worktree，僅作觀察；FEATURE 是分離的文件 worktree，base 為 `0d3ca3d9dd764d15b22932a3fcc88c7feb52bb1a`。RUN 是本次私人 evidence root。公開只使用 aliases；exact roots、binary locator、原始私有路徑、命令、exit、完整 SHA-256 與檔案清單留在 RUN 的 `manifest.json`、`context.json`、`provenance-observations.json`、`aids.json`，不進 Git。
 
+## 交付狀態與版本界線
+
+初次交付為 commit [`c198f809f91b0b7f5e48a4f93d79e27be4e1a584`](https://github.com/a129924/codex-task-workflow/commit/c198f809f91b0b7f5e48a4f93d79e27be4e1a584)，其 report SHA-256 為 `8ad24c5e5d04f543dea7ac55b5ea41c326e9b9c019a5508f64f4a12adeea9266`，plan SHA-256 為 `c7295aef6e2349369576e7e79583949bfee0c95f6428b47678209d91181d24f6`。Tester 於 `2026-10-19T03:59:59.536014+00:00` 完成 11 項檢查，結果 PASS、issues 空；其私人 `verification.json` SHA-256 為 `7519d894bf50054cde071911c25fdd2e500dc4aa56a2352497a8b0f85d70f8bb`。另一位獨立 Reviewer 對相同 report／plan／verification 綁定回傳 PASS、issues 空。上述 PASS 只綁定 c198f80 baseline；本次 PR 修訂查核的版本與結果另記 [PR #7 review threads](https://github.com/a129924/codex-task-workflow/pull/7#discussion_r4311362618)，不由舊 PASS 推及新 bytes。本次修訂沒有重跑 host 或 live 證據。
+
+計畫末段「planning approval 尚未成立」是遺留的核准前歷史文字。權威狀態以凍結 plan 的 [Status / Allowed Transitions：approved、terminal、allowed transitions=[]](https://github.com/a129924/codex-task-workflow/blob/c198f809f91b0b7f5e48a4f93d79e27be4e1a584/plan/plugin-installation-evidence/plugin-installation-evidence.plan.md#L57-L63) 及 [2026-10-19T03:50:21.884287+00:00 的獨立 native approval phase 記錄](https://github.com/a129924/codex-task-workflow/blob/c198f809f91b0b7f5e48a4f93d79e27be4e1a584/plan/plugin-installation-evidence/plugin-installation-evidence.plan.md#L68-L73) 為準。本次保留已核准 source bytes，透過報告釐清該段時序，不修改計畫或重開 planning transition。
+
 ## 本次 context 與原始結果
 
-觀察時間為 **2026-10-19T03:51:42Z**（查詢完成記錄 `03:51:42.859429+00:00`），CLI `0.163.0`，macOS `26.5.2`（build `25F84`）。實際 OBS branch 是 `dev`、HEAD 是 `0c6d81aa1b8381573d599cc6bb31bbf02af5b954`，查詢前工作樹乾淨。這是 runtime context；下節歷史文件仍從凍結的 OBS@`0d3ca3d` Git objects 讀取，未將來源悄悄換成較新的 dev。FEATURE HEAD 仍為 base，沒有建立實作 commit。
+觀察時間為 **2026-10-19T03:51:42Z**（查詢完成記錄 `03:51:42.859429+00:00`），CLI `0.163.0`，macOS `26.5.2`（build `25F84`）。實際 OBS branch 是 `dev`、HEAD 是 `0c6d81aa1b8381573d599cc6bb31bbf02af5b954`，查詢前工作樹乾淨。這是 runtime context；下節歷史文件仍從凍結的 OBS@`0d3ca3d` Git objects 讀取，未將來源悄悄換成較新的 dev。當時 FEATURE HEAD 仍為 base，尚未建立實作 commit；後續交付版本見上節，這項歷史 context 未重新觀察。
 
 從 OBS 執行一次原命令，沒有 `--available`、profile 或 config overrides：
 
@@ -71,7 +77,7 @@ CORE 固定為 `655cbf36eec4e8065b8d54c41aa638d394c452bf`，由 Git objects 讀�
 | effective-enabled | inventory＋官方語意 | 無 runtime 結果 | 同上 | UNKNOWN，沒有可分類的 enabled 欄位 | 不由 true 宣告補推啟用。 |
 | 安裝事件時間 | H 與 receipt 調查界線 | H 日期 2026-10-16；本次未取得 event receipt | H CLI／OS／確切時間未知 | UNKNOWN；mtime 不算安裝時間 | 不回填日期、不重裝。 |
 | 固定 core reuse | CP／CT／CS | 六檔、input declarations、fresh recall 的歷史記錄 | CORE@655cbf3，記錄 CLI 0.163.0／2026-10-19 | 當前 bytes、其他 host、所有 adverse branch 未證實 | 引用固定來源與限制，不重跑。 |
-| 工具輔助 | RUN aids／receipts | 見下節；獨立於上述證據 | 本次 local-only | 不能替代 Tester／Reviewer | 將實際檔案交 Tester。 |
+| 工具輔助 | RUN aids／receipts | 初次與 post-commit 結果分列如下 | 各自版本、local-only | 不能替代 Tester／Reviewer | baseline gates 已完成；PR 修訂查核另記 PR #7 review threads。 |
 
 方法判準：成功 inventory 若明確 installed 且 effective disabled，應分列 installed／DISABLED；缺 `enabled` 或語意、scope 不明時 effective 為 UNKNOWN；來源同一維度衝突時保留 CONFLICT 及各版本，不任選有利結果。本次未遇這些成功 schema 分支，僅查核方法，未注入假資料。
 
@@ -81,11 +87,11 @@ Archify 以繁體中文繪製「核准唯讀方法」與「本次失敗觀察」
 
 Graphify pinned 0.9.73 的 version command 使用 `GRAPHIFY_NO_AUTO_REFRESH=1`。只在 OBS／FEATURE 的已宣告 graph 路徑查找，未找到既有 graph；未做 graph query／build／refresh，改以固定 Git objects／targeted source reads。這不證明全主機沒有 graph。
 
-PR Lens pinned 0.11.0 的 pre-commit working-tree map 嘗試以實際兩份新增文件及未變 plugin／catalog／公開摘要為基礎。兩份未追蹤檔透過真實 `git diff --no-index /dev/null <file>` 納入，完整 patch 與 digest 留私人 index；base／HEAD 均仍是 0d3ca3d，沒有偽造 head commit。第一次 validate exit 1：graph document 要求 `provenance`；核對 pinned schema 後確認必填 repo／base.sha／head.sha，沒有 working-tree snapshot 欄位。未以 base SHA 冒充新文件 bytes，因此此 candidate 保留為無效，render 未執行、沒有 rendered manifest 或 SVG；目前採 direct-diff fallback。這是此 pre-commit 表示方式的限制，不宣稱 PR Lens 普遍失效。獲授權且實際建立 topic commit 後，才可另以真實 head 製作 map。工具只作 change comprehension，不能判定證據正確性。沒有 hosted canvas、provider、upload、server 或工具安裝。
+PR Lens pinned 0.11.0 的 pre-commit working-tree map 嘗試以實際兩份新增文件及未變 plugin／catalog／公開摘要為基礎。兩份未追蹤檔透過真實 `git diff --no-index /dev/null <file>` 納入，完整 patch 與 digest 留私人 index；base／HEAD 均仍是 0d3ca3d，沒有偽造 head commit。第一次 validate exit 1：graph document 要求 `provenance`；核對 pinned schema 後確認必填 repo／base.sha／head.sha，沒有 working-tree snapshot 欄位。未以 base SHA 冒充新文件 bytes，因此此 candidate 保留為無效，該輪 render 未執行、沒有 rendered manifest 或 SVG；初次審閱採 direct-diff fallback。這是此 pre-commit 表示方式的限制，不宣稱 PR Lens 普遍失效。後續已對真實 base `0d3ca3d`／head `c198f809f91b0b7f5e48a4f93d79e27be4e1a584` 製作獨立的 post-commit map：PR Lens 0.11.0 validate／render 均 exit 0，graph SHA-256 前 12 碼 `9c60e0e347d2`，native manifest 與 SVG 留在私人 publication index。原 failed candidate 與 receipt 保留；成功 map 僅對 c198f80 的兩檔差異有效，不覆蓋後續報告修訂。工具只作 change comprehension，不能判定證據正確性。沒有 hosted canvas、provider、upload、server 或工具安裝。
 
 ## TestCase
 
-下表是 Implementer 的實際人工檢查，不是獨立 Tester／Reviewer gate；其後續結論仍待各本人執行。`OBSERVED` 表示真實觀察已記錄，`METHOD_ONLY` 表示只核對未遇分支判準。
+下表保留初次蒐集時 Implementer 的實際人工檢查與當時工具結果，不是獨立 Tester／Reviewer gate；baseline gates 的版本界線見「交付狀態與版本界線」；PR 修訂查核另記 PR #7 review threads。`OBSERVED` 表示真實觀察已記錄，`METHOD_ONLY` 表示只核對未遇分支判準。
 
 | input | preconditions | steps | expected | actual | evidence | status |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -98,4 +104,4 @@ PR Lens pinned 0.11.0 的 pre-commit working-tree map 嘗試以實際兩份新�
 | 九欄／diff／去識別 | 只兩個 public outputs | 核對 owner、路徑、private index、原 plan hash | 既有修改／刪除為無，原 plan 不改 | 本報告新增；plan 由另一 owner 新增；exact paths 私人保留 | diff／manifest，交 Tester 再驗 | OBSERVED |
 | Tools | 依 pinned/local-only 契約 | 讀 receipts、四張截圖及實際 diff | 各工具 used／fallback／failed 如實 | Archify 實際結果如上；Graphify source fallback；PR Lens pre-commit validate 失敗／render 未執行，direct-diff fallback | aids.json、tool receipts | OBSERVED（保留工具失敗） |
 
-本題的交付目的是證據清晰。查詢失敗、未知或停用均可如實交付；後續是否變更 marketplace／安裝／設定，需另定範圍。本文件不宣稱獨立測試、review 或產品驗收已通過。
+本題的交付目的是證據清晰。查詢失敗、未知或停用均可如實交付；後續是否變更 marketplace／安裝／設定，需另定範圍。已完成的獨立驗證／review 只支持上述凍結 baseline；PR 修訂查核的版本與結果另記 PR #7 review threads，不由舊 PASS 推及新 bytes，不宣稱產品或一般 runtime 驗收通過。
