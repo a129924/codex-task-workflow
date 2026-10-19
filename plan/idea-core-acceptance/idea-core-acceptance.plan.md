@@ -44,6 +44,13 @@ Implementer 錄入觀察，不代判 gate。Runtime 缺陷或路徑漂移須停�
 
 Owner 僅在真正獨立 Plan-Reviewer start acknowledgement 後記錄 `reviewer-in-progress`，僅依其 native verdict 記錄 `approved` 或 `needs-rework`；不得捏造 acknowledgement 或 approval。`approved` 為 planning 終態，allowed planning transitions `[]`、next actor Implementer、action 為準備本 plan 的自足測試定義。實作與驗收尚未執行。
 
+**行政 provenance 補註（非新 approval）**：開頭「尚未進行獨立 planning review、核心驗收或輔助工具執行」及本節「實作與驗收尚未執行」均指初次 materialization 的歷史快照，不代表目前進度。Planning approval 依下列真實紀錄成立；實作及驗收現況依 testcase／validation summary 的具 provenance 觀察判讀，不由 planning approval 推定通過。
+
+- 實際獨立 Plan-Reviewer：`/root/plan_reviewer_core_acceptance`；審查 source SHA-256：`60b059739213e080527fc1ee1ab0d6803a7d15707c53de86b9180cb4e72793bb`；真實 native verdict：`approved`，blocking issues 與 feedback triage 均為空。
+- 原 owner proof：checkout 外保留的 `review-02-approved.native.json` 及 `materialization-provenance.json`，後者 sequence 9 記錄本輪真正 start ACK、sequence 10 記錄 owner terminal approved；原始證據保持 immutable。
+- 原 approved execution basis：`10-approved.plan.md`，whole-file SHA-256 為 `730b68bdad68c9cc8b8aebc8f2d35ad189a3af7b6acf54c6bba443081789d058`；原 approval body binding（排除當時 status metadata）為 `862ad4599f27562996ea7163c8e59cab25ccd8e83c90cce15f94cf9cf630e7e3`。這兩個 hash 標識原執行依據，不標識加入本補註後的新 whole-file bytes。
+- 本檔現在是僅附加 Status 行政註記的衍生版；不重開 approved execution 契約，不新增 canonical transition 或 approval backedge。Current 仍為 `approved`、allowed planning transitions 仍為 `[]`、next actor 仍為 Implementer。
+
 ## Artifact Paths
 
 | 標記 | Exact path | Owner | 用途 |

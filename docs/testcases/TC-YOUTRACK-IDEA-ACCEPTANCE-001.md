@@ -115,9 +115,9 @@ B–E 均 NOT_EXECUTED，未 create/update。當次 private/license 適用證據
 
 原 Archify HTML SHA-256 `170d5e80fa9780acf0c25f2f77f787e04995598bd6f9b08b967eaacd11e7f36d` 曾 deterministic 9/9，但 Tester 真正 visual-check exit 1、人工檢視 FAIL：四尺寸 scrollHeight 依序為 1520/1611/1611/1644，大於 viewport 高度 900/1000/1080/1320；最小畫面裁切最後審查節點。此 FAIL 不被新 revision 抹除。既有 visual receipts/captures 仍綁定原 HTML，不能用於新圖。
 
-依獨立 Reviewer PATCH_REQUIRED 回修 authored 垂直配置，改為兩條流程帶，保留全節點文字、字級與語意，合併重複限制卡及移除多餘 viewBox 空間；未手改 HTML、隱藏 overflow 或加入捲動。蛇形流程以既有 main-role arrows 表達，省略只接受欄位遞增的 mainPath lint 欄位；一次正式授權跨帶連線指定 bottom→top，確保方向。新 specification SHA-256 `f65f4108696412327a7342b6c6c7c24189fe808c6356e0788c0048405196c51b`，新 HTML SHA-256 `a873039ad747c2a32946a109e0da1504bdd7ed5a626cc53f6cf65b3ba2dc6ece`。兩輪 focused correction 後 validate/deliver exit 0，showcase 9/9、零 errors/warnings。**新 revision visual-check／人工視覺重驗 pending Tester**，並非已通過。原 FAIL、舊 hashes、修訂與受測版本 binding 保留於 manifest。
+依獨立 Reviewer PATCH_REQUIRED 回修 authored 垂直配置，改為兩條流程帶，保留全節點文字、字級與語意，合併重複限制卡及移除多餘 viewBox 空間；未手改 HTML、隱藏 overflow 或加入捲動。蛇形流程以既有 main-role arrows 表達，省略只接受欄位遞增的 mainPath lint 欄位；一次正式授權跨帶連線指定 bottom→top，確保方向。新 specification SHA-256 `f65f4108696412327a7342b6c6c7c24189fe808c6356e0788c0048405196c51b`，新 HTML SHA-256 `a873039ad747c2a32946a109e0da1504bdd7ed5a626cc53f6cf65b3ba2dc6ece`。兩輪 focused correction 後 validate/deliver exit 0，showcase 9/9、零 errors/warnings。**該回修 checkpoint 的 visual-check／人工視覺重驗當時 pending Tester**；後續實測 PASS 見下方，這裡保留當時狀態。原 FAIL、舊 hashes、修訂與受測版本 binding 保留於 manifest。
 
-後續狀態：使用者已授權本輪沿用同 project 的單一使用者 audit 並確認組態未變，獨立 Reviewer 已作 preflight-only 通過判定，Tester 正恢復獨立測試。上述 A–F 是第一輪已收證據的歷史狀態；本次圖修不預判恢復後結果，待 Tester 新證據與獨立審查再錄入。
+後續狀態：使用者已授權本輪沿用同 project 的單一使用者 audit 並確認組態未變，獨立 Reviewer 已作 preflight-only 通過判定，Tester 當時正恢復獨立測試。上述 A–F 是第一輪已收證據的歷史狀態；本次圖修不預判恢復後結果，待 Tester 新證據與獨立審查再錄入。
 
 ## 最終實測證據同步 — 2026-10-19
 
@@ -133,8 +133,16 @@ B–E 均 NOT_EXECUTED，未 create/update。當次 private/license 適用證據
 | E 追問 | 經獨立 Reviewer 授權，在同一 R2 唯一一次一般追問「請僅依同一 Task 記錄，列出重要變更的先後與各次理由；保持唯讀。」未給 baseline／評分／預期答案，沒有新 thread、command、MCP call 或 write。回覆完整兩筆先後、各別理由及未完成試填，未補造日期。Reviewer 判 combined bounded multi-turn PASS；首答歷史 PARTIAL 與非 single-turn 限制保留。 |
 | F | C/E 完整 native traces 均僅唯讀，前述 static stop rules 核對及缺當次授權時先停 create 的歷史保留。不是全部 adverse branches 通過：model-only、unknown create/update recovery 與 live fault injection 未執行。 |
 
-九欄位最終比較：C 對 S0 九列 MATCH；E 首答對 S1 第 1–7、9 列 MATCH，第 8 歷史列 PARTIAL；同 R2 的上述唯一追問另有第 8 列 MATCH 證據，不重寫首答。合計恰一 create、一 description update；無 close/delete、State/Type/tag/ACL/account/config/visibility 改動。真實 target/account/URL、Task 正文 mapping 與 native thread IDs 不公開，也不複製至 run manifest。
+九欄位最終比較：C 對 S0 九列 MATCH；E 首答對 S1 第 1–7、9 列 MATCH，第 8 歷史列 PARTIAL；同 R2 的上述唯一追問另有第 8 列 MATCH 證據，不重寫首答。合計恰一 create、一 description update；無 close/delete、State/Type/tag/ACL/account/config/visibility 改動。真實 target/account/URL、Task 正文及 native thread IDs 不公開。初次同步未在 manifest 持久化 raw target/session mapping，該歷史缺口及後續受限補存見下方；私人正文不複製至 manifest。
 
-修正版 HTML `a873039ad747c2a32946a109e0da1504bdd7ed5a626cc53f6cf65b3ba2dc6ece` 已由 Tester visual-check exit 0：四尺寸 scrollWidth/Height 均不超過 viewport；最小／最大 light/dark 四張實際 view_image 人工檢視 PASS，完整流程、stop、審查、legend／限制皆可見，無可見裁切或重疊。原 HTML `170d5e80…` 四尺寸 FAIL 的 1520/1611/1611/1644 與修復關聯仍保留。PR Lens 依本次文件同步重建真實 bounded diff；新產物仍須 Tester 重新核對，沒有新 commit/PR。Graphify 保持無既有 graph 的 source fallback。
+修正版 HTML `a873039ad747c2a32946a109e0da1504bdd7ed5a626cc53f6cf65b3ba2dc6ece` 已由 Tester visual-check exit 0：四尺寸 scrollWidth/Height 均不超過 viewport；最小／最大 light/dark 四張實際 view_image 人工檢視 PASS，完整流程、stop、審查、legend／限制皆可見，無可見裁切或重疊。原 HTML `170d5e80…` 四尺寸 FAIL 的 1520/1611/1611/1644 與修復關聯仍保留。該次 PR Lens 文件同步重建真實 bounded diff；在那個 checkpoint 新產物仍待 Tester 核對且尚無新 commit/PR，後續原版本審查／交付事件另列於下方。Graphify 保持無既有 graph 的 source fallback。
 
-限制：歷史 TC02 partial 不被本次 bounded testcase 改寫；普通他人 live negative 仍 NOT_EXECUTED，單一使用者 substitute 只限本次經獨立核對的組態／授權，不作永久私密或保存承諾，license/retention 來源衝突保留。Formal output schema 未暴露；沒有 conditional revision，prewrite reread 不消除競態、不能保證無 lost update／exactly-once。逾時／衝突／未知寫入與所有停止分支未 fully live 驗收。CLI trace 支持本次可見行為，不證明所有 hidden host injection 不存在或日常 host 普遍相容。此為證據同步，尚待 Tester final artifact rebinding 與獨立 Reviewer 最終 gate。
+限制：歷史 TC02 partial 不被本次 bounded testcase 改寫；普通他人 live negative 仍 NOT_EXECUTED，單一使用者 substitute 只限本次經獨立核對的組態／授權，不作永久私密或保存承諾，license/retention 來源衝突保留。Formal output schema 未暴露；沒有 conditional revision，prewrite reread 不消除競態、不能保證無 lost update／exactly-once。逾時／衝突／未知寫入與所有停止分支未 fully live 驗收。CLI trace 支持本次可見行為，不證明所有 hidden host injection 不存在或日常 host 普遍相容。該證據同步 checkpoint 當時尚待 Tester final artifact rebinding 與獨立 Reviewer 最終 gate；原版本後續真實判定與本次修訂邊界見下方。
+
+## 原版本最終審查與 PR-comment 修正 provenance — 2026-10-19
+
+原版本在交付前，獨立 Reviewer `/root/reviewer_core_acceptance` 已真正回 final PASS（actual parent handoff），綁定原 head `655cbf36eec4e8065b8d54c41aa638d394c452bf`、受審 snapshot `1bf4e7c828c0fedb08a72d93147aaccba6f79424ecfd4b01a7310d6a92c682e3`、本 testcase 原 SHA-256 `146aac07151feb1800ecd6c094086ecd13e3e9678884d40fad2a6923df2eb6a7` 與 summary 原 SHA-256 `b356b38c7f06782a799431f7d6cd13f8b579f16a216fa8f9126676217da40394`。這是 bounded synthetic S0/S1、所選 CLI 與輔助產物的原版本審查事件，不是 full v1／single-turn E 通過；E 首答 PARTIAL、multi-turn PASS 及所有未執行／競態／schema／privacy 限制不變。原 PASS 不覆蓋之後的 PR-comment 修正 bytes；每次新修訂交付前須各自完成獨立驗證及審查。
+
+初次 run 只在 Tester 記憶體保留 raw target/session mapping，未持久化，造成可回查證據缺口。Tester 於 2026-10-19 03:32:51 UTC 從仍存的原始 live 記憶體／native captures 補存最小 Task/project/session 與 trace-digest mapping，無 replay、新 remote calls、私人正文或 credentials。獨立 Reviewer 已核對受限補存；run root 0700、comparisons/observations/manifest 0600，manifest 對 Tester 原證據 hash/provenance 綁定。十項 requested/returned IDs 同票同 project，R1/R2 相異、follow-up 同 R2、captured digests 相符。此為事後恢復，不溯及宣稱原 run 當時已 durable；真實值僅存受保護外部 bundle，不入公開 Git。
+
+Plan-Creator 對 plan 的 Status 作行政 provenance 補註；當前 whole-file SHA-256 為 `57ae8e179b9de3b07f1e816a2f10d85b92b9992eedfd155845334009164814c7`，原 approved execution basis `730b68bdad68c9cc8b8aebc8f2d35ad189a3af7b6acf54c6bba443081789d058` 及原 approval proof 保持不變。排除完整 Status section 後，當前與原 approved snapshot bytes 相同，binding `e50a6debbba072a2a3f024fdf4f37d560d2b11d9a8fbd5ec1e3ed09fcddc4146`；這不是重新 approval 或執行契約變更。
